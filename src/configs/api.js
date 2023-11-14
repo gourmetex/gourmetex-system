@@ -11,7 +11,7 @@ const publish_environment = "http://coreteste.gourmetech.com.br/"; //Ambiente de
 // 1 - Ambiente de produção
 // 
 // ==============================
-let test_or_publish = 0;
+let test_or_publish = 1;
 // ==============================
 //
 
