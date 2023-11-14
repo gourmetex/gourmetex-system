@@ -2,8 +2,8 @@ import axios from 'axios'
 
 let url_api;
 
-const dev_environment = ""; //Ambiente de desenvolvimento.
-const production_environment = ""; //Ambiente de produção.
+const dev_environment = "http://192.168.15.43:3000/"; //Ambiente de desenvolvimento.
+const publish_environment = "http://coreteste.gourmetech.com.br/"; //Ambiente de teste ou produção.
 // TROCA DO AMBIENTE DA API
 //
 // O parâmetro que deverá ser informado será 0 ou 1, sendo que:
@@ -11,17 +11,17 @@ const production_environment = ""; //Ambiente de produção.
 // 1 - Ambiente de produção
 // 
 // ==============================
-let test_or_prod = 0;
+let test_or_publish = 0;
 // ==============================
 //
 
 
-switch (test_or_prod) {
+switch (test_or_publish) {
     case 0:
         url_api = dev_environment;
         break;
     case 1: 
-        url_api = production_environment;
+        url_api = publish_environment;
         break;
 }
 
