@@ -1,6 +1,6 @@
 <template>
     <header>
-        Header gourmetex
+        Header Gourmetech
     </header>
 </template>
 <script>

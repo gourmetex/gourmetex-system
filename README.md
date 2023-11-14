@@ -1,2 +1,2 @@
-# gourmetex-system
-Interface web do produto Gourmetex
+# gourmetech-system
+Interface web do produto Gourmetech
