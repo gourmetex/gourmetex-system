@@ -10,11 +10,11 @@ const routes = [
         path: '/home',
         component: indexPage,
         meta: {
-            title: "Gourmetex",
+            title: "Gourmetech",
             metaTags: [
                 {
                     name: "description",
-                    content: "Página inicial - Gourmetex"
+                    content: "Página inicial - Gourmetech"
                 },
                 {
                     name: "og:description",
