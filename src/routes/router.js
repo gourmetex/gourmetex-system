@@ -4,6 +4,8 @@ import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 
 import indexPage from '../pages/indexPage.vue';
+import loginPage from '../pages/loginPage.vue';
+import registerPage from '../pages/registerPage.vue';
 
 const routes = [
     {
@@ -24,6 +26,40 @@ const routes = [
         },
         children: [
         ]
+    },
+    {
+        path: '/login',
+        component: loginPage,
+        meta: {
+            title: "Faça login - Gourmetech",
+            metaTags: [
+                {
+                    name: "description",
+                    content: "Login - Gourmetech"
+                },
+                {
+                    name: "og:description",
+                    content: "ERP para restaurantes, tudo o que você precisa"
+                }
+            ]
+        },
+    },
+    {
+        path: '/register',
+        component: registerPage,
+        meta: {
+            title: "Registre-se - Gourmetech",
+            metaTags: [
+                {
+                    name: "description",
+                    content: "Registro - Gourmetech"
+                },
+                {
+                    name: "og:description",
+                    content: "ERP para restaurantes, tudo o que você precisa"
+                }
+            ]
+        },
     },
     {
         path: '',

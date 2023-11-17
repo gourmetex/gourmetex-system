@@ -86,6 +86,9 @@
     --fontsize-md: 24px;
     --fontsize-sm: 16px;
     --fontsize-xs: 12px;
+
+    /* BOX SHADOW */
+    --boxshadow-default: 0 0 15px rgba(0, 0, 0, 0.2);
 }
 
 * {
@@ -102,6 +105,10 @@ html, body {
     font-family: Manrope;
 }
 
+h1, h2, h3, p, a {
+    color: var(--black);
+}
+
 h1 {
     font-size: var(--fontsize-lg);
 }
@@ -116,6 +123,14 @@ h3 {
 
 p {
     font-size: var(--fontsize-xs);
+}
+
+.error {
+    color: var(--red);
+}
+
+.success {
+    color: var(--green-2);
 }
 
 .font-bold {
@@ -147,12 +162,40 @@ a, a:hover {
 }
 
 .btn {
-    padding: 7px 15px;
+    padding: var(--space-4) var(--space-5);
     border-radius: 6px;
     border: none;
     cursor: pointer;
     transition: background 0.4s;
     margin: 5px;
+    font-size: var(--fontsize-sm);
+    font-weight: bold;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-loading::after {
+    content: '';
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: var(--radius-full);
+    border: 5px solid var(--white);
+    border-top-color: var(--blue);
+    animation: spin 1s linear infinite;
+    margin-left: var(--space-3);
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .btn-primary {
@@ -215,3 +258,26 @@ a, a:hover {
         background: var(--red-high);
         cursor: not-allowed;
     }
+
+.avatar-p {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.company-logo-p {
+    width: 160px;
+    height: 54px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+}
+
+input {
+    border: 1px solid var(--gray-2);
+    padding: var(--space-3);
+    border-radius: var(--radius-sm);
+}
