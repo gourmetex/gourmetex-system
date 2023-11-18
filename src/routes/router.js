@@ -6,6 +6,9 @@ Vue.use(VueRouter);
 import indexPage from '../pages/indexPage.vue';
 import loginPage from '../pages/loginPage.vue';
 import registerPage from '../pages/registerPage.vue';
+import adminComponent from '../components/adminComponent.vue';
+import dishesComponent from '../components/dishesComponent.vue';
+import digitalMenuComponent from '../components/digitalMenuComponent.vue';
 
 const routes = [
     {
@@ -25,6 +28,18 @@ const routes = [
             ]
         },
         children: [
+            {
+                path: 'admin',
+                component: adminComponent
+            },
+            {
+                path: 'dishes',
+                component: dishesComponent
+            },
+            {
+                path: 'digital-menu',
+                component: digitalMenuComponent
+            }
         ]
     },
     {

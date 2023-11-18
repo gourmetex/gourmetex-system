@@ -2,6 +2,7 @@
     <div class="system-frame">
         <header>
             <div class="left-content">
+                <span class="material-icons responsive-lateral-menu-toggle" v-on:click="toggleLateralMenu()">menu</span>
                 <div class="profile">
                     <img :src="connectedUser.profile_photo" class="avatar-p" v-on:click="toggleProfileMenu()">
                     <div class="profile-menu-wrapper" v-on:click="toggleProfileMenu()"></div>
@@ -24,9 +25,11 @@
         </header>
         <div class="lateral-menu">
             <ul>
-                <li v-for="(item, index) in menuOptions" :key="index" class="menu-item">
-                    <span class="material-icons">{{ item.icon }}</span>
-                    <h3>{{ item.name }}</h3>
+                <li v-for="(item, index) in menuOptions" :key="index" class="menu-item" v-on:click="selectThisItem('menu-' + item.icon)" :id="'menu-' + item.icon">
+                    <router-link :to="item.link">
+                        <span class="material-icons">{{ item.icon }}</span>
+                        <h3>{{ item.name }}</h3>
+                    </router-link>
                 </li> 
             </ul>
         </div>
@@ -43,12 +46,20 @@ export default {
                 {
                     id: 1,
                     name: "Menu digital",
-                    icon: "menu_book"
+                    icon: "menu_book",
+                    link: "/home/digital-menu"
                 },
                 {
                     id: 2,
                     name: "Pratos",
-                    icon: "dinner_dining"
+                    icon: "dinner_dining",
+                    link: "/home/dishes"
+                },
+                {
+                    id: 3,
+                    name: "Admin",
+                    icon: "admin_panel_settings",
+                    link: "/home/admin"
                 }
             ],
             connectedUser: {
@@ -63,10 +74,17 @@ export default {
                 id: 1,
                 profile_photo: "https://www.cdc.gov/policy/polaris/tis/assets/tis-img/systems-problems-hero-medium.png",
                 name: "Barraca do zé"
-            }
+            },
+            menuMovement: false
         }
     },
     methods: {
+        selectThisItem: function (elementId) {
+            $(".menu-item").removeClass("li-active");
+
+            let targetElement = $("#" + elementId);
+            targetElement.addClass("li-active");
+        },
         toggleProfileMenu: function () {
             let profileMenu = $(".profile-menu-container");
             let profileMenuWrapper = $(".profile-menu-wrapper");
@@ -78,7 +96,77 @@ export default {
                 profileMenu.show();
                 profileMenuWrapper.show();
             }
+        },
+        toggleLateralMenu: function () {
+            let lateralMenu = $(".lateral-menu");
+            if (lateralMenu.is(":visible")) {
+                this.$emit("toggleMenu", false);
+                this.hideLateralMenu();
+            } else {
+                this.$emit("toggleMenu", true);
+                this.showLateralMenu();
+            }
+        },
+        hideLateralMenu: function () {
+            this.menuMovement = true;
+
+            let lateralMenu = $(".lateral-menu");
+            lateralMenu.css("transform", "translateX(-260px)");
+            setTimeout(() => {
+                lateralMenu.hide();
+                this.menuMovement = false;
+            }, 400)
+        },
+        showLateralMenu: function () {
+            this.menuMovement = true;
+
+            let lateralMenu = $(".lateral-menu");
+
+            lateralMenu.show();
+            setTimeout(() => {
+                lateralMenu.css("transform", "translateX(0)");
+                setTimeout(() => {
+                    this.menuMovement = false;
+                }, 400)
+            }, 1)
+        },
+        hideResponsiveButton: function () {
+            let responsiveButton = $(".responsive-lateral-menu-toggle");
+
+            responsiveButton.css("opacity", 0);
+
+            setTimeout(() => {
+                responsiveButton.hide();
+            }, 400)
+        },
+        showResponsiveButton: function () {
+            let responsiveButton = $(".responsive-lateral-menu-toggle");
+
+            responsiveButton.show();
+
+            setTimeout(() => {
+                responsiveButton.css("opacity", 1);
+            }, 1)
         }
+    },
+    mounted: function () {
+        let self = this;
+
+        $(window).on("resize", () => {
+            let windowWidth = $(window).width();
+
+            if (windowWidth <= 960) {
+                if (this.menuMovement) return;
+
+                self.hideLateralMenu();
+                self.showResponsiveButton();
+            } else {
+                if (this.menuMovement) return;
+
+                self.showLateralMenu();
+                self.hideResponsiveButton();
+            }
+        })
     }
 }
 </script>
@@ -111,6 +199,13 @@ header {
         margin: var(--space-3);
     }
 
+.responsive-lateral-menu-toggle {
+    margin: 0 var(--space-4) 0 var(--space-3);
+    transition: opacity 0.4s;
+    display: none;
+    opacity: 0;
+}
+
 .notifications-container {
     display: flex;
     align-items: center;
@@ -120,7 +215,7 @@ header {
     margin-right: var(--space-4);
 }
 
-    .notifications-container span:first-child, .right-content > span {
+    .notifications-container span:first-child, .right-content > span, .responsive-lateral-menu-toggle {
         font-size: var(--fontsize-lg);
         cursor: pointer;
     }
@@ -144,6 +239,7 @@ header {
     left: 0;
     width: 260px;
     height: calc(100vh - 80px);
+    transition: transform 0.4s;
 }
 
     .lateral-menu h3 {
@@ -158,16 +254,19 @@ header {
     }
 
         .lateral-menu ul li {
-            display: flex;
             padding: var(--space-4);
+            margin: var(--space-2) auto;
+        }
+
+        .lateral-menu ul li, .lateral-menu ul li a {
+            display: flex;
             cursor: pointer;
             color: var(--white);
             width: 90%;
             border-radius: var(--radius-md);
-            margin: auto;
         }   
 
-            .lateral-menu ul li:hover {
+            .lateral-menu ul li:hover, .li-active {
                 background: var(--blue-low);
             }
 
@@ -221,6 +320,22 @@ header {
     top: 0;
     left: 0;
     display: none;
+}
+
+@media (max-width: 960px) {
+    .responsive-lateral-menu-toggle {
+        display: block;
+        opacity: 1;
+    }
+
+    .company-logo-p {
+        display: none;
+    }
+
+    .lateral-menu {
+        display: none;
+        transform: translateX(-260px);
+    }
 }
 
 </style>

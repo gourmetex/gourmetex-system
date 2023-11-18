@@ -6,6 +6,7 @@
 
 <script>
 import './style/global.css';
+import 'animate.css';
 
 export default {
   name: 'App'
