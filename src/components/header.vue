@@ -25,7 +25,7 @@
         </header>
         <div class="lateral-menu">
             <ul>
-                <li v-for="(item, index) in menuOptions" :key="index" class="menu-item" v-on:click="selectThisItem('menu-' + item.icon)" :id="'menu-' + item.icon">
+                <li v-for="(item, index) in menuOptions" :key="index" class="menu-item" v-on:click="selectThisItem('menu-' + item.icon)" :id="'menu-' + item.icon" :class="checkCurrentPathname(item.link) ? 'li-active' : ''">
                     <router-link :to="item.link">
                         <span class="material-icons">{{ item.icon }}</span>
                         <h3>{{ item.name }}</h3>
@@ -43,6 +43,12 @@ export default {
     data() {
         return {
             menuOptions: [
+                {
+                    id: 0,
+                    name: "Início",
+                    icon: "home",
+                    link: "/home"
+                },
                 {
                     id: 1,
                     name: "Menu digital",
@@ -79,6 +85,13 @@ export default {
         }
     },
     methods: {
+        checkCurrentPathname: function (linkToCheck) {
+            let pathname = window.location.pathname;
+            if (pathname == linkToCheck) {
+                return true;
+            }
+            return false;
+        },
         selectThisItem: function (elementId) {
             $(".menu-item").removeClass("li-active");
 
@@ -254,15 +267,19 @@ header {
     }
 
         .lateral-menu ul li {
-            padding: var(--space-4);
             margin: var(--space-2) auto;
+            width: 90%;
+        }
+
+        .lateral-menu ul li a {
+            padding: var(--space-4);
+            width: 100%;
         }
 
         .lateral-menu ul li, .lateral-menu ul li a {
             display: flex;
             cursor: pointer;
             color: var(--white);
-            width: 90%;
             border-radius: var(--radius-md);
         }   
 
@@ -328,13 +345,17 @@ header {
         opacity: 1;
     }
 
-    .company-logo-p {
-        display: none;
-    }
+    
 
     .lateral-menu {
         display: none;
         transform: translateX(-260px);
+    }
+}
+
+@media (max-width: 423px) {
+    .company-logo-p {
+        display: none;
     }
 }
 

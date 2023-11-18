@@ -9,6 +9,7 @@ import registerPage from '../pages/registerPage.vue';
 import adminComponent from '../components/adminComponent.vue';
 import dishesComponent from '../components/dishesComponent.vue';
 import digitalMenuComponent from '../components/digitalMenuComponent.vue';
+import homeComponent from '../components/homeComponent.vue';
 
 const routes = [
     {
@@ -28,6 +29,10 @@ const routes = [
             ]
         },
         children: [
+            {
+                path: '',
+                component: homeComponent
+            },
             {
                 path: 'admin',
                 component: adminComponent
