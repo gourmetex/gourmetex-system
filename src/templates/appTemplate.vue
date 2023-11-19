@@ -52,6 +52,14 @@ export default {
                 self.contractContent();
             }
         })
+
+        this.checkIfUserIsAuthenticated().then(() => {
+            let interval = setInterval(() => {
+                if (self.$root.jwtLoaded) {
+                    clearInterval(interval);
+                }
+            })
+        }).catch(() => {})
     }
 }
 </script>

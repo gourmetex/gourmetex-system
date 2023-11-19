@@ -5,6 +5,10 @@
             <form @submit.prevent="register()" id="register-form">
                 <h2>REGISTRAR</h2>
                 <div class="form-group">
+                    <label for="name">Nome</label>
+                    <input type="text" id="name" name="name" maxlength="45" required>
+                </div>
+                <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" placeholder="example@domain.com" required>
                 </div>
@@ -27,6 +31,7 @@
     </div>
 </template>
 <script>
+import api from "../configs/api.js";
 import { globalMethods } from '@/js/globalMethods';
 import $ from 'jquery';
 
@@ -35,8 +40,7 @@ export default {
     mixins: [globalMethods],
     methods: {
         register: function () {
-            let response = $(".response");
-            this.resetResponse(response);
+            let self = this;
 
             let registerButton = $("#register-button");
             registerButton.attr("disabled", "disabled").addClass("btn-loading");
@@ -49,15 +53,19 @@ export default {
             let password = $("#password").val();
             let repeatPassword = $("#repeat-password").val();
 
-            setTimeout(() => {
-                if (password == repeatPassword) {
-                    console.log(data);
-                } else {
-                    response.addClass("error");
-                    this.response = "As senhas não coencidem";
-                }
+            if (password == repeatPassword) {
+                api.post("/users/register", data).then((res) => {
+                    self.setResponse(res.data.message, "success");
+                    self.$router.push("/login");
+                }).catch((error) => {
+                    self.setResponse(error.response.data, "error");
+                }).then(() => {
+                    registerButton.removeAttr("disabled").removeClass("btn-loading");
+                })
+            } else {
+                self.setResponse("As senhas não coincidem", "error");
                 registerButton.removeAttr("disabled").removeClass("btn-loading");
-            }, 2000)
+            }
         }
     }
 }
@@ -103,7 +111,7 @@ form {
     max-width: 500px;
     min-height: fit-content;
     height: 90vh;
-    max-height: 370px;
+    max-height: 470px;
     justify-content: center;
 }
 

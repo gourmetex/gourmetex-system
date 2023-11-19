@@ -9,7 +9,7 @@
                     <div class="profile-menu-container">
                         <ul>
                             <li>Perfil</li>
-                            <li>Sair</li>
+                            <li v-on:click="logoutUser()">Sair</li>
                         </ul>
                     </div>
                 </div>
@@ -38,9 +38,11 @@
 </template>
 <script>
 import $ from 'jquery';
+import { globalMethods } from '@/js/globalMethods';
 
 export default {
     name: "headerComponent",
+    mixins: [globalMethods],
     data() {
         return {
             menuOptions: [

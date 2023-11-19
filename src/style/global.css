@@ -196,6 +196,10 @@ a, a:hover {
     margin-left: var(--space-3);
 }
 
+form .btn {
+    margin: 5px 0;
+}
+
 @keyframes spin {
     0% {
         transform: rotate(0);

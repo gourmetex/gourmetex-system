@@ -15,14 +15,15 @@
                 <button type="submit" class="btn btn-primary" id="login-button">Entrar</button>
                 <div class="complement">
                     <h3>Não tem cadastro? <router-link to="/register"><span>Registre-se</span></router-link></h3>
+                    <h3 class="response">{{ response }}</h3>
                 </div>
-                <h3 class="response">{{ response }}</h3>
             </form>
         </div>
         <h3 class="copyright">© {{ year }} Gourmetech - Todos os direitos reservados</h3>
     </div>
 </template>
 <script>
+import api from "../configs/api.js";
 import { globalMethods } from '@/js/globalMethods';
 import $ from 'jquery';
 
@@ -31,8 +32,7 @@ export default {
     mixins: [globalMethods],
     methods: {
         login: function () {
-            let response = $(".response");
-            this.resetResponse(response);
+            let self = this;
 
             let loginButton = $("#login-button");
             loginButton.attr("disabled", "disabled").addClass("btn-loading");
@@ -42,13 +42,19 @@ export default {
                 return obj;
             }, {});
 
-            setTimeout(() => {
-                console.log(data)
+            api.post("/users/login", data).then((res) => {
+                self.setResponse(res.data.message, "success");
+                self.setJwtInLocalStorage(res.data.returnObj.jwtToken);
+                self.$router.push("/home");
+            }).catch((error) => {
+                self.setResponse(error.response.data, "error");
+            }).then(() => {
                 loginButton.removeAttr("disabled").removeClass("btn-loading");
-            }, 2000)
-
-            console.log(data)
+            })
         }
+    },
+    mounted: function () {
+        this.checkIfUserIsAuthenticated();
     }
 }
 </script>
@@ -104,6 +110,7 @@ form {
 
 .complement {
     margin-top: var(--space-3);
+    text-align: center;
 }
 
     .complement span {
