@@ -62,11 +62,12 @@ export default {
     left: 260px;
     top: 80px;
     height: calc(100vh - 80px);
+    overflow-y: auto;
     padding: var(--space-6);
     transition: all 0.4s;
 }
 
-@media (max-width: 960px) {
+@media (max-width: 768px) {
     .inner-page-system {
         width: 100vw;
         left: 0;

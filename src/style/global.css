@@ -89,6 +89,14 @@
 
     /* BOX SHADOW */
     --boxshadow-default: 0 0 15px rgba(0, 0, 0, 0.2);
+
+    /* BREAKPOINTS */
+    --small-device: 960px;
+    --tablet: 768px;
+    --mobile: 480px;
+
+    /* OVERLAY */
+    --overlay: rgba(0, 0, 0, 0.5);
 }
 
 * {
@@ -281,3 +289,21 @@ input {
     padding: var(--space-3);
     border-radius: var(--radius-sm);
 }
+
+input[type="radio"], input[type="checkbox"] {
+    cursor: pointer;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin: var(--space-3) 0;
+}
+
+.radio-group {
+    margin: var(--space-3) 0;
+}
+
+    .radio-group input {
+        margin-right: var(--space-3);
+    }

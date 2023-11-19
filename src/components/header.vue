@@ -33,6 +33,7 @@
                 </li> 
             </ul>
         </div>
+        <div class="lateral-menu-wrapper" v-on:click="toggleLateralMenu()"></div>
     </div>
 </template>
 <script>
@@ -124,7 +125,10 @@ export default {
             this.menuMovement = true;
 
             let lateralMenu = $(".lateral-menu");
+            let lateralMenuWrapper = $(".lateral-menu-wrapper");
+
             lateralMenu.css("transform", "translateX(-260px)");
+            lateralMenuWrapper.hide();
             setTimeout(() => {
                 lateralMenu.hide();
                 this.menuMovement = false;
@@ -134,7 +138,9 @@ export default {
             this.menuMovement = true;
 
             let lateralMenu = $(".lateral-menu");
+            let lateralMenuWrapper = $(".lateral-menu-wrapper");
 
+            lateralMenuWrapper.show();
             lateralMenu.show();
             setTimeout(() => {
                 lateralMenu.css("transform", "translateX(0)");
@@ -287,9 +293,20 @@ header {
                 background: var(--blue-low);
             }
 
-    .menu-item span {
-        margin-right: var(--space-4);
-    }
+.lateral-menu-wrapper {
+    position: fixed;
+    top: 80px;
+    left: 260px;
+    width: calc(100vw - 260px);
+    height: calc(100vh - 80px);
+    background: transparent;
+    display: none;
+    z-index: 2;
+}
+
+.menu-item span {
+    margin-right: var(--space-4);
+}
 
 .avatar-p {
     cursor: pointer;
@@ -339,13 +356,11 @@ header {
     display: none;
 }
 
-@media (max-width: 960px) {
+@media (max-width: 768px) {
     .responsive-lateral-menu-toggle {
         display: block;
         opacity: 1;
     }
-
-    
 
     .lateral-menu {
         display: none;
@@ -353,7 +368,7 @@ header {
     }
 }
 
-@media (max-width: 423px) {
+@media (max-width: 480px) {
     .company-logo-p {
         display: none;
     }

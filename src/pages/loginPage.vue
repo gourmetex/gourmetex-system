@@ -110,11 +110,4 @@ form {
         cursor: pointer;
         text-decoration: underline;
     }
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    margin: var(--space-3) 5px;
-}
-
 </style>
