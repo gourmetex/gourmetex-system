@@ -28,6 +28,8 @@ export const globalMethods = {
         closeModalFunction: function () {
             this.closeModalContent();
 
+            this.reloadGrid = true;
+
             setTimeout(() => {
                 this.showModal = false;
 
@@ -35,6 +37,8 @@ export const globalMethods = {
                 this.modalButton1 = "";
                 this.modalButton2 = "";
                 this.submitContent = false;
+
+                this.reloadGrid = false;
             }, 400);
         },
         closeModalContent: function () {
@@ -122,7 +126,8 @@ export const globalMethods = {
             modalTitle: "",
             modalButton1: "",
             modalButton2: "",
-            closeModal: false
+            closeModal: false,
+            reloadGrid: false
         }
     }
 }

@@ -7,8 +7,8 @@
                 </div>
             </div>
             <div class="grid-body">
-                <div class="grid-row" v-for="(row, index) in griddata" :key="index">
-                    <div class="grid-cell" v-for="col in row" :key="col[1]">
+                <div class="grid-row" v-for="(row, key) in griddata" :key="key">
+                    <div class="grid-cell" v-for="(col, key) in row" :key="key">
                         <h3 v-if="col[0] == 'text'" v-on:click="emitClick(col)" :class="col[2] != undefined ? 'clicable' : ''">{{ col[1] }}</h3>
                         <badge v-if="col[0] == 'badge'" :content="col[1]" :backcolor="col[2]" :forecolor="col[3]"></badge>
                     </div>

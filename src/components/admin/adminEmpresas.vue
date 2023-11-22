@@ -14,6 +14,7 @@
     </div>
 </template>
 <script>
+import api from "../../configs/api";
 import { globalMethods } from "@/js/globalMethods";
 import gridView from "../gridView.vue";
 import modal from "../modal.vue";
@@ -24,34 +25,17 @@ export default {
     mixins: [globalMethods],
     data() {
         return {
-            companies: [
-                {
-                    id: ["text", 1, "companie_edit"],
-                    name: ["text", "Gourmetech"],
-                    active: ["badge", "Sim", "var(--green-2)", "var(--white)"],
-                    members: ["text", 2]
-                },
-                {
-                    id: ["text", 2, "companie_edit"],
-                    name: ["text", "Barraca do zé"],
-                    active: ["badge", "Sim", "var(--green-2)", "var(--white)"],
-                    members: ["text", 5]
-                },
-                {
-                    id: ["text", 3, "companie_edit"],
-                    name: ["text", "Outback"],
-                    active: ["badge", "Não", "var(--red)", "var(--white)"],
-                    members: ["text", 450]
-                }
-            ],
-            gridOptions: [
-                "Id",
-                "Nome",
-                "Ativa",
-                "Membros"
-            ],
+            companies: [],
+            gridOptions: [],
             showEditCompanieModalContent: false,
             companyId: null
+        }
+    },
+    watch: {
+        reloadGrid: function () {
+            if (this.reloadGrid) {
+                this.returnAllCompanies();
+            }
         }
     },
     methods: {
@@ -65,8 +49,21 @@ export default {
         editCompany: function (event = [0, 0]) {
             this.showModalFunction("Editar empresa", "Salvar", "Cancelar");
             this.showEditCompanieModalContent = true;
-            this.companieId = event[1];
+            this.companyId = event[1];
+        },
+        returnAllCompanies: function () {
+            let self = this;
+
+            api.get("/companies/return_all_companies").then((response) => {
+                self.companies = response.data.returnObj.companies;
+                self.gridOptions = response.data.returnObj.labels;
+            }).catch((error) => {
+                console.log(error);
+            })
         }
+    },
+    mounted: function () {
+        this.returnAllCompanies();
     },
     components: {
         gridView,
