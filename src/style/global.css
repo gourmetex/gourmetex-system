@@ -115,6 +115,7 @@ html, body {
 
 h1, h2, h3, p, a {
     color: var(--black);
+    font-weight: 500;
 }
 
 h1 {
@@ -131,6 +132,10 @@ h3 {
 
 p {
     font-size: var(--fontsize-xs);
+}
+
+.page-title {
+    margin-bottom: var(--space-6);
 }
 
 .error {
@@ -282,9 +287,8 @@ form .btn {
 }
 
 .company-logo-p {
-    width: 160px;
-    height: 54px;
-    object-fit: cover;
+    height: 60px;
+    object-fit: contain;
     border-radius: var(--radius-sm);
 }
 
@@ -296,6 +300,10 @@ input {
 
 input[type="radio"], input[type="checkbox"] {
     cursor: pointer;
+}
+
+label {
+    margin: var(--space-2) 0;
 }
 
 .form-group {

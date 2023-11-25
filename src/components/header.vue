@@ -69,6 +69,12 @@ export default {
                     name: "Admin",
                     icon: "admin_panel_settings",
                     link: "/home/admin"
+                },
+                {
+                    id: 4,
+                    name: "Configurações",
+                    icon: "settings",
+                    link: "/home/config"
                 }
             ],
             connectedUser: {

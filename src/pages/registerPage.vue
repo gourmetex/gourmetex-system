@@ -1,6 +1,6 @@
 <template>
     <div class="register-page">
-        <img src="https://www.cdc.gov/policy/polaris/tis/assets/tis-img/systems-problems-hero-medium.png" class="company-logo-p">
+        <img src="../assets/img/logo-gourmetech.svg" class="company-logo-p">
         <div class="register-container">
             <form @submit.prevent="register()" id="register-form">
                 <h2>REGISTRAR</h2>

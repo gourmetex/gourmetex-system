@@ -3,11 +3,15 @@
         <form class="edit-company" id="informations-form" @submit.prevent="saveCompany()">
             <div class="form-group">
                 <label for="name">Nome</label>
-                <input type="text" name="name" placeholder="Nome da empresa" v-model="company.nome" required>
+                <input type="text" name="name" id="name" placeholder="Nome da empresa" v-model="company.nome" required>
             </div>
             <div class="radio-group">
-                <input type="checkbox" name="active" v-model="company.ativa">
+                <input type="checkbox" name="active" id="active" v-model="company.ativa">
                 <label for="active">Ativo?</label>
+            </div>
+            <div class="form-group">
+                <label for="main-user">Usuário admin</label>
+                <input type="email" name="main_user_email" id="main-user" placeholder="example@domain.com">
             </div>
             <input type="submit" id="submit-button" style="display: none;">
         </form>

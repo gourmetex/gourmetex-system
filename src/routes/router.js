@@ -10,6 +10,7 @@ import adminComponent from '../components/adminComponent.vue';
 import dishesComponent from '../components/dishesComponent.vue';
 import digitalMenuComponent from '../components/digitalMenuComponent.vue';
 import homeComponent from '../components/homeComponent.vue';
+import configComponent from "../components/configComponent.vue";
 
 const routes = [
     {
@@ -44,6 +45,10 @@ const routes = [
             {
                 path: 'digital-menu',
                 component: digitalMenuComponent
+            },
+            {
+                path: "config",
+                component: configComponent
             }
         ]
     },

@@ -1,6 +1,6 @@
 <template>
     <div class="login-page">
-        <img src="https://www.cdc.gov/policy/polaris/tis/assets/tis-img/systems-problems-hero-medium.png" class="company-logo-p">
+        <img src="../assets/img/logo-gourmetech.svg" class="company-logo-p">
         <div class="login-container">
             <form @submit.prevent="login()" id="login-form">
                 <h2>LOGIN</h2>
