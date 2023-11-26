@@ -11,7 +11,7 @@
             </div>
             <div class="form-group">
                 <label for="main-user">Usuário admin</label>
-                <input type="email" name="main_user_email" id="main-user" placeholder="example@domain.com">
+                <input type="email" name="main_user_email" id="main-user" v-model="company.email_requisitado" placeholder="example@domain.com" required>
             </div>
             <input type="submit" id="submit-button" style="display: none;">
         </form>
@@ -28,7 +28,8 @@ export default {
         return {
             company: {
                 nome: "",
-                ativa: false
+                ativa: false,
+                email_requisitado: ""
             },
             savingCompany: false
         }
@@ -76,6 +77,9 @@ export default {
         }
     },
     mounted: function () {
+        if (this.companyid != 0) {
+            $("#main-user").attr("disabled", "disabled");
+        }
         this.returnCompany();
     }
 }

@@ -87,7 +87,7 @@ export default {
             },
             currentCompany: {
                 id: 1,
-                profile_photo: "https://www.cdc.gov/policy/polaris/tis/assets/tis-img/systems-problems-hero-medium.png",
+                profile_photo: "https://gourmetech-test-storage.s3.sa-east-1.amazonaws.com/gourmetech-erp-para-restaurantes-branco.png",
                 name: "Barraca do zé"
             },
             menuMovement: false
