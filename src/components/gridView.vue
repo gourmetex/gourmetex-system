@@ -7,9 +7,9 @@
                 </div>
             </div>
             <div class="grid-body">
-                <div class="grid-row" v-for="(row, key) in griddata" :key="key">
-                    <div class="grid-cell" v-for="(col, key) in row" :key="key">
-                        <h3 v-if="col[0] == 'text'" v-on:click="emitClick(col)" :class="col[2] != undefined ? 'clicable' : ''">{{ col[1] }}</h3>
+                <div class="grid-row" v-for="(row, rowKey) in griddata" :key="rowKey" :id="'grid-row-' + rowKey">
+                    <div class="grid-cell" v-for="(col, colKey) in row" :key="colKey">
+                        <h3 v-if="col[0] == 'text'" v-on:click="emitClick(col, rowKey)" :class="col[2] != undefined ? 'clicable' : ''">{{ col[1] }}</h3>
                         <badge v-if="col[0] == 'badge'" :content="col[1]" :backcolor="col[2]" :forecolor="col[3]"></badge>
                     </div>
                 </div>
@@ -24,9 +24,11 @@ export default {
     name: "gridView",
     props: ["gridoptions", "griddata"],
     methods: {
-        emitClick: function (data) {
+        emitClick: function (data, rowKey) {
             if (data[2] != undefined) {
-                this.$emit("dataclick", data);
+                let returnData = data;
+                returnData.push(rowKey);
+                this.$emit("dataclick", returnData);
             }
         }
     },
@@ -64,6 +66,10 @@ export default {
 .grid-header, .grid-row {
     padding: var(--space-4);
     border-bottom: 1px solid var(--gray-3);
+}
+
+.grid-row.row-selected, .grid-row:hover {
+    background: var(--blue-high-2);
 }
 
 .grid-row:last-child {

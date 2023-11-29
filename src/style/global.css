@@ -54,6 +54,8 @@
     --red: #EA2B2B;
     --red-high: #FFE9E9;
     --yellow: #F0BB00;
+    --yellow-low: #d3a500;
+    --yellow-high: #ffd53e;
     --gray-2: #B5B5B5;
     --gray-3: #DFDFDF;
     --green-2: #12E41A;
@@ -187,7 +189,22 @@ a, a:hover {
     display: flex;
     align-items: center;
     justify-content: center;
+    min-width: 130px;
 }
+
+.rounded-btn {
+    padding: var(--space-3);
+    width: 50px;
+    height: 50px;
+    border: none;
+    border-radius: var(--radius-full);
+    margin: var(--space-2);
+    cursor: pointer;
+}
+
+    .rounded-btn span {
+        font-size: var(--fontsize-lg);
+    }
 
 .btn-loading::after {
     content: '';
@@ -276,6 +293,31 @@ form .btn {
         cursor: not-allowed;
     }
 
+.btn-yellow {
+    background: var(--yellow);
+    color: var(--white);
+}
+
+    .btn-yellow:hover {
+        background: var(--yellow-low);
+    }
+
+    .btn-yellow:focus, .btn-yellow:active {
+        outline: 2px solid var(--red-high-2);
+    }
+
+    .btn-yellow:disabled {
+        outline: none !important;
+        background: var(--red-high);
+        cursor: not-allowed;
+    }
+
+
+/* CLASSES BUSCAS */
+.edit-buttons {
+    display: none;
+}
+
 .avatar-p {
     width: 50px;
     height: 50px;
@@ -294,10 +336,13 @@ form .btn {
     padding: var(--space-3);
 }
 
-input {
+input, textarea, select {
     border: 1px solid var(--gray-2);
     padding: var(--space-3);
     border-radius: var(--radius-sm);
+    min-width: 190px;
+    width: 100%;
+    height: 42px;
 }
 
 input[type="radio"], input[type="checkbox"] {
@@ -321,3 +366,20 @@ label {
     .radio-group input {
         margin-right: var(--space-3);
     }
+
+/* FILTERS */
+.filters {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+    .filters .btn {
+        margin-top: var(--space-8);
+    }
+
+.filter-field {
+    display: flex;
+    flex-direction: column;
+    margin-right: var(--space-5);
+}

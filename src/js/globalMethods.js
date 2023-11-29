@@ -135,6 +135,29 @@ export const globalMethods = {
                     resolve();
                 })
             })
+        },
+        //Metodos manipulação objetos
+        showEditButtons: function () {
+            let editButtons = $(".edit-buttons");
+
+            editButtons.show();
+        },
+        hideEditButtons: function () {
+            let editButtons = $(".edit-buttons");
+
+            editButtons.hide();
+        },
+        selectGridRow: function (rowKey) {
+            let allRows = $(".grid-row");
+            let row = $("#grid-row-" + rowKey);
+
+            if (row.hasClass("row-selected")) {
+                allRows.removeClass("row-selected");
+                this.hideEditButtons();
+            } else {
+                allRows.removeClass("row-selected");
+                row.addClass("row-selected");
+            }
         }
     },
     mounted: function() {

@@ -24,6 +24,8 @@
                     <h2>Abra algume configuração</h2>
                 </div>
                 <systemConfig v-if="showSections.systemConfig"></systemConfig>
+                <usersListConfig v-if="showSections.usersListConfig"></usersListConfig>
+                <rolesConfig v-if="showSections.rolesConfig"></rolesConfig>
             </div>
         </div>
     </div>
@@ -31,6 +33,8 @@
 <script>
 import $ from 'jquery';
 import systemConfig from "./config/systemConfig.vue";
+import usersListConfig from "./config/usersListConfig.vue";
+import rolesConfig from "./config/rolesConfig.vue";
 
 export default {
     name: "configComponent",
@@ -38,7 +42,7 @@ export default {
         return {
             configMenus: [
                 {
-                    id: 1,
+                    id: 0,
                     name: "Sistema",
                     subMenus: [
                         {
@@ -50,18 +54,25 @@ export default {
                 },
                 {
                     id: 1,
-                    name: "Sistema",
+                    name: "Usuarios",
                     subMenus: [
                         {
+                            id: 0,
+                            name: "Listar usuários",
+                            link: "usersListConfig"
+                        },
+                        {
                             id: 1,
-                            name: "Personalização",
-                            link: ""
+                            name: "Cargos",
+                            link: "rolesConfig"
                         }
                     ]
                 }
             ],
             showSections: {
-                systemConfig: false
+                systemConfig: false,
+                usersListConfig: false,
+                rolesConfig: false
             }
         }
     },
@@ -113,7 +124,9 @@ export default {
         this.closeAllMenusExceptFirst();
     },
     components: {
-        systemConfig
+        systemConfig,
+        usersListConfig,
+        rolesConfig
     }
 }
 </script>
