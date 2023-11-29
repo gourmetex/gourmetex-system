@@ -290,6 +290,8 @@ form .btn {
     height: 50px;
     object-fit: contain;
     border-radius: var(--radius-sm);
+    background: var(--white);
+    padding: var(--space-3);
 }
 
 input {
