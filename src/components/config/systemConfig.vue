@@ -3,12 +3,14 @@
         <div class="config-section">
             <label>Logomarca</label>
             <div class="image-container">
-                <form @submit.prevent="uploadPhoto(formData)" method="post" enctype="multipart/form-data"></form>
-                <img src="https://rabsystems-storage.s3.sa-east-1.amazonaws.com/mokaly-thumb.png">
-                <input type="file" name="photo" id="photo" @change.prevent="preSendPhoto($event)" title="Envie uma foto nos formatos PNG ou JPG">
-                <button type="submit" class="btn btn-primary" v-on:click="clickInInputFile()">Alterar</button>
+                <form @submit.prevent="uploadPhoto(formData)" method="post" enctype="multipart/form-data">
+                    <img :src="$root.company.logo_url">
+                    <input type="file" name="photo" id="photo" @change.prevent="preSendPhoto($event)" title="Envie uma foto nos formatos PNG ou JPG">
+                    <button type="button" class="btn btn-primary" v-on:click="clickInInputFile()">Alterar</button>
+                    <input type="submit" id="submit-form" style="display: none;">
+                </form>
             </div>
-            <div class="response error">{{ response }}</div>
+            <div class="response">{{ response }}</div>
         </div>
     </div>
 </template>
@@ -38,6 +40,7 @@ export default {
 
                 self.formData.set("company_image", file);
                 adress.readAsDataURL(file);
+                $("#submit-form").click();
             } else {
                 self.setResponse("Tipo de arquivo não suportado", "error");
             }
@@ -52,12 +55,16 @@ export default {
                 location.reload();
             })
             .catch(function (error) {
-                self.setResponse(error.response, "error");
+                self.setResponse(error.response.data, "error");
             })
         },
         clickInInputFile: function () {
             $("#photo").click();
         }
+    },
+    mounted: function () {
+        console.log(this.$root.user);
+        console.log(this.$root.company);
     }
 }
 </script>
@@ -90,4 +97,9 @@ input[type="file"] {
         border: 1px dashed var(--blue);
         padding: var(--space-3);
     }
+
+form {
+    display: flex;
+    align-items: center;
+}
 </style>

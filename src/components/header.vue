@@ -4,7 +4,7 @@
             <div class="left-content">
                 <span class="material-icons responsive-lateral-menu-toggle" v-on:click="toggleLateralMenu()">menu</span>
                 <div class="profile">
-                    <img :src="connectedUser.profile_photo" class="avatar-p" v-on:click="toggleProfileMenu()">
+                    <img :src="$root.user.url_foto_perfil" class="avatar-p" v-on:click="toggleProfileMenu()">
                     <div class="profile-menu-wrapper" v-on:click="toggleProfileMenu()"></div>
                     <div class="profile-menu-container">
                         <ul>
@@ -13,12 +13,12 @@
                         </ul>
                     </div>
                 </div>
-                <img :src="currentCompany.profile_photo" class="company-logo-p">
+                <img :src="$root.company.logo_url" class="company-logo-p">
             </div>
             <div class="right-content">
                 <div class="notifications-container">
                     <span class="material-icons">notifications</span>
-                    <span class="notifications-number">{{ connectedUser.status.notifications }}</span>
+                    <span class="notifications-number">{{ $root.user.status.notifications }}</span>
                 </div>
                 <span class="material-icons">help</span>
             </div>
@@ -37,6 +37,7 @@
     </div>
 </template>
 <script>
+import api from "../configs/api.js";
 import $ from 'jquery';
 import { globalMethods } from '@/js/globalMethods';
 
@@ -94,6 +95,15 @@ export default {
         }
     },
     methods: {
+        returnMenuOptions: function () {
+            let self = this;
+
+            api.get("/users/return_menus").then((response) => {
+                self.menuOptions = response.data.returnObj;
+            }).catch((error) => {
+                console.log(error);
+            })
+        },
         checkCurrentPathname: function (linkToCheck) {
             let pathname = window.location.pathname;
             if (pathname == linkToCheck) {
@@ -194,6 +204,8 @@ export default {
                 self.hideResponsiveButton();
             }
         })
+
+        console.log(this.$root.company)
     }
 }
 </script>

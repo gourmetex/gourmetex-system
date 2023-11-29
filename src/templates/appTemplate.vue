@@ -1,8 +1,13 @@
 <template>
     <div>
-        <headerComponent @toggleMenu="toggleContent($event)" />
-        <div class="inner-page-system">
-            <slot />
+        <div class="loading" v-if="loading">
+            Loading
+        </div>
+        <div class="app-frame" v-else>
+            <headerComponent @toggleMenu="toggleContent($event)" />
+            <div class="inner-page-system">
+                <slot />
+            </div>
         </div>
     </div>
 </template>
@@ -20,7 +25,7 @@ export default {
     },
     data() {
         return {
-            
+            loading: true
         }
     },
     methods: {
@@ -38,6 +43,15 @@ export default {
         contractContent: function () {
             let pageContent = $(".inner-page-system");
             pageContent.css("left", "260px").css("width", "calc(100vw - 260px)");
+        },
+        initSystemRequests: function () {
+            let self = this;
+
+            self.requireUser().then(() => {
+                self.requireCompany(self.$root.user.id_empresa).then(() => {
+                    self.loading = false;
+                })
+            })
         }
     },
     mounted: function () {
@@ -57,6 +71,8 @@ export default {
             let interval = setInterval(() => {
                 if (self.$root.jwtLoaded) {
                     clearInterval(interval);
+
+                    self.initSystemRequests();
                 }
             })
         }).catch(() => {})

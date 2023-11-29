@@ -287,7 +287,7 @@ form .btn {
 }
 
 .company-logo-p {
-    height: 60px;
+    height: 50px;
     object-fit: contain;
     border-radius: var(--radius-sm);
 }

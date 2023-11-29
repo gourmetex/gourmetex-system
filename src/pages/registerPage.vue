@@ -39,6 +39,18 @@ export default {
     name: "registerPage",
     mixins: [globalMethods],
     methods: {
+        returnUrlParams: function () {
+            let url = new URLSearchParams(window.location.search);
+            let token = url.get("token");
+            let email = decodeURI(url.get("email"));
+            
+            let obj = {
+                token: token ? token : "",
+                email: email != "null" && email != "" ? email : ""
+            }
+
+            return obj;
+        },
         register: function () {
             let self = this;
 
@@ -49,6 +61,8 @@ export default {
                 obj[item.name] = item.value;
                 return obj;
             }, {});
+
+            data["token"] = this.returnUrlParams().token;
 
             let password = $("#password").val();
             let repeatPassword = $("#repeat-password").val();
@@ -67,6 +81,9 @@ export default {
                 registerButton.removeAttr("disabled").removeClass("btn-loading");
             }
         }
+    },
+    mounted: function () {
+        $("#email").val(this.returnUrlParams().email);
     }
 }
 </script>

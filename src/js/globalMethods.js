@@ -114,6 +114,27 @@ export const globalMethods = {
                     })
                 }
             })
+        },
+        //Métodos retorno objetos globais
+        requireCompany: function (company_id) {
+            return new Promise((resolve) => {
+                let self = this;
+                
+                api.get("/companies/" + company_id + "/return_company").then((response) => {
+                    self.$root.company = response.data.returnObj;
+                    resolve();
+                })
+            })
+        },
+        requireUser: function () {
+            return new Promise((resolve) => {
+                let self = this;
+
+                api.get("/users/return_user").then((response) => {
+                    self.$root.user = response.data.returnObj;
+                    resolve();
+                })
+            })
         }
     },
     mounted: function() {
