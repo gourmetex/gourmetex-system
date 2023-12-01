@@ -6,7 +6,12 @@
                 <span class="material-icons" v-on:click="handleCloseModalContent()">close</span>
             </div>
             <div class="modal-body">
-                <slot />
+                <div v-if="edit">
+                    <slot />
+                </div>
+                <div v-else>
+                    <excludeModalContent :excludepath="excludepath" @excludedContent="handleCloseModalContent()"></excludeModalContent>
+                </div>
             </div>
             <div class="modal-footer">
                 <button class="btn" :class="chooseBtnClass()" id="modal-submit-button" v-if="modalbutton1 != ''" v-on:click="submitInformations()">{{ modalbutton1 }}</button>
@@ -18,13 +23,24 @@
 </template>
 <script>
 import $ from 'jquery';
+import excludeModalContent from "./excludeModalContent.vue";
 
 export default {
     name: "modalComponent",
-    props: ["modaltitle", "modalbutton1", "modalbutton2"],
+    props: ["modaltitle", "modalbutton1", "modalbutton2", "excludepath"],
+    data() {
+        return {
+            edit: true
+        }
+    },
     methods: {
+        checkModalType: function () {
+            if (this.modaltitle.indexOf("Excluir") != -1) {
+                this.edit = false;
+            }
+        },
         chooseBtnClass: function () {
-            if (this.modalButton1 == "Excluir") {
+            if (!this.edit) {
                 return "btn-red";
             }
             return "btn-primary";
@@ -51,6 +67,7 @@ export default {
     mounted: function () {
         setTimeout(() => {
             this.showModalContent();
+            this.checkModalType();
         }, 1)
 
         let submitButton = $("#submit-button");
@@ -65,6 +82,9 @@ export default {
                 modalButton.removeAttr("disabled").removeClass("btn-loading");
             }
         })
+    },
+    components: {
+        excludeModalContent
     }
 }
 </script>
@@ -124,6 +144,10 @@ export default {
     flex: 1;
     overflow-y: auto;
     overflow: hidden;
+}
+
+.modal-body > div {
+    height: 100%;
 }
 
 .modal-header {

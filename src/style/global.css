@@ -314,8 +314,21 @@ form .btn {
 
 
 /* CLASSES BUSCAS */
+
 .edit-buttons {
+    display: flex;
+    align-items: center;
+}
+
+.dynamic-edit-buttons {
     display: none;
+}
+
+#filter-form {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 .avatar-p {
@@ -336,7 +349,7 @@ form .btn {
     padding: var(--space-3);
 }
 
-input, textarea, select {
+input:not([type="checkbox"]):not([type="radio"]), textarea, select {
     border: 1px solid var(--gray-2);
     padding: var(--space-3);
     border-radius: var(--radius-sm);

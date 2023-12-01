@@ -138,12 +138,12 @@ export const globalMethods = {
         },
         //Metodos manipulação objetos
         showEditButtons: function () {
-            let editButtons = $(".edit-buttons");
+            let editButtons = $(".dynamic-edit-buttons");
 
             editButtons.show();
         },
         hideEditButtons: function () {
-            let editButtons = $(".edit-buttons");
+            let editButtons = $(".dynamic-edit-buttons");
 
             editButtons.hide();
         },
@@ -158,6 +158,12 @@ export const globalMethods = {
                 allRows.removeClass("row-selected");
                 row.addClass("row-selected");
             }
+        },
+        descelectRows: function () {
+            let allRows = $(".grid-row");
+
+            allRows.removeClass("row-selected");
+            this.hideEditButtons();
         }
     },
     mounted: function() {
