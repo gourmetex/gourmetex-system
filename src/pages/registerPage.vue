@@ -63,6 +63,9 @@ export default {
             }, {});
 
             data["token"] = this.returnUrlParams().token;
+            data["temporaryPassword"] = "";
+            data["salary"] = 0;
+            data["role"] = "";
 
             let password = $("#password").val();
             let repeatPassword = $("#repeat-password").val();

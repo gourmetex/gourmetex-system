@@ -24,8 +24,8 @@
                     <h2>Abra algume configuração</h2>
                 </div>
                 <systemConfig v-if="showSections.systemConfig"></systemConfig>
-                <usersListConfig v-if="showSections.usersListConfig"></usersListConfig>
                 <rolesConfig v-if="showSections.rolesConfig"></rolesConfig>
+                <usersConfig v-if="showSections.usersConfig"></usersConfig>
             </div>
         </div>
     </div>
@@ -33,8 +33,8 @@
 <script>
 import $ from 'jquery';
 import systemConfig from "./config/systemConfig.vue";
-import usersListConfig from "./config/usersListConfig.vue";
 import rolesConfig from "./config/rolesConfig.vue";
+import usersConfig from "./config/usersConfig.vue";
 
 export default {
     name: "configComponent",
@@ -59,7 +59,7 @@ export default {
                         {
                             id: 0,
                             name: "Listar usuários",
-                            link: "usersListConfig"
+                            link: "usersConfig"
                         },
                         {
                             id: 1,
@@ -71,8 +71,8 @@ export default {
             ],
             showSections: {
                 systemConfig: false,
-                usersListConfig: false,
-                rolesConfig: false
+                rolesConfig: false,
+                usersConfig: false
             }
         }
     },
@@ -125,8 +125,8 @@ export default {
     },
     components: {
         systemConfig,
-        usersListConfig,
-        rolesConfig
+        rolesConfig,
+        usersConfig
     }
 }
 </script>

@@ -7,15 +7,23 @@
             <h2 class="font-bold">Tem certeza que deseja excluir?</h2>
             <h3>Essa ação é irreversível</h3>
         </div>
+        <p class="response">{{ response }}</p>
         <input type="submit" id="submit-button" v-on:click="deleteItem()" style="display: none;">
     </div>
 </template>
 <script>
 import api from "../configs/api";
+import { globalMethods } from "@/js/globalMethods";
 
 export default {
     name: "excludeModalContent",
+    mixins: [globalMethods],
     props: ["excludepath"],
+    data() {
+        return {
+            response: ""
+        }
+    },
     methods: {
         deleteItem: function () {
             let self = this;
@@ -23,7 +31,11 @@ export default {
             api.delete(self.excludepath).then(() => {
                 self.$emit("excludedContent", true);
             }).catch((error) => {
-                console.log(error);
+                self.setResponse(error.response.data, "error");
+            }).then(() => {
+                setTimeout(() => {
+                    self.$emit("excludedContent", true);
+                }, 5000)
             })
         }
     }
