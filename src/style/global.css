@@ -218,6 +218,25 @@ a, a:hover {
     margin-left: var(--space-3);
 }
 
+#register-form, #login-form {
+    border: 1px solid var(--gray-2);
+    padding: var(--space-6);
+    border-radius: var(--radius-md);
+    box-shadow: var(--boxshadow-default);
+    min-width: 200px;
+    width: 90vw;
+    max-width: 500px;
+    height: fit-content;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+}
+
+    #register-form h2, #login-form h2 {
+        margin-bottom: var(--space-3);
+        text-align: center;
+    }
+
 form .btn {
     margin: 5px 0;
 }

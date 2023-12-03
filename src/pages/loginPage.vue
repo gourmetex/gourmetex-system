@@ -84,29 +84,10 @@ export default {
     bottom: 10vh;
 }
 
-form, .login-container {
+.login-container {
     display: flex;
     flex-direction: column;
 }
-
-form {
-    border: 1px solid var(--gray-2);
-    padding: var(--space-6);
-    border-radius: var(--radius-md);
-    box-shadow: var(--boxshadow-default);
-    min-width: 200px;
-    width: 90vw;
-    max-width: 500px;
-    min-height: fit-content;
-    height: 90vh;
-    max-height: 370px;
-    justify-content: center;
-}
-
-    form h2 {
-        margin-bottom: var(--space-3);
-        text-align: center;
-    }
 
 .complement {
     margin-top: var(--space-3);
