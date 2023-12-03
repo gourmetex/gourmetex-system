@@ -204,8 +204,6 @@ export default {
                 self.hideResponsiveButton();
             }
         })
-
-        console.log(this.$root.company)
     }
 }
 </script>

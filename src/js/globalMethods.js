@@ -180,7 +180,6 @@ export const globalMethods = {
         inputMoneyCheck: function (event) {
             let target = $(event.target);
             const formattedValue = this.formatCurrency(target.val());
-            console.log(formattedValue)
             target.val(formattedValue);
         }
     },

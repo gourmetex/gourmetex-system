@@ -110,7 +110,6 @@ export default {
     },
     mounted: function () {
         this.returnUser();
-        console.log(this.userid)
     }
 }
 </script>

@@ -61,10 +61,6 @@ export default {
         clickInInputFile: function () {
             $("#photo").click();
         }
-    },
-    mounted: function () {
-        console.log(this.$root.user);
-        console.log(this.$root.company);
     }
 }
 </script>
