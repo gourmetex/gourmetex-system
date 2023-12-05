@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="loading" v-if="loading">
-            Loading
+            <lottie-player id="loading-system"  background="transparent" speed="1" loop autoplay></lottie-player>
         </div>
         <div class="app-frame" v-else>
             <headerComponent @toggleMenu="toggleContent($event)" />
@@ -16,6 +16,7 @@
 import headerComponent from '../components/header.vue';
 import { globalMethods } from '../js/globalMethods';
 import $ from 'jquery';
+import loadingJson from "../assets/animations/loading.json";
 
 export default {
     name: "appTemplate",
@@ -67,6 +68,13 @@ export default {
             }
         })
 
+        const player = document.querySelector("lottie-player");
+        player.addEventListener("rendered", () => {
+            player.load(
+                loadingJson
+            );
+        });
+
         this.checkIfUserIsAuthenticated().then(() => {
             let interval = setInterval(() => {
                 if (self.$root.jwtLoaded) {
@@ -90,6 +98,20 @@ export default {
     padding: var(--space-6);
     transition: all 0.4s;
 }
+
+.loading {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .loading lottie-player {
+        width: 90vw;
+        max-width: 420px;
+        margin-top: -50vh;
+    }
 
 @media (max-width: 768px) {
     .inner-page-system {
