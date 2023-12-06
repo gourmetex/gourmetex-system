@@ -73,7 +73,7 @@ export default {
             if (password == repeatPassword) {
                 api.post("/users/register", data).then((res) => {
                     self.setResponse(res.data.message, "success");
-                    self.$router.push("/login");
+                    self.logoutUser();
                 }).catch((error) => {
                     self.setResponse(error.response.data, "error");
                 }).then(() => {
