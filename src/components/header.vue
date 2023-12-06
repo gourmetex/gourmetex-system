@@ -25,10 +25,10 @@
         </header>
         <div class="lateral-menu">
             <ul>
-                <li v-for="(item, index) in menuOptions" :key="index" class="menu-item" v-on:click="selectThisItem('menu-' + item.icon)" :id="'menu-' + item.icon" :class="checkCurrentPathname(item.link) ? 'li-active' : ''">
+                <li v-for="(item, index) in menuOptions" :key="index" class="menu-item" v-on:click="selectThisItem('menu-' + item.icone)" :id="'menu-' + item.icone" :class="checkCurrentPathname(item.link) ? 'li-active' : ''">
                     <router-link :to="item.link">
-                        <span class="material-icons">{{ item.icon }}</span>
-                        <h3>{{ item.name }}</h3>
+                        <span class="material-icons">{{ item.icone }}</span>
+                        <h3>{{ item.nome }}</h3>
                     </router-link>
                 </li> 
             </ul>
@@ -46,51 +46,7 @@ export default {
     mixins: [globalMethods],
     data() {
         return {
-            menuOptions: [
-                {
-                    id: 0,
-                    name: "Início",
-                    icon: "home",
-                    link: "/home"
-                },
-                {
-                    id: 1,
-                    name: "Menu digital",
-                    icon: "menu_book",
-                    link: "/home/digital-menu"
-                },
-                {
-                    id: 2,
-                    name: "Pratos",
-                    icon: "dinner_dining",
-                    link: "/home/dishes"
-                },
-                {
-                    id: 3,
-                    name: "Admin",
-                    icon: "admin_panel_settings",
-                    link: "/home/admin"
-                },
-                {
-                    id: 4,
-                    name: "Configurações",
-                    icon: "settings",
-                    link: "/home/config"
-                }
-            ],
-            connectedUser: {
-                id: 1,
-                name: "João Marques de Carvalho Junior",
-                profile_photo: "https://m.media-amazon.com/images/I/61Sz-RayqyL._AC_UF1000,1000_QL80_.jpg",
-                status: {
-                    notifications: 5
-                }
-            },
-            currentCompany: {
-                id: 1,
-                profile_photo: "https://gourmetech-test-storage.s3.sa-east-1.amazonaws.com/gourmetech-erp-para-restaurantes-branco.png",
-                name: "Barraca do zé"
-            },
+            menuOptions: [],
             menuMovement: false
         }
     },
@@ -204,6 +160,8 @@ export default {
                 self.hideResponsiveButton();
             }
         })
+
+        this.returnMenuOptions();
     }
 }
 </script>
