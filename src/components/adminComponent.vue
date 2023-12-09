@@ -2,7 +2,7 @@
     <div class="admin">
         <h1>Admin</h1>
         <div class="admin-container">
-            <ul class="admin-options-ul">
+            <ul class="options-ul">
                 <li v-for="(item, index) in adminOptions" v-bind:key="index" v-on:click="selectAdminOption(item.path)" :id="'admin-' + item.path" class="admin-option">
                     <h3>{{ item.name }}</h3>
                 </li>
@@ -68,27 +68,5 @@ export default {
 .select-some-option {
     text-align: center;
 }
-
-.admin-options-ul {
-    list-style-type: none;
-    margin: var(--space-4) 0;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    border-top: 1px solid var(--gray-3);
-    border-bottom: 1px solid var(--gray-3);
-}
-
-    .admin-options-ul li {
-        padding: var(--space-3) var(--space-5);
-        border-radius: var(--radius-md);
-        cursor: pointer;
-        width: fit-content;
-        margin: var(--space-2);
-    }
-
-        .admin-options-ul li:hover, .selected {
-            background: var(--gray-3);
-        }
 
 </style>
