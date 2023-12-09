@@ -25,6 +25,7 @@
                 <systemConfig v-if="showSections.systemConfig"></systemConfig>
                 <rolesConfig v-if="showSections.rolesConfig"></rolesConfig>
                 <usersConfig v-if="showSections.usersConfig"></usersConfig>
+                <ingredientsConfig v-if="showSections.ingredientsConfig"></ingredientsConfig>
             </div>
         </div>
     </div>
@@ -34,6 +35,7 @@ import $ from 'jquery';
 import systemConfig from "./config/systemConfig.vue";
 import rolesConfig from "./config/rolesConfig.vue";
 import usersConfig from "./config/usersConfig.vue";
+import ingredientsConfig from "./config/ingredientsConfig.vue";
 
 export default {
     name: "configComponent",
@@ -42,12 +44,12 @@ export default {
             configMenus: [
                 {
                     id: 0,
-                    name: "Sistema",
+                    name: "Tipos de ingredientes",
                     subMenus: [
                         {
-                            id: 1,
-                            name: "Personalização",
-                            link: "systemConfig"
+                            id: 0,
+                            name: "Listar tipos",
+                            link: "ingredientsConfig"
                         }
                     ]
                 },
@@ -66,12 +68,24 @@ export default {
                             link: "rolesConfig"
                         }
                     ]
+                },
+                {
+                    id: 2,
+                    name: "Sistema",
+                    subMenus: [
+                        {
+                            id: 1,
+                            name: "Personalização",
+                            link: "systemConfig"
+                        }
+                    ]
                 }
             ],
             showSections: {
                 systemConfig: false,
                 rolesConfig: false,
-                usersConfig: false
+                usersConfig: false,
+                ingredientsConfig: false
             }
         }
     },
@@ -127,7 +141,8 @@ export default {
     components: {
         systemConfig,
         rolesConfig,
-        usersConfig
+        usersConfig,
+        ingredientsConfig
     }
 }
 </script>
