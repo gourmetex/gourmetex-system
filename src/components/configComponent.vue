@@ -74,7 +74,7 @@ export default {
                     name: "Sistema",
                     subMenus: [
                         {
-                            id: 1,
+                            id: 0,
                             name: "Personalização",
                             link: "systemConfig"
                         }
@@ -118,16 +118,7 @@ export default {
 
             this.resetConfigOptions();
 
-            let subMenu = "sub-menu-";
-
-            switch (path) {
-                case 0:
-                    subMenu += path;
-                    break;
-                case 1:
-                    subMenu += path;
-                    break;
-            }
+            let subMenu = "sub-menu-" + path;
 
             $("#" + subMenu).show();
         },
