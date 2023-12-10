@@ -1,6 +1,8 @@
 <template>
     <div class="custom-grid-container">
-        <div class="custom-grid">
+        <div class="loading" v-if="loading">
+            <lottie-player id="loading" background="transparent" speed="1" loop autoplay></lottie-player></div>
+        <div class="custom-grid" v-if="!loading">
             <div class="grid-header">
                 <div class="grid-header-cell" v-for="item in gridoptions" :key="item">
                     <h3 class="font-bold">{{ item }}</h3>
@@ -19,10 +21,21 @@
 </template>
 <script>
 import badge from './badge.vue';
+import loadingJson from "../assets/animations/loading-component.json";
 
 export default {
     name: "gridView",
     props: ["gridoptions", "griddata"],
+    data() {
+        return {
+            loading: true
+        }  
+    },
+    watch: {
+        griddata: function () {
+            this.loading = false;
+        }
+    },
     methods: {
         emitClick: function (data, rowKey) {
             if (data[2] != undefined) {
@@ -32,12 +45,26 @@ export default {
             }
         }
     },
+    mounted: function () {
+        const player = document.querySelector("lottie-player");
+        player.addEventListener("rendered", () => {
+            player.load(
+                loadingJson
+            );
+        });
+    },
     components: {
         badge
     }
 }
 </script>
 <style scoped>
+
+#loading {
+    width: 170px;
+    margin: auto;
+}
+
 .custom-grid-container {
     width: 100%;
     height: fit-content;
