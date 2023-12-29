@@ -41,7 +41,7 @@ export default {
     methods: {
         selectModal: function (event) {
             switch (event[2]) {
-                case "companie_edit":
+                case "company_edit":
                     this.editCompany(event);
                     break;
             }

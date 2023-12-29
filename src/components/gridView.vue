@@ -11,7 +11,7 @@
             <div class="grid-body">
                 <div class="grid-row" v-for="(row, rowKey) in griddata" :key="rowKey" :id="'grid-row-' + rowKey">
                     <div class="grid-cell" v-for="(col, colKey) in row" :key="colKey">
-                        <h3 v-if="col[0] == 'text'" v-on:click="emitClick(col, rowKey)" :class="col[2] != undefined ? 'clicable' : ''">{{ col[1] }}</h3>
+                        <h3 v-if="col[0] == 'text'" v-on:click="emitClick(col, rowKey)" :class="col[2] != '' ? 'clicable' : ''">{{ col[1] }}</h3>
                         <badge v-if="col[0] == 'badge'" :content="col[1]" :backcolor="col[2]" :forecolor="col[3]"></badge>
                     </div>
                 </div>
@@ -38,7 +38,7 @@ export default {
     },
     methods: {
         emitClick: function (data, rowKey) {
-            if (data[2] != undefined) {
+            if (data[2] != '') {
                 let returnData = data;
                 returnData.push(rowKey);
                 this.$emit("dataclick", returnData);

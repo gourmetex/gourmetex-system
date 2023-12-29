@@ -13,7 +13,7 @@
                 <label for="role">Cargo</label>
                 <select name="role" id="role" v-model="user.id_cargo" required>
                     <option value="">Escolha uma opção</option>
-                    <option :value="role.id[1]" v-for="(role, index) in companyroles" :key="index">{{ role.name[1] }}</option>
+                    <option :value="role.id[1]" v-for="(role, index) in companyroles" :key="index">{{ role.nome[1] }}</option>
                 </select>
             </div>
             <div class="form-group">

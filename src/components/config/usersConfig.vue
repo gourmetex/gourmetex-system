@@ -14,7 +14,7 @@
                     <label for="role">Perfil</label>
                     <select id="role" name="id_cargo">
                         <option value="">* Qualquer</option>
-                        <option :value="role.id[1]" v-for="(role, index) in roles" :key="index">{{ role.name[1] }}</option>
+                        <option :value="role.id[1]" v-for="(role, index) in roles" :key="index">{{ role.nome[1] }}</option>
                     </select>
                 </div>
                 <button type="submit" class="btn btn-primary">Buscar</button>
