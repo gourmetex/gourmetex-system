@@ -137,6 +137,24 @@ export const globalMethods = {
             })
         },
         //Metodos manipulação objetos
+        selectRow: function (event) {
+            switch (event[2]) {
+                case "select_row":
+                    this.showEditButtons(event);
+                    this.editId = event[1];
+                    this.selectGridRow(event[3]);
+                    break;
+            }
+        },
+        selectRowWithLargeButtons: function (event) {
+            switch (event[2]) {
+                case "select_row":
+                    /*this.showEditButtons(event);
+                    this.editId = event[1];
+                    this.selectGridRow(event[3])*/
+                    break;
+            }
+        },
         showEditButtons: function () {
             let editButtons = $(".dynamic-edit-buttons");
 

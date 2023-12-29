@@ -84,6 +84,7 @@
     --space-20: 80px;
 
     /* FONTSIZE */
+    --fontsize-xl: 46px;
     --fontsize-lg: 34px;
     --fontsize-md: 24px;
     --fontsize-sm: 16px;
@@ -251,6 +252,41 @@ form .btn {
     }
 }
 
+.btn-big {
+    width: 31%;
+    height: 20vh;
+    min-height: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border: none;
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    margin: 0.7rem;
+    font-size: var(--fontsize-md);
+}
+
+    .btn-big span {
+        font-size: var(--fontsize-xl);
+        display: inline-block;
+        margin-top: 1rem;
+    }
+
+    .btn-big:first-child {
+        margin-left: 0;
+    }
+
+    .btn-big:last-child {
+        margin-right: 0;
+    }
+
+@media (max-width: 960px) {
+    .btn-big {
+        width: 100%;
+    }
+}
+
 .btn-primary {
     background: var(--green);
     color: var(--white);
@@ -290,6 +326,25 @@ form .btn {
         outline: none !important;
         border: 1px solid var(--gray-3);
         background: var(--gray-high);
+        cursor: not-allowed;
+    }
+
+.btn-green {
+    background: var(--red);
+    color: var(--white);
+}
+
+    .btn-green:hover {
+        background: var(--red-low);
+    }
+
+    .btn-green:focus, .btn-green:active {
+        outline: 2px solid var(--red-high-2);
+    }
+
+    .btn-green:disabled {
+        outline: none !important;
+        background: var(--red-high);
         cursor: not-allowed;
     }
 
@@ -400,6 +455,13 @@ label {
     }
 
 /* FILTERS */
+.filter-container-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
 .filters {
     display: flex;
     align-items: center;

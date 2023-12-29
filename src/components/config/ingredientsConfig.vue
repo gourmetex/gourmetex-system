@@ -81,7 +81,7 @@ export default {
                 case "select_row":
                     this.showEditButtons(event);
                     this.editId = event[1];
-                    this.selectGridRow(event[3])
+                    this.selectGridRow(event[3]);
                     break;
             }
         },
