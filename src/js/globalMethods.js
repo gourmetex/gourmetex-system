@@ -183,6 +183,12 @@ export const globalMethods = {
             allRows.removeClass("row-selected");
             this.hideEditButtons();
         },
+        inputMoneyCheck: function (event) {
+            let target = $(event.target);
+            const formattedValue = this.formatCurrency(target.val());
+            target.val(formattedValue);
+        },
+        //Métodos de manipulação de valores de inputs
         formatCurrency: function (value) {
             const numeroLimpo = value.replace(/[^\d,]/g, ''); // Remove caracteres não numéricos, exceto a vírgula
             const partes = numeroLimpo.split(',');
@@ -195,10 +201,17 @@ export const globalMethods = {
                 return `R$ ${partes[0].replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')}`;
             }
         },
-        inputMoneyCheck: function (event) {
-            let target = $(event.target);
-            const formattedValue = this.formatCurrency(target.val());
-            target.val(formattedValue);
+        formatDecimalValues: function (value) {
+            const numeroLimpo = value.replace(/[^\d,]/g, ''); // Remove caracteres não numéricos, exceto a vírgula
+            const partes = numeroLimpo.split(',');
+
+            if (partes.length > 1) {
+                // Se houver parte decimal, formata separadamente
+                return `${partes[0].replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')},${partes[1].slice(0, 2)}`;
+            } else {
+                // Se não houver parte decimal, formata apenas a parte inteira
+                return `${partes[0].replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')}`;
+            }
         }
     },
     mounted: function() {

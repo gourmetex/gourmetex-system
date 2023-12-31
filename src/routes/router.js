@@ -11,7 +11,7 @@ import dishesComponent from '../components/dishesComponent.vue';
 import digitalMenuComponent from '../components/digitalMenuComponent.vue';
 import homeComponent from '../components/homeComponent.vue';
 import configComponent from "../components/configComponent.vue";
-import stockComponent from "../components/stockComponent.vue";
+import stockComponent from "../components/modules/stock/stockComponent.vue";
 
 const routes = [
     {
