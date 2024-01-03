@@ -2,7 +2,7 @@
     <div class="custom-grid-container">
         <div class="loading" v-if="loading">
             <lottie-player id="loading" background="transparent" speed="1" loop autoplay></lottie-player></div>
-        <div class="custom-grid" v-if="!loading">
+        <div class="custom-grid" v-if="!loading" :class="gridoptions.length > 2 ? 'large-grid' : ''">
             <div class="grid-header">
                 <div class="grid-header-cell" v-for="item in gridoptions" :key="item">
                     <h3 class="font-bold">{{ item }}</h3>
@@ -78,8 +78,11 @@ export default {
 
 .custom-grid {
     width: 100%;
-    min-width: var(--tablet);
     background: var(--white);
+}
+
+.custom-grid.large-grid {
+    min-width: var(--tablet);
 }
 
 .grid-header {

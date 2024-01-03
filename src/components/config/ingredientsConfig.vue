@@ -79,7 +79,7 @@ export default {
         selectRow: function (event) {
             switch (event[2]) {
                 case "select_row":
-                    this.showEditButtons(event);
+                    this.showEditButtons();
                     this.editId = event[1];
                     this.selectGridRow(event[3]);
                     break;

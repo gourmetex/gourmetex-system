@@ -45,6 +45,22 @@ export const globalMethods = {
             let modal = $(".modal-container");
             modal.css("opacity", 0).css("transform", "translateY(-20vh)");
         },
+        openSmallModal: function () {
+            let smallModal = $(".small-modal");
+
+            smallModal.show();
+            setTimeout(() => {
+                smallModal.css("transform", "translateY(0)").css("opacity", 1);
+            }, 1)
+        },
+        closeSmallModal: function () {
+            let smallModal = $(".small-modal");
+
+            smallModal.css("transform", "translateY(-10vh)").css("opacity", 0);
+            setTimeout(() => {
+                smallModal.hide();
+            }, 400)
+        },
         //Métodos autenticação
         logoutUser: function () {
             let self = this;
@@ -140,7 +156,7 @@ export const globalMethods = {
         selectRow: function (event) {
             switch (event[2]) {
                 case "select_row":
-                    this.showEditButtons(event);
+                    this.showEditButtons();
                     this.editId = event[1];
                     this.selectGridRow(event[3]);
                     break;

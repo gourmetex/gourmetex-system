@@ -193,6 +193,10 @@ a, a:hover {
     min-width: 130px;
 }
 
+.btn.w-100 {
+    width: 100%;
+}
+
 .rounded-btn {
     padding: var(--space-3);
     width: 50px;
@@ -386,6 +390,30 @@ form .btn {
         cursor: not-allowed;
     }
 
+/* CLASSES MODAIS */
+
+.small-modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--white);
+    width: fit-content;
+    height: fit-content;
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--gray);
+    box-shadow: var(--boxshadow-default);
+    transition: transform 0.4s, opacity 0.4s;
+    opacity: 0;
+    display: none;
+    transform: translateY(-10vh);
+}
 
 /* CLASSES BUSCAS */
 
@@ -453,6 +481,22 @@ label {
     .radio-group input {
         margin-right: var(--space-3);
     }
+
+.form-horizontal {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+@media (max-width: 680px) {
+    .form-horizontal {
+        flex-direction: column;
+    }
+
+    .form-horizontal .form-group {
+        width: 100%;
+    }
+}
 
 /* FILTERS */
 .filter-container-header {

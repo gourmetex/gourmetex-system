@@ -7,10 +7,10 @@ import indexPage from '../pages/indexPage.vue';
 import loginPage from '../pages/loginPage.vue';
 import registerPage from '../pages/registerPage.vue';
 import adminComponent from '../components/adminComponent.vue';
-import dishesComponent from '../components/dishesComponent.vue';
+import dishesComponent from '../components/modules/dishes/dishesComponent.vue';
 import digitalMenuComponent from '../components/digitalMenuComponent.vue';
 import homeComponent from '../components/homeComponent.vue';
-import configComponent from "../components/configComponent.vue";
+import configComponent from "../components/configComponent.vue"
 import stockComponent from "../components/modules/stock/stockComponent.vue";
 
 const routes = [
