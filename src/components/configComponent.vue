@@ -26,6 +26,7 @@
                 <rolesConfig v-if="showSections.rolesConfig"></rolesConfig>
                 <usersConfig v-if="showSections.usersConfig"></usersConfig>
                 <ingredientsConfig v-if="showSections.ingredientsConfig"></ingredientsConfig>
+                <dishesCategories v-if="showSections.dishesCategories"></dishesCategories>
             </div>
         </div>
     </div>
@@ -36,6 +37,7 @@ import systemConfig from "./config/systemConfig.vue";
 import rolesConfig from "./config/rolesConfig.vue";
 import usersConfig from "./config/usersConfig.vue";
 import ingredientsConfig from "./config/ingredientsConfig.vue";
+import dishesCategories from "./config/dishesCategories.vue";
 
 export default {
     name: "configComponent",
@@ -44,6 +46,17 @@ export default {
             configMenus: [
                 {
                     id: 0,
+                    name: "Categorias de pratos",
+                    subMenus: [
+                        {
+                            id: 0,
+                            name: "Listar categorias",
+                            link: "dishesCategories"
+                        }
+                    ]
+                },
+                {
+                    id: 1,
                     name: "Tipos de ingredientes",
                     subMenus: [
                         {
@@ -54,7 +67,7 @@ export default {
                     ]
                 },
                 {
-                    id: 1,
+                    id: 2,
                     name: "Usuários",
                     subMenus: [
                         {
@@ -70,7 +83,7 @@ export default {
                     ]
                 },
                 {
-                    id: 2,
+                    id: 3,
                     name: "Sistema",
                     subMenus: [
                         {
@@ -85,7 +98,8 @@ export default {
                 systemConfig: false,
                 rolesConfig: false,
                 usersConfig: false,
-                ingredientsConfig: false
+                ingredientsConfig: false,
+                dishesCategories: false
             }
         }
     },
@@ -133,7 +147,8 @@ export default {
         systemConfig,
         rolesConfig,
         usersConfig,
-        ingredientsConfig
+        ingredientsConfig,
+        dishesCategories
     }
 }
 </script>

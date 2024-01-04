@@ -9,7 +9,7 @@
                 <label for="email">Email do usuário</label>
                 <input type="email" name="email" id="email" v-model="user.email" required>
             </div>
-            <div class="radio-group">
+            <div class="form-group">
                 <label for="role">Cargo</label>
                 <select name="role" id="role" v-model="user.id_cargo" required>
                     <option value="">Escolha uma opção</option>
