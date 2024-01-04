@@ -24,7 +24,7 @@
             </div>
         </div>
         <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :excludepath="'/dishes/ingredients/' + editId" :modalbutton2="modalButton2" @closeModal="closeModalFunction(); returnIngredientsCategories();">
-            <editDishesCategoriesModalContent v-if="showEditDishesCategoriesModalContent" :ingredientid="editId" @savedContent="closeModalFunction(); returnIngredientsCategories();"></editDishesCategoriesModalContent>
+            <editDishesCategoriesModalContent v-if="showEditDishesCategoriesModalContent" :categoryid="editId" @savedContent="closeModalFunction(); returnIngredientsCategories();"></editDishesCategoriesModalContent>
         </modal>
     </div>
 </template>

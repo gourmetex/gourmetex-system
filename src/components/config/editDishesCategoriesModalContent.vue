@@ -7,16 +7,17 @@
             </div>
             <div class="form-group">
                 <label for="name">Cor da categoria</label>
-                <colorSelect :colors="categoriesColors" @select="selectedColor = $event" :selectedcolor="selectedColor" required="true" />
+                <colorSelect :colors="categoriesColors" @select="category.cor = $event.id" :selectedcolor="category.cor" />
             </div>
             <div class="radio-group">
                 <input type="checkbox" name="promocional" id="promocional" v-model="category.promocional">
                 <label for="promocional">Promocional?</label>
             </div>
-            <div class="form-group">
-                <label for="porcentagem_desconto">Nome da categoria</label>
+            <div class="form-group" v-if="category.promocional">
+                <label for="porcentagem_desconto">Porcentagem do desconto</label>
                 <input type="text" name="porcentagem_desconto" id="porcentagem_desconto" v-model="category.porcentagem_desconto" @keypress="formatPercentageValues()">
             </div>
+            <p class="response">{{ response }}</p>
             <input type="submit" id="submit-button" style="display: none;">
         </form>
     </div>
@@ -30,24 +31,37 @@ import { globalMethods } from "@/js/globalMethods";
 export default {
     name: "editIngredientModalContent",
     mixins: [globalMethods],
-    props: ["ingredientid"],
+    props: ["categoryid"],
     data() {
         return {
             category: {
-                promocional: 0,
+                promocional: null,
                 porcentagem_desconto: 0,
+                cor: null,
                 nome: ""
             },
             savingCategory: false,
-            categoriesColors: [],
-            selectedColor: null
+            categoriesColors: []
+        }
+    },
+    watch: {
+        ["category.cor"]: function () {
+            console.log(this.category)
         }
     },
     methods: {
         saveCategory: function () {
             let self = this;
 
+            this.resetResponse();
+
             if (self.savingCategory) return;
+
+            if (this.category.cor == null) {
+                this.setResponse("Cor não pode ser vazia", "error");
+                $("#modal-submit-button").removeAttr("disabled").removeClass("btn-loading");
+                return;
+            }
 
             self.savingCategory = true;
 
@@ -56,20 +70,22 @@ export default {
                 return obj;
             }, {});
 
-            data["id"] = self.ingredientid;
+            data["id"] = self.categoryid;
+            data["cor"] = this.category.cor;
 
-            let path = "create_ingredient";
+            console.log(data)
+            let path = "create_dish_category";
 
-            if (self.ingredient.id != 0) {
-                path = "edit_ingredient";
+            if (self.categoryid != 0) {
+                path = "edit_dish_category";
             }
 
-            api.post("/dishes/ingredients/" + path, data).then(() => {
+            api.post("/dishes/" + path, data).then(() => {
                 self.$emit("savedContent", true);
             }).catch((error) => {
                 console.log(error);
             }).then(() => {
-                self.savingIngredient = false;
+                self.savingCategory = false;
             })
         },
         returnDishesCategoriesColors: function () {
