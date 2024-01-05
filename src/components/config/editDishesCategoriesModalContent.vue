@@ -2,20 +2,20 @@
     <div class="edit-dishe-caregories-modal-content">
         <form class="edit-category" id="informations-form" @submit.prevent="saveCategory()">
             <div class="form-group">
-                <label for="name">Nome da categoria</label>
-                <input type="text" name="name" id="name" v-model="category.nome" required>
+                <label for="nome">Nome da categoria</label>
+                <input type="text" name="nome" id="nome" v-model="category.nome" required>
             </div>
             <div class="form-group">
                 <label for="name">Cor da categoria</label>
                 <colorSelect :colors="categoriesColors" @select="category.cor = $event.id" :selectedcolor="category.cor" />
             </div>
             <div class="radio-group">
-                <input type="checkbox" name="promocional" id="promocional" v-model="category.promocional">
+                <input type="checkbox" id="promocional" v-model="category.promocional">
                 <label for="promocional">Promocional?</label>
             </div>
             <div class="form-group" v-if="category.promocional">
-                <label for="porcentagem_desconto">Porcentagem do desconto</label>
-                <input type="text" name="porcentagem_desconto" id="porcentagem_desconto" v-model="category.porcentagem_desconto" @keypress="formatPercentageValues()">
+                <label for="porcentagem_desconto">Porcentagem do desconto (%)</label>
+                <input type="number" name="porcentagem_desconto" id="porcentagem_desconto" v-model="category.porcentagem_desconto" required>
             </div>
             <p class="response">{{ response }}</p>
             <input type="submit" id="submit-button" style="display: none;">
@@ -36,7 +36,7 @@ export default {
         return {
             category: {
                 promocional: null,
-                porcentagem_desconto: 0,
+                porcentagem_desconto: null,
                 cor: null,
                 nome: ""
             },
@@ -70,17 +70,20 @@ export default {
                 return obj;
             }, {});
 
-            data["id"] = self.categoryid;
-            data["cor"] = this.category.cor;
-
-            console.log(data)
-            let path = "create_dish_category";
-
-            if (self.categoryid != 0) {
-                path = "edit_dish_category";
+            if (this.category.promocional) {
+                data["promocional"] = true;
             }
 
-            api.post("/dishes/" + path, data).then(() => {
+            data["id"] = self.categoryid;
+            data["cor"] = self.category.cor;
+
+            let path = "create_dish_category";
+
+            if (self.categoryid != null) {
+                path = self.categoryid;
+            }
+
+            api.post("/dishes/categories/" + path, data).then(() => {
                 self.$emit("savedContent", true);
             }).catch((error) => {
                 console.log(error);
@@ -88,10 +91,21 @@ export default {
                 self.savingCategory = false;
             })
         },
+        returnDishCategory: function () {
+            let self = this;
+            
+            if (self.categoryid == 0 || self.categoryid == null) return;
+
+            api.get("/dishes/categories/" + self.categoryid).then((response) => {
+                self.category = response.data.returnObj;
+            }).catch((error) => {
+                console.log(error);
+            })
+        },
         returnDishesCategoriesColors: function () {
             let self = this;
             
-            api.get("/dishes/categories_colors").then((response) => {
+            api.get("/dishes/categories/categories_colors").then((response) => {
                 self.categoriesColors = response.data.returnObj;
             }).catch((error) => {
                 console.log(error);
@@ -100,6 +114,7 @@ export default {
     },
     mounted: function () {
         this.returnDishesCategoriesColors();
+        this.returnDishCategory();
     },
     components: {
         colorSelect

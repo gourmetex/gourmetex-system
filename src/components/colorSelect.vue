@@ -100,6 +100,7 @@ export default {
     min-height: 35px !important;
     position: relative;
     z-index: 3;
+    cursor: pointer;
 }
 
 .color-list-wrapper {

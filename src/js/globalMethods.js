@@ -228,12 +228,6 @@ export const globalMethods = {
                 // Se não houver parte decimal, formata apenas a parte inteira
                 return `${partes[0].replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')}`;
             }
-        },
-        formatPercentageValues: function (value) {
-            let numeroLimpo = value.replace(/[^0-9]/g, '');
-
-            numeroLimpo = numeroLimpo + " %";
-            return numeroLimpo;
         }
     },
     mounted: function() {

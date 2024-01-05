@@ -3,13 +3,13 @@
         <div class="filters">
             <form id="filter-form" @submit.prevent="search()">
                 <div class="filter-field">
-                    <label for="categoria">Nome da categoria</label>
-                    <input type="text" name="categoria" id="categoria" placeholder="Ex. Lanches">
+                    <label for="nome">Nome da categoria</label>
+                    <input type="text" name="nome" id="nome" placeholder="Ex. Lanches">
                 </div>
                 <button type="submit" class="btn btn-primary">Buscar</button>
             </form>
         </div>
-        <gridView :gridoptions="gridOptions" :griddata="dishesCategories" :selected="selectedRow" @dataclick="selectRow($event)"></gridView>
+        <gridView :gridoptions="gridOptions" :griddata="dishes_categories" :selected="selectedRow" @dataclick="selectRow($event)"></gridView>
         <div class="edit-buttons">
             <button type="button" class="rounded-btn btn-primary" v-on:click="createNewCategory()">
                 <span class="material-icons">add</span>
@@ -23,8 +23,8 @@
                 </button>
             </div>
         </div>
-        <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :excludepath="'/dishes/ingredients/' + editId" :modalbutton2="modalButton2" @closeModal="closeModalFunction(); returnIngredientsCategories();">
-            <editDishesCategoriesModalContent v-if="showEditDishesCategoriesModalContent" :categoryid="editId" @savedContent="closeModalFunction(); returnIngredientsCategories();"></editDishesCategoriesModalContent>
+        <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :excludepath="'/dishes/ingredients/' + editId" :modalbutton2="modalButton2" @closeModal="closeModalFunction(); returnDishesCategories();">
+            <editDishesCategoriesModalContent v-if="showEditDishesCategoriesModalContent" :categoryid="editId" @savedContent="closeModalFunction(); returnDishesCategories();"></editDishesCategoriesModalContent>
         </modal>
     </div>
 </template>
@@ -41,7 +41,7 @@ export default {
     mixins: [globalMethods],
     data() {
         return {
-            dishesCategories: [],
+            dishes_categories: [],
             gridOptions: [],
             selectedRow: null,
             editId: null,
@@ -57,7 +57,7 @@ export default {
                 return obj;
             }, {});
             this.filters = data;
-            this.returnAllIngredients();
+            this.returnDishesCategories();
         },
         deleteCategory: function () {
             this.showModalFunction("Excluir categoria", "Excluir", "Cancelar");
@@ -82,18 +82,23 @@ export default {
                     break;
             }
         },
-        returnIngredientsCategories: function () {
+        returnDishesCategories: function () {
             let self = this;
 
-            api.get("/dishes/ingredient_categories").then((response) => {
-                self.ingredients_categories = response.data.returnObj;
+            let data = {
+                filters: self.filters
+            }
+
+            api.post("/dishes/categories", data).then((response) => {
+                self.dishes_categories = response.data.returnObj.dishes_categories;
+                self.gridOptions = response.data.returnObj.labels;
             }).catch((error) => {
                 console.log(error);
             })
         }
     },
     mounted: function () {
-        this.returnIngredientsCategories();
+        this.returnDishesCategories();
     },
     components: {
         gridView,
