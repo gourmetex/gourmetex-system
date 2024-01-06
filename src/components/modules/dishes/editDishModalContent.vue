@@ -61,7 +61,7 @@ import $ from 'jquery';
 import gridView from "../../gridView.vue";
 
 export default {
-    name: "deleteIngredientQuantityModalContent",
+    name: "editDishModalContent",
     mixins: [globalMethods],
     props: ["dishid"],
     data() {

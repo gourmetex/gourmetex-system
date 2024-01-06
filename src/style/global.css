@@ -493,6 +493,10 @@ label {
     justify-content: space-between;
 }
 
+.inputs-50 .form-group {
+    width: 48%;
+}
+
 @media (max-width: 680px) {
     .form-horizontal {
         flex-direction: column;

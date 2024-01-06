@@ -12,6 +12,7 @@ import digitalMenuComponent from '../components/digitalMenuComponent.vue';
 import homeComponent from '../components/homeComponent.vue';
 import configComponent from "../components/configComponent.vue"
 import stockComponent from "../components/modules/stock/stockComponent.vue";
+import ordersComponent from "../components/modules/orders/ordersComponent.vue";
 
 const routes = [
     {
@@ -54,6 +55,10 @@ const routes = [
             {
                 path: "stock",
                 component: stockComponent
+            },
+            {
+                path: "orders",
+                component: ordersComponent
             }
         ]
     },
