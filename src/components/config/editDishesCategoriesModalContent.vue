@@ -44,11 +44,6 @@ export default {
             categoriesColors: []
         }
     },
-    watch: {
-        ["category.cor"]: function () {
-            console.log(this.category)
-        }
-    },
     methods: {
         saveCategory: function () {
             let self = this;

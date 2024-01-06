@@ -120,6 +120,7 @@ export default {
 
 .clicable {
     cursor: pointer;
+    text-decoration: underline;
 }
 
 @media (max-width: 768px) {

@@ -204,6 +204,21 @@ export const globalMethods = {
             const formattedValue = this.formatCurrency(target.val());
             target.val(formattedValue);
         },
+        disableActionsButtons: function (addButton = true, excludeButton = true, editButton = true) {
+            this.disabledButtons = [];
+            
+            if (addButton) {
+                this.disabledButtons.push(1);
+            }
+
+            if (excludeButton) {
+                this.disabledButtons.push(2);
+            }
+
+            if (editButton) {
+                this.disabledButtons.push(3);
+            }
+        },
         //Métodos de manipulação de valores de inputs
         formatCurrency: function (value) {
             const numeroLimpo = value.replace(/[^\d,]/g, ''); // Remove caracteres não numéricos, exceto a vírgula
@@ -241,7 +256,9 @@ export const globalMethods = {
             modalButton1: "",
             modalButton2: "",
             closeModal: false,
-            reloadGrid: false
+            reloadGrid: false,
+            editId: null,
+            disabledButtons: []
         }
     }
 }

@@ -141,6 +141,11 @@ p {
     margin-bottom: var(--space-6);
 }
 
+.response.big {
+    font-size: var(--fontsize-sm);
+    margin-top: var(--space-5);
+}
+
 .error {
     color: var(--red);
 }
@@ -482,7 +487,7 @@ label {
         margin-right: var(--space-3);
     }
 
-.form-horizontal {
+.form-horizontal, .form-group-horizontal {
     display: flex;
     align-items: center;
     justify-content: space-between;

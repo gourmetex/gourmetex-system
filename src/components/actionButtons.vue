@@ -1,15 +1,15 @@
 <template>
     <div class="action-buttons-component">
         <div class="buttons-container">
-            <button class="btn-big btn-primary" v-if="add_text" v-on:click="add()">
+            <button class="btn-big btn-primary" v-if="add_text" id="add-button-big" v-on:click="add()">
                 {{ add_text }}
                 <span class="material-icons">add</span>
             </button>
-            <button class="btn-big btn-red" v-if="exclude_text" v-on:click="exclude()">
+            <button class="btn-big btn-red" v-if="exclude_text" id="exclude-button-big" v-on:click="exclude()">
                 {{ exclude_text }}
                 <span class="material-icons">close</span>
             </button>
-            <button class="btn-big btn-yellow" v-if="edit_text" v-on:click="edit()">
+            <button class="btn-big btn-yellow" v-if="edit_text" id="edit-button-big" v-on:click="edit()">
                 {{ edit_text }}
                 <span class="material-icons">edit</span>
             </button>
@@ -17,10 +17,13 @@
     </div>
 </template>
 <script>
+import { globalMethods } from "@/js/globalMethods";
+import $ from 'jquery';
 
 export default {
     name: "actionButtonsComponent",
-    props: ["add_text", "exclude_text", "edit_text"],
+    mixins: [globalMethods],
+    props: ["add_text", "exclude_text", "edit_text", "disabledbuttons"],
     methods: {
         add: function () {
             this.$emit("add");
@@ -30,7 +33,34 @@ export default {
         },
         edit: function () {
             this.$emit("edit");
+        },
+        disableRequestedButtons: function () {
+            if (this.disabledbuttons.indexOf(1) != -1) {
+                $("#add-button-big").attr("disabled", "disabled");
+            } else {
+                $("#add-button-big").removeAttr("disabled");
+            }
+
+            if (this.disabledbuttons.indexOf(2) != -1) {
+                $("#exclude-button-big").attr("disabled", "disabled");
+            } else {
+                $("#exclude-button-big").removeAttr("disabled");
+            }
+
+            if (this.disabledbuttons.indexOf(3) != -1) {
+                $("#edit-button-big").attr("disabled", "disabled");
+            } else {
+                $("#edit-button-big").removeAttr("disabled");
+            }
         }
+    },
+    watch: {
+        disabledbuttons: function () {
+            this.disableRequestedButtons();
+        }
+    },
+    mounted: function () {
+        this.disableRequestedButtons();
     }
 }
 </script>

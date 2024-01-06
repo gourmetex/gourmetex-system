@@ -56,7 +56,6 @@ export default {
             roles: [],
             gridOptions: [],
             selectedRow: null,
-            editId: null,
             showEditRoleModalContent: false,
             filters: []
         }
@@ -83,15 +82,6 @@ export default {
         editRole: function () {
             this.showModalFunction("Editar cargo", "Salvar", "Cancelar");
             this.showEditRoleModalContent = true;
-        },
-        selectRow: function (event) {
-            switch (event[2]) {
-                case "select_row":
-                    this.showEditButtons();
-                    this.editId = event[1];
-                    this.selectGridRow(event[3])
-                    break;
-            }
         },
         returnAllRoles: function () {
             let self = this;

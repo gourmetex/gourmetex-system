@@ -44,7 +44,6 @@ export default {
             dishes_categories: [],
             gridOptions: [],
             selectedRow: null,
-            editId: null,
             showEditDishesCategoriesModalContent: false,
             filters: [],
             ingredients_categories: []
@@ -72,15 +71,6 @@ export default {
         editCategory: function () {
             this.showModalFunction("Editar categoria", "Salvar", "Cancelar");
             this.showEditDishesCategoriesModalContent = true;
-        },
-        selectRow: function (event) {
-            switch (event[2]) {
-                case "select_row":
-                    this.showEditButtons();
-                    this.editId = event[1];
-                    this.selectGridRow(event[3]);
-                    break;
-            }
         },
         returnDishesCategories: function () {
             let self = this;

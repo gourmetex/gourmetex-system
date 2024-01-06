@@ -76,15 +76,6 @@ export default {
             this.showModalFunction("Editar ingrediente", "Salvar", "Cancelar");
             this.showEditIngredientModalContent = true;
         },
-        selectRow: function (event) {
-            switch (event[2]) {
-                case "select_row":
-                    this.showEditButtons();
-                    this.editId = event[1];
-                    this.selectGridRow(event[3]);
-                    break;
-            }
-        },
         returnIngredientsCategories: function () {
             let self = this;
 
