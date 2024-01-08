@@ -17,7 +17,7 @@
             <h3>Itens do pedido</h3>
             <div class="order-dishes-inner">
                 <gridView :gridoptions="order.dishes.labels" :griddata="order.dishes.dishes" @dataclick="selectRow($event)"></gridView>
-                <div class="edit-buttons">
+                <div class="edit-buttons buttons-vertical">
                     <button type="button" class="rounded-btn btn-primary" v-on:click="addDish()">
                         <span class="material-icons">add</span>
                     </button>
@@ -31,8 +31,22 @@
         </div>
         <h2 class="order-total">{{ order.total }}</h2>
         <div class="small-modal">
-            <form class="add-dish" id="informations-form" @submit.prevent="submitAddIngredient()">
-                
+            <form class="add-dish" id="informations-form" @submit.prevent="submitAddDish()">
+                <div class="form-group">
+                    <label for="item">Item</label>
+                    <select name="item" id="item" required>
+                        <option value="">"Selecione um item"</option>
+                        <option :value="item.id[1]" v-for="(item, index) in dishes_list" :key="index">{{ item.nome[1] }}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="quantidade">Quantidade</label>
+                    <input type="number" name="quantidade" v-model="quantity" id="quantidade" required>
+                </div>
+                <div class="form-group">
+                    <label for="observacoes">Observações</label>
+                    <input type="text" name="observacoes" v-model="observations" id="observacoes">
+                </div>
                 <button type="submit" class="btn btn-primary w-100">Salvar</button>
             </form>
         </div>
@@ -63,17 +77,93 @@ export default {
                         "Valor do item"
                     ]
                 },
-                total: "R$ 25,52"
+                total: "R$ 0,00"
             },
-            order_dishes: []
+            order_dishes: [],
+            dishes_list: [],
+            selected_dish: [],
+            quantity: null,
+            order_total: null,
+            observations: ""
+        }
+    },
+    watch: {
+        order_total: function () {
+            this.order.total = this.formatCurrency(this.order_total);
         }
     },
     methods: {
         addDish: function () {
             this.openSmallModal();
+            this.descelectRows();
         },
         excludeDish: function () {
+            let self = this;
+            
+            let excludedDish = self.order.dishes.dishes.find(obj => obj.id[1] == self.editId);
+
+            self.order.dishes.dishes = self.order.dishes.dishes.filter(obj => obj.id[1] !== self.editId);
+            self.order_dishes = self.order_dishes.filter(obj => obj.id !== self.editId);
+            let item_value = (this.formatDecimalValues(excludedDish.preco[1]) * parseFloat(excludedDish.quantidade[1]));
+
+            this.order_total -= item_value;
+
             this.closeSmallModal();
+            this.descelectRows();
+        },
+        submitAddDish: function () {
+            this.selectThisDish();
+
+            let newDishGrid = {
+                id: this.selected_dish.id,
+                nome: this.selected_dish.nome,
+                quantidade: ["text", this.quantity, ""],
+                observacoes: ["text", this.observations, ""],
+                preco: this.selected_dish.preco
+            }
+
+            let newDish = {
+                id: this.selected_dish.id[1],
+                quantidade: this.quantity,
+                observacoes: this.observations
+            }
+
+            if (this.order.dishes.dishes.length == 0) {
+                this.order.dishes.dishes.push(newDishGrid);
+                this.order_dishes.push(newDish);
+            } else {
+                this.order.dishes.dishes.map(obj => {
+                    if (obj.id[1] == this.selected_dish.id[1]) {
+                        obj.quantidade[1] = (parseInt(obj.quantidade[1]) + parseInt(this.quantity)).toString();
+                    }
+                })
+
+                this.order.dishes.dishes.push({});
+                this.order.dishes.dishes.pop();
+
+                this.order_dishes.map(obj => {
+                    if (obj.id == this.selected_dish.id[1]) {
+                        obj.quantidade = this.quantity;
+                    }
+                })
+            }
+
+            let total_value = (this.formatDecimalValues(newDishGrid.preco[1]) * parseFloat(this.quantity));
+            this.order_total += total_value;
+            this.selected_dish = {};
+            this.quantity = null;
+
+            this.closeSmallModal();
+        },
+        selectThisDish: function () {
+            let value = $("#item").val();
+            let dish = this.dishes_list.find(obj => obj.id[1] == value);
+
+            if (dish != undefined && dish != null) {
+                this.selected_dish = dish;
+            } else {
+                this.selected_dish = {};
+            }
         },
         saveOrder: function () {
             let self = this;
@@ -92,11 +182,11 @@ export default {
                 return obj;
             }, {});
 
-            data["ingredientes"] = self.ingredients_list;
-            let path = "create_dish";
+            data["pratos"] = self.order_dishes;
+            let path = "new_order";
 
             if (self.orderid != null) {
-                path = "edit_dish/" + self.orderid;
+                path = "edit_order/" + self.orderid;
             }
             
             console.log(path)
@@ -110,6 +200,16 @@ export default {
                 self.savingOrder = false;
             })*/
         },
+        returnAllDishes: function () {
+            let self = this;
+
+            api.get("/dishes").then((response) => {
+                self.dishes_list = response.data.returnObj.dishes;
+                console.log(self.dishes_list)
+            }).catch((error) => {
+                console.log(error);
+            })
+        },
         returnOrder: function () {
             let self = this;
 
@@ -118,15 +218,16 @@ export default {
                 return;
             } 
 
-            api.get("/dishes/" + self.dishid).then((response) => {
-                self.dish = response.data.returnObj;
-                self.fillSubmitIngredients();
+            api.get("/orders/" + self.orderid).then((response) => {
+                self.order = response.data.returnObj;
+                self.order_total = self.formatDecimalValues(self.order.total);
             }).catch((error) => {
                 console.log(error);
             })
         }
     },
     mounted: function () {
+        this.returnAllDishes();
         this.returnOrder();        
     },
     components: {

@@ -11,7 +11,7 @@
             <gridView :gridoptions="gridOptions" :griddata="orders" @dataclick="selectRow($event)"></gridView>
         </div>
         <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :excludepath="'/dishes/' + editId" :modalbutton2="modalButton2" @closeModal="closeModalFunction(); returnOrders();">
-            <editOrderModalContent v-if="showEditOrderModalContent" :dishid="editId" @savedContent="closeModalFunction(); returnOrders();"></editOrderModalContent>
+            <editOrderModalContent v-if="showEditOrderModalContent" :orderid="editId" @savedContent="closeModalFunction(); returnOrders();"></editOrderModalContent>
         </modal>
     </div>
 </template>
@@ -28,7 +28,8 @@ export default {
     data() {
         return {
             orders: [],
-            showEditOrderModalContent: false
+            showEditOrderModalContent: false,
+            gridOptions: []
         }
     },
     methods: {

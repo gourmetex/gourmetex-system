@@ -221,8 +221,8 @@ export const globalMethods = {
         },
         //Métodos de manipulação de valores de inputs
         formatCurrency: function (value) {
-            const numeroLimpo = value.replace(/[^\d,]/g, ''); // Remove caracteres não numéricos, exceto a vírgula
-            const partes = numeroLimpo.split(',');
+            const numeroLimpo = value.toString().replace(/[^\d.]/g, ''); // Remove caracteres não numéricos, exceto ponto
+            const partes = numeroLimpo.replace(".", ",").split(',');
 
             if (partes.length > 1) {
                 // Se houver parte decimal, formata separadamente
@@ -233,16 +233,9 @@ export const globalMethods = {
             }
         },
         formatDecimalValues: function (value) {
-            const numeroLimpo = value.replace(/[^\d,]/g, ''); // Remove caracteres não numéricos, exceto a vírgula
-            const partes = numeroLimpo.split(',');
-
-            if (partes.length > 1) {
-                // Se houver parte decimal, formata separadamente
-                return `${partes[0].replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')},${partes[1].slice(0, 2)}`;
-            } else {
-                // Se não houver parte decimal, formata apenas a parte inteira
-                return `${partes[0].replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')}`;
-            }
+            const numeroLimpo = value.toString().replace(/[^\d,]/g, '').replace(",", ".");
+            let formattedFloat = parseFloat(numeroLimpo);
+            return formattedFloat;
         }
     },
     mounted: function() {

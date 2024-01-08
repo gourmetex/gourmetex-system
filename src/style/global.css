@@ -427,6 +427,10 @@ form .btn {
     align-items: center;
 }
 
+.edit-buttons.buttons-vertical {
+    flex-direction: column;
+}
+
 .dynamic-edit-buttons {
     display: none;
 }
