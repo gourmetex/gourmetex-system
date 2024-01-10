@@ -7,8 +7,8 @@
                     <input type="number" name="mesa" v-model="order.mesa">
                 </div>
                 <div class="form-group">
-                    <label for="cliente">Nome do cliente</label>
-                    <input type="text" name="cliente" v-model="order.cliente" required>
+                    <label for="id_cliente">Nome do cliente</label>
+                    <input type="text" name="id_cliente" id="id_cliente" v-model="order.cliente" required>
                 </div>
             </div>
             <input type="submit" id="submit-button" style="display: none;">
@@ -77,7 +77,8 @@ export default {
                         "Valor do item"
                     ]
                 },
-                total: "R$ 0,00"
+                total: "R$ 0,00",
+                cliente: null
             },
             order_dishes: [],
             dishes_list: [],
@@ -188,24 +189,20 @@ export default {
             if (self.orderid != null) {
                 path = "edit_order/" + self.orderid;
             }
-            
-            console.log(path)
-            console.log(data)
 
-            /*api.post("/dishes/" + path, data).then(() => {
+            api.post("/orders/" + path, data).then(() => {
                 self.$emit("savedContent", true);
             }).catch((error) => {
                 console.log(error);
             }).then(() => {
                 self.savingOrder = false;
-            })*/
+            })
         },
         returnAllDishes: function () {
             let self = this;
 
             api.get("/dishes").then((response) => {
                 self.dishes_list = response.data.returnObj.dishes;
-                console.log(self.dishes_list)
             }).catch((error) => {
                 console.log(error);
             })
@@ -247,5 +244,6 @@ export default {
 
 .add-order-modal-content {
     position: relative;
+    height: 100%;
 }
 </style>
