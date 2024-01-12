@@ -91,6 +91,11 @@ export default {
     watch: {
         order_total: function () {
             this.order.total = this.formatCurrency(this.order_total);
+        },
+        order: function () {
+            if (this.order.status == "Cancelado") {
+                this.$emit("savedContent", true);
+            }
         }
     },
     methods: {

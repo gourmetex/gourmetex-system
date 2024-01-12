@@ -162,15 +162,6 @@ export const globalMethods = {
                     break;
             }
         },
-        selectRowWithLargeButtons: function (event) {
-            switch (event[2]) {
-                case "select_row":
-                    /*this.showEditButtons(event);
-                    this.editId = event[1];
-                    this.selectGridRow(event[3])*/
-                    break;
-            }
-        },
         showEditButtons: function () {
             let editButtons = $(".dynamic-edit-buttons");
 
@@ -238,7 +229,16 @@ export const globalMethods = {
             return formattedFloat;
         }
     },
-    mounted: function() {
+    watch: {
+        editId: function () {
+            if (this.editId != null) {
+                this.disableActionsButtons(false, false, false);
+            } else {
+                this.disableActionsButtons(false, true, true);
+            }
+        }
+    },
+    mounted: function () {
     },
     data() {
         return {

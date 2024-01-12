@@ -10,7 +10,7 @@
             </div>
             <gridView :gridoptions="gridOptions" :griddata="orders" @dataclick="selectRow($event)"></gridView>
         </div>
-        <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :excludepath="'/dishes/' + editId" :modalbutton2="modalButton2" @closeModal="closeModalFunction(); returnOrders();">
+        <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :excludepath="'/orders/' + editId" :modalbutton2="modalButton2" @closeModal="closeModalFunction(); returnOrders();">
             <editOrderModalContent v-if="showEditOrderModalContent" :orderid="editId" @savedContent="closeModalFunction(); returnOrders();"></editOrderModalContent>
         </modal>
     </div>
@@ -37,6 +37,12 @@ export default {
         resetModalContents: function () {
             this.showEditOrderModalContent = false;
         }, 
+        cancelOrder: function () {
+            this.resetModalContents();
+            this.showModalFunction("Cancelar pedido", "Cancelar", "Cancelar");
+            this.showEditOrderModalContent = true;
+            this.descelectRows();
+        },
         addOrder: function () {
             this.resetModalContents();
             this.showModalFunction("Adicionar pedido", "Adicionar", "Cancelar");
@@ -64,6 +70,7 @@ export default {
     },
     mounted: function () {
         this.returnOrders();
+        this.disableActionsButtons(false, true, true);
     },
     components: {
         actionButtons,

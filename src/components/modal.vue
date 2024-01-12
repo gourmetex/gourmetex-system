@@ -35,7 +35,7 @@ export default {
     },
     methods: {
         checkModalType: function () {
-            if (this.modaltitle.indexOf("Excluir") != -1) {
+            if (this.modaltitle.indexOf("Excluir") != -1 || this.modaltitle.indexOf("Cancelar") != -1) {
                 this.edit = false;
             }
         },

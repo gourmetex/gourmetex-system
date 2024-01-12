@@ -34,15 +34,6 @@ export default {
             ingredients_categories: []
         }
     },
-    watch: {
-        editId: function () {
-            if (this.editId != null) {
-                this.disableActionsButtons(false, false, false);
-            } else {
-                this.disableActionsButtons(false, true, true);
-            }
-        }
-    },
     methods: {
         resetModalContents: function () {
             this.showEditDishModalContent = false;
