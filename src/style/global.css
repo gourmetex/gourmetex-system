@@ -418,6 +418,35 @@ form .btn {
     opacity: 0;
     display: none;
     transform: translateY(-10vh);
+    z-index: 1;
+}
+
+.small-modal-wrapper {
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: none;
+}
+
+.modal-edit-grid {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+    .modal-edit-grid .edit-buttons {
+        margin-right: var(--space-5);
+    }
+
+.modal-body .custom-grid-container {
+    max-height: 220px;
+}
+
+.inner-modal-content {
+    position: relative;
+    height: 100%;
 }
 
 /* CLASSES BUSCAS */

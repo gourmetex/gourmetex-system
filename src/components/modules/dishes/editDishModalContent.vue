@@ -1,5 +1,5 @@
 <template>
-    <div class="add-dish-modal-content">
+    <div class="inner-modal-content">
         <form class="add-dish" id="informations-form" @submit.prevent="saveDish()">
             <div class="form-group-horizontal">
                 <div class="form-group">
@@ -24,22 +24,24 @@
             </div>
             <input type="submit" id="submit-button" style="display: none;">
         </form>
-        <gridView :gridoptions="dish.ingredientes.labels" :griddata="dish.ingredientes.ingredientes" @dataclick="selectRow($event)"></gridView>
-        <div class="edit-buttons">
-            <button type="button" class="rounded-btn btn-primary" v-on:click="addIngredient()">
-                <span class="material-icons">add</span>
-            </button>
-            <div class="dynamic-edit-buttons">
-                <button type="button" class="rounded-btn btn-red" v-on:click="deleteIngredient()">
-                    <span class="material-icons">delete</span>
+        <div class="modal-edit-grid">
+            <gridView :gridoptions="dish.ingredientes.labels" :griddata="dish.ingredientes.ingredientes" @dataclick="selectRow($event)"></gridView>
+            <div class="edit-buttons buttons-vertical">
+                <button type="button" class="rounded-btn btn-primary" v-on:click="addIngredient()">
+                    <span class="material-icons">add</span>
                 </button>
+                <div class="dynamic-edit-buttons">
+                    <button type="button" class="rounded-btn btn-red" v-on:click="deleteIngredient()">
+                        <span class="material-icons">delete</span>
+                    </button>
+                </div>
             </div>
         </div>
         <div class="small-modal">
             <form class="add-dish" id="informations-form" @submit.prevent="submitAddIngredient()">
                 <div class="form-group">
                     <label for="ingredient">Item</label>
-                    <select id="ingredient" name="ingredient">
+                    <select id="ingredient" name="ingredient" @change="selectThisIngredient()" required>
                         <option value="">Qualquer</option>
                         <option v-for="(item, index) in ingredients" :key="index" :value="item.id[1]">{{ item.nome[1] }}</option>
                     </select>
@@ -51,6 +53,7 @@
                 <button type="submit" class="btn btn-primary w-100">Salvar</button>
             </form>
         </div>
+        <div class="small-modal-wrapper" v-on:click="closeSmallModal()"></div>
         <p class="response big">{{ response }}</p>
     </div>
 </template>

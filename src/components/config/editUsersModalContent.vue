@@ -46,6 +46,7 @@ export default {
                 nome: "",
                 email: "",
                 salario: null,
+                admin: 0,
                 data_criacao: null,
                 url_foto_perfil: "",
                 cargo: "",
@@ -53,6 +54,13 @@ export default {
             },
             savingUser: false,
             response: ""
+        }
+    },
+    watch: {
+        user: function () {
+            if (this.user.admin == 1) {
+                this.$emit("savedContent", true);
+            }
         }
     },
     methods: {

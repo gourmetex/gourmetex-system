@@ -47,17 +47,21 @@ export const globalMethods = {
         },
         openSmallModal: function () {
             let smallModal = $(".small-modal");
+            let smallModalWrapper = $(".small-modal-wrapper");
 
             smallModal.show();
+            smallModalWrapper.show();
             setTimeout(() => {
                 smallModal.css("transform", "translateY(0)").css("opacity", 1);
             }, 1)
         },
         closeSmallModal: function () {
             let smallModal = $(".small-modal");
+            let smallModalWrapper = $(".small-modal-wrapper");
 
             smallModal.css("transform", "translateY(-10vh)").css("opacity", 0);
             setTimeout(() => {
+                smallModalWrapper.hide();
                 smallModal.hide();
             }, 400)
         },

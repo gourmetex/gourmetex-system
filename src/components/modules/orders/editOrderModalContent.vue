@@ -1,5 +1,5 @@
 <template>
-    <div class="add-order-modal-content">
+    <div class="inner-modal-content">
         <form class="add-order" id="informations-form" @submit.prevent="saveOrder()">
             <div class="form-group-horizontal inputs-50">
                 <div class="form-group">
@@ -15,7 +15,7 @@
         </form>
         <div class="order-dishes-container">
             <h3>Itens do pedido</h3>
-            <div class="order-dishes-inner">
+            <div class="modal-edit-grid">
                 <gridView :gridoptions="order.dishes.labels" :griddata="order.dishes.dishes" @dataclick="selectRow($event)"></gridView>
                 <div class="edit-buttons buttons-vertical">
                     <button type="button" class="rounded-btn btn-primary" v-on:click="addDish()">
@@ -50,6 +50,7 @@
                 <button type="submit" class="btn btn-primary w-100">Salvar</button>
             </form>
         </div>
+        <div class="small-modal-wrapper" v-on:click="closeSmallModal()"></div>
         <p class="response big">{{ response }}</p>
     </div>
 </template>
@@ -253,17 +254,4 @@ export default {
 }
 </script>
 <style scoped>
-.order-dishes-inner {
-    display: flex;
-    flex-direction: row-reverse;
-}
-
-    .order-dishes-inner .edit-buttons {
-        margin-right: var(--space-5);;
-    }
-
-.add-order-modal-content {
-    position: relative;
-    height: 100%;
-}
 </style>

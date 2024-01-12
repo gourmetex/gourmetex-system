@@ -6,7 +6,7 @@
                 <h2>LOGIN</h2>
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="example@domain.com" required>
+                    <input type="text" id="email" name="email" placeholder="example@domain.com" required>
                 </div>
                 <div class="form-group">
                     <label for="password">Senha</label>
@@ -14,7 +14,7 @@
                 </div>
                 <button type="submit" class="btn btn-primary" id="login-button">Entrar</button>
                 <div class="complement">
-                    <h3>Não tem cadastro? <router-link to="/register"><span>Registre-se</span></router-link></h3>
+                    <h3>Não tem cadastro? <span>Contate-nos</span></h3>
                     <h3 class="response">{{ response }}</h3>
                 </div>
             </form>
