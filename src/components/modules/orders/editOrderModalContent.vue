@@ -112,6 +112,18 @@ export default {
             this.closeSmallModal();
             this.descelectRows();
         },
+        fillOrderDishes: function () {
+            for (let i = 0; i < this.order.dishes.dishes.length; i++) {
+                let currentDish = this.order.dishes.dishes[i];
+                let newDish = {
+                    id: currentDish.id[1],
+                    quantidade: currentDish.quantidade[1],
+                    observacoes: currentDish.observacoes[1]
+                }
+
+                this.order_dishes.push(newDish);
+            }
+        },
         submitAddDish: function () {
             this.selectThisDish();
 
@@ -129,7 +141,9 @@ export default {
                 observacoes: this.observations
             }
 
-            if (this.order.dishes.dishes.length == 0) {
+            let selectedDishHaveInGrid = this.order.dishes.dishes.some(obj => obj.id[1] == this.selected_dish.id[1]);
+
+            if (this.order.dishes.dishes.length == 0 || !selectedDishHaveInGrid) {
                 this.order.dishes.dishes.push(newDishGrid);
                 this.order_dishes.push(newDish);
             } else {
@@ -144,7 +158,7 @@ export default {
 
                 this.order_dishes.map(obj => {
                     if (obj.id == this.selected_dish.id[1]) {
-                        obj.quantidade = this.quantity;
+                        obj.quantidade = parseInt(obj.quantidade) + parseInt(this.quantity);
                     }
                 })
             }
@@ -218,6 +232,7 @@ export default {
             api.get("/orders/" + self.orderid).then((response) => {
                 self.order = response.data.returnObj;
                 self.order_total = self.formatDecimalValues(self.order.total);
+                self.fillOrderDishes();
             }).catch((error) => {
                 console.log(error);
             })

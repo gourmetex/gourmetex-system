@@ -46,7 +46,7 @@
                 </div>
                 <div class="radio-group">
                     <label for="quantity">Quantidade {{ selected_ingredient_measure_unit != "" ? `(${selected_ingredient_measure_unit})` : "" }}</label>
-                    <input type="text" name="quantity" id="quantity" required v-model="quantity" @keypress="quantity = formatDecimalValues(quantity)">
+                    <input type="text" name="quantity" id="quantity" required v-model="quantity" @keypress="formatDecimalValues(quantity)">
                 </div>
                 <button type="submit" class="btn btn-primary w-100">Salvar</button>
             </form>

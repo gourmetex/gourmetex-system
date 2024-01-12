@@ -16,6 +16,7 @@
     </div>
 </template>
 <script>
+import api from "../../../configs/api";
 import actionButtons from "../../actionButtons.vue";
 import gridView from "../../gridView.vue";
 import { globalMethods } from "@/js/globalMethods";
@@ -43,9 +44,26 @@ export default {
             this.editId = null;
             this.descelectRows();
         },
+        editOrder: function () {
+            this.resetModalContents();
+            this.showModalFunction("Editar pedido", "Salvar", "Cancelar");
+            this.showEditOrderModalContent = true;
+            this.descelectRows();
+        },
         returnOrders: function () {
+            let self = this;
 
+            api.get("/orders").then((response) => {
+                self.orders = response.data.returnObj.orders;
+                self.gridOptions = response.data.returnObj.labels;
+                self.editId = null;
+            }).catch((error) => {
+                console.log(error);
+            })
         }
+    },
+    mounted: function () {
+        this.returnOrders();
     },
     components: {
         actionButtons,
