@@ -13,6 +13,7 @@ import homeComponent from '../components/homeComponent.vue';
 import configComponent from "../components/configComponent.vue"
 import stockComponent from "../components/modules/stock/stockComponent.vue";
 import ordersComponent from "../components/modules/orders/ordersComponent.vue";
+import customersComponent from "../components/modules/customers/customersComponent.vue";
 
 const routes = [
     {
@@ -59,6 +60,10 @@ const routes = [
             {
                 path: "orders",
                 component: ordersComponent
+            },
+            {
+                path: "customers",
+                component: customersComponent
             }
         ]
     },

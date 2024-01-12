@@ -24,7 +24,7 @@ import editDishModalContent from "./editDishModalContent.vue";
 import api from "../../../configs/api";
 
 export default {
-    name: "stockComponent",
+    name: "dishesComponent",
     mixins: [globalMethods],
     data() {
         return {

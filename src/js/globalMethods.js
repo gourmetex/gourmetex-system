@@ -195,6 +195,11 @@ export const globalMethods = {
             const formattedValue = this.formatCurrency(target.val());
             target.val(formattedValue);
         },
+        inputTelCheck: function (event) {
+            let target = $(event.target);
+            const formattedValue = this.formatTel(target.val());
+            target.val(formattedValue);
+        },
         disableActionsButtons: function (addButton = true, excludeButton = true, editButton = true) {
             this.disabledButtons = [];
             
@@ -222,6 +227,33 @@ export const globalMethods = {
                 // Se não houver parte decimal, formata apenas a parte inteira
                 return `R$ ${partes[0].replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')}`;
             }
+        },
+        formatTel: function (value) {
+            let numberTemplate = "(00) 0 0000-0000";
+            let number = value.replace("+55", "").replace("(", "").replace(")", "").replace("-", "").replace(" ", '').replace(" ", '');
+            let formattedNumber = [], numberPosition = 0;
+            for (let i in numberTemplate) {
+                if (numberTemplate[i] == "0") {
+                    formattedNumber[i] = number[numberPosition];
+                    numberPosition++;
+                } else {
+                    formattedNumber[i] = numberTemplate[i];
+                }
+            }
+
+            return formattedNumber.join('');
+        },
+        formatTelToSubmit: function (value) {
+            // Remove everything that is not a number
+            const numbers = value.replace("+55", "").replace(/\D/g, '');
+
+            // Limit the string to a maximum of 11 digits
+            const truncatedNumbers = numbers.slice(0, 11);
+
+            // Add the country code +55
+            const formattedNumber = `+55${truncatedNumbers}`;
+
+            return formattedNumber;
         },
         formatDecimalValues: function (value) {
             const numeroLimpo = value.toString().replace(/[^\d,]/g, '').replace(",", ".");
