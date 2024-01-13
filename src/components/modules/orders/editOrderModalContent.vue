@@ -41,12 +41,12 @@
                     </div>
                     <div class="payment-difference">
                         <h3 class="font-bold">Restante: {{ difference }}</h3>
-                        <h3 class="font-bold">Entrega:</h3>
+                        <h3 class="font-bold" v-if="have_delivery_module">Entrega: {{ delivery_amount }}</h3>
                     </div>
                 </div>
                 <h2 class="order-total">{{ order.total }}</h2>
             </div>
-            <div class="delivery" style="display: none;">
+            <div class="delivery" v-if="have_delivery_module">
                 <button class="btn btn-blue">Entrega</button>
                 <div class="delivery-content">
                     <div class="delivery-texts">
@@ -62,7 +62,7 @@
                     <label for="item">Item</label>
                     <select name="item" id="item" required>
                         <option value="">"Selecione um item"</option>
-                        <option :value="item.id[1]" v-for="(item, index) in dishes_list" :key="index">{{ item.nome[1] }}</option>
+                        <option :value="item.id[1]" v-for="(item, index) in dishes_list" :key="index">{{ item.nome[1] }} {{ item.disponivel[1] != "Sim" ? "(Indisponível)" : "" }}</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -90,10 +90,6 @@
                 <div class="form-group">
                     <label for="valor_pago">Valor pago</label>
                     <input type="text" name="valor_pago" id="quantidade" v-model="amount_payed" required>
-                </div>
-                <div class="form-group">
-                    <label for="restante">Valor restante</label>
-                    <input type="text" id="restante" disabled>
                 </div>
                 <button type="submit" class="btn btn-primary w-100">Adicionar</button>
             </form>
@@ -136,6 +132,8 @@ export default {
             quantity: null,
             order_total: null,
             observations: "",
+            have_delivery_module: false,
+            delivery_amount: "R$ 0",
             card_payment: "R$ 0",
             cash_payment: "R$ 0",
             pix_payment: "R$ 0",
@@ -158,7 +156,7 @@ export default {
             this.order.total = this.formatCurrency(this.order_total);
         },
         order: function () {
-            if (this.order.status == "Cancelado") {
+            if (this.order.status == "Cancelado" || this.order.status == "Finalizado") {
                 this.$emit("savedContent", true);
             }
         }
@@ -200,45 +198,48 @@ export default {
         },
         submitAddDish: function () {
             this.selectThisDish();
+            
+            if (this.selected_dish.disponivel[1] == "Sim") {
+                let newDishGrid = {
+                    id: this.selected_dish.id,
+                    nome: this.selected_dish.nome,
+                    quantidade: ["text", this.quantity, ""],
+                    observacoes: ["text", this.observations, ""],
+                    preco: this.selected_dish.preco
+                }
 
-            let newDishGrid = {
-                id: this.selected_dish.id,
-                nome: this.selected_dish.nome,
-                quantidade: ["text", this.quantity, ""],
-                observacoes: ["text", this.observations, ""],
-                preco: this.selected_dish.preco
+                let newDish = {
+                    id: this.selected_dish.id[1],
+                    quantidade: this.quantity,
+                    observacoes: this.observations
+                }
+
+                let selectedDishHaveInGrid = this.order.dishes.dishes.some(obj => obj.id[1] == this.selected_dish.id[1]);
+
+                if (this.order.dishes.dishes.length == 0 || !selectedDishHaveInGrid) {
+                    this.order.dishes.dishes.push(newDishGrid);
+                    this.order_dishes.push(newDish);
+                } else {
+                    this.order.dishes.dishes.map(obj => {
+                        if (obj.id[1] == this.selected_dish.id[1]) {
+                            obj.quantidade[1] = (parseInt(obj.quantidade[1]) + parseInt(this.quantity)).toString();
+                        }
+                    })
+
+                    this.order.dishes.dishes.push({});
+                    this.order.dishes.dishes.pop();
+
+                    this.order_dishes.map(obj => {
+                        if (obj.id == this.selected_dish.id[1]) {
+                            obj.quantidade = parseInt(obj.quantidade) + parseInt(this.quantity);
+                        }
+                    })
+                }
+
+                let total_value = (this.formatDecimalValues(newDishGrid.preco[1]) * parseFloat(this.quantity));
+                this.order_total += total_value;
             }
 
-            let newDish = {
-                id: this.selected_dish.id[1],
-                quantidade: this.quantity,
-                observacoes: this.observations
-            }
-
-            let selectedDishHaveInGrid = this.order.dishes.dishes.some(obj => obj.id[1] == this.selected_dish.id[1]);
-
-            if (this.order.dishes.dishes.length == 0 || !selectedDishHaveInGrid) {
-                this.order.dishes.dishes.push(newDishGrid);
-                this.order_dishes.push(newDish);
-            } else {
-                this.order.dishes.dishes.map(obj => {
-                    if (obj.id[1] == this.selected_dish.id[1]) {
-                        obj.quantidade[1] = (parseInt(obj.quantidade[1]) + parseInt(this.quantity)).toString();
-                    }
-                })
-
-                this.order.dishes.dishes.push({});
-                this.order.dishes.dishes.pop();
-
-                this.order_dishes.map(obj => {
-                    if (obj.id == this.selected_dish.id[1]) {
-                        obj.quantidade = parseInt(obj.quantidade) + parseInt(this.quantity);
-                    }
-                })
-            }
-
-            let total_value = (this.formatDecimalValues(newDishGrid.preco[1]) * parseFloat(this.quantity));
-            this.order_total += total_value;
             this.selected_dish = {};
             this.quantity = null;
 
@@ -297,6 +298,12 @@ export default {
             }, {});
 
             data["pratos"] = self.order_dishes;
+            data["pagamento_pix"] = this.pix_payment;
+            data["pagamento_cartao"] = this.card_payment;
+            data["pagamento_dinheiro"] = this.cash_payment;
+            data["cep_entrega"] = this.order.cep_entrega;
+            data["save_type"] = $("#submit_type").val();
+
             let path = "new_order";
 
             if (self.orderid != null) {
