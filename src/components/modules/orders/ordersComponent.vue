@@ -10,7 +10,7 @@
             </div>
             <gridView :gridoptions="gridOptions" :griddata="orders" @dataclick="selectRow($event)"></gridView>
         </div>
-        <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :excludepath="'/orders/' + editId" :modalbutton2="modalButton2" @closeModal="closeModalFunction(); returnOrders();">
+        <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :excludepath="'/orders/' + editId" :modalbutton2="modalButton2" :modalButton3="modalButton3" @closeModal="closeModalFunction(); returnOrders();">
             <editOrderModalContent v-if="showEditOrderModalContent" :orderid="editId" @savedContent="closeModalFunction(); returnOrders();"></editOrderModalContent>
         </modal>
     </div>
@@ -52,7 +52,7 @@ export default {
         },
         editOrder: function () {
             this.resetModalContents();
-            this.showModalFunction("Editar pedido", "Salvar", "Cancelar");
+            this.showModalFunction("Editar pedido", "Salvar", "Cancelar", "Finalizar");
             this.showEditOrderModalContent = true;
             this.descelectRows();
         },

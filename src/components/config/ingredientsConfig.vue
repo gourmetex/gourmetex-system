@@ -26,7 +26,7 @@
                 </button>
             </div>
         </div>
-        <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :excludepath="'/dishes/ingredients/' + editId" :modalbutton2="modalButton2" @closeModal="closeModalFunction(); returnAllIngredients();">
+        <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :excludepath="'/dishes/ingredients/' + editId" :modalbutton2="modalButton2" :modalbutton3="modalButton3" @closeModal="closeModalFunction(); returnAllIngredients();">
             <editIngredientModalContent v-if="showEditIngredientModalContent" :ingredientid="editId" @savedContent="closeModalFunction(); returnAllIngredients();"></editIngredientModalContent>
         </modal>
     </div>

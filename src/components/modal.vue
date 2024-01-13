@@ -14,6 +14,7 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <button class="btn btn-blue" v-if="modalButton3 != '' && modalButton3 != null" id="modal-save-submit-button" v-on:click="saveAndSubmitInformations()">{{ modalButton3 }}</button>
                 <button class="btn" :class="chooseBtnClass()" id="modal-submit-button" v-if="modalbutton1 != ''" v-on:click="submitInformations()">{{ modalbutton1 }}</button>
                 <button class="btn btn-gray" v-if="modalbutton2 != ''" v-on:click="handleCloseModalContent()">{{ modalbutton2 }}</button>
             </div>
@@ -27,7 +28,7 @@ import excludeModalContent from "./excludeModalContent.vue";
 
 export default {
     name: "modalComponent",
-    props: ["modaltitle", "modalbutton1", "modalbutton2", "excludepath"],
+    props: ["modaltitle", "modalbutton1", "modalbutton2", "modalButton3", "excludepath"],
     data() {
         return {
             edit: true
@@ -58,9 +59,21 @@ export default {
             }, 400)
         },
         submitInformations: function () {
-            let modalButton = $("#modal-submit-button");
-            modalButton.attr("disabled", "disabled").addClass("btn-loading");
+            let modalButton1 = $("#modal-submit-button");
+            let modalButton2 = $("#modal-save-submit-button");
+            modalButton1.attr("disabled", "disabled").addClass("btn-loading");
+            modalButton2.attr("disabled", "disabled").addClass("btn-loading");
 
+            $("#submit_type").val("save");
+            $("#submit-button").click();
+        },
+        saveAndSubmitInformations: function () {
+            let modalButton1 = $("#modal-submit-button");
+            let modalButton2 = $("#modal-save-submit-button");
+            modalButton1.attr("disabled", "disabled").addClass("btn-loading");
+            modalButton2.attr("disabled", "disabled").addClass("btn-loading");
+
+            $("#submit_type").val("finish");
             $("#submit-button").click();
         }
     },

@@ -34,7 +34,7 @@
                 </button>
             </div>
         </div>
-        <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :excludepath="'/users/' + editId" :modalbutton2="modalButton2" @closeModal="closeModalFunction(); returnAllUsers();">
+        <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :excludepath="'/users/' + editId" :modalbutton2="modalButton2" :modalbutton3="modalButton3" @closeModal="closeModalFunction(); returnAllUsers();">
             <editUsersModalContent v-if="showEditUsersModalContent" :userid="editId" :companyroles="roles" @savedContent="closeModalFunction(); returnAllUsers();"></editUsersModalContent>
         </modal>
     </div>

@@ -8,7 +8,7 @@
         <div class="empresas-list">
             <gridView :gridoptions="gridOptions" :griddata="companies" @dataclick="selectModal($event)"></gridView>
         </div>
-        <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :modalbutton2="modalButton2" @closeModal="closeModalFunction()">
+        <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :modalbutton2="modalButton2" :modalbutton3="modalButton3" @closeModal="closeModalFunction()">
             <editCompanyModalContent v-if="showEditCompanieModalContent" :companyid="companyId" @savedContent="closeModalFunction()"></editCompanyModalContent>
         </modal>
     </div>

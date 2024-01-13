@@ -1,6 +1,7 @@
 <template>
     <div class="inner-modal-content">
         <form class="add-order" id="informations-form" @submit.prevent="saveOrder()">
+            <input type="hidden" id="submit_type" value="save">
             <div class="form-group-horizontal inputs-50">
                 <div class="form-group">
                     <label for="mesa">Mesa vinculada</label>
@@ -29,8 +30,33 @@
                 </div>
             </div>
         </div>
-        <h2 class="order-total">{{ order.total }}</h2>
-        <div class="small-modal">
+        <div class="order-submit-informations">
+            <div class="payment">
+                <div class="payment-inner">
+                    <button class="btn btn-primary" v-on:click="openPaymentModal()">Pagamento</button>
+                    <div class="payment-list">
+                        <h3>Pix: {{ pix_payment }}</h3>
+                        <h3>Cartão: {{ card_payment }}</h3>
+                        <h3>Dinheiro: {{ cash_payment }}</h3>
+                    </div>
+                    <div class="payment-difference">
+                        <h3 class="font-bold">Restante: {{ difference }}</h3>
+                        <h3 class="font-bold">Entrega:</h3>
+                    </div>
+                </div>
+                <h2 class="order-total">{{ order.total }}</h2>
+            </div>
+            <div class="delivery" style="display: none;">
+                <button class="btn btn-blue">Entrega</button>
+                <div class="delivery-content">
+                    <div class="delivery-texts">
+                        <h3>Rua Brasholanda, 556 - Weissópolis, Pinhais</h3>
+                        <h3>Cep: 86930-000</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="small-modal" id="modal-dishes">
             <form class="add-dish" id="informations-form" @submit.prevent="submitAddDish()">
                 <div class="form-group">
                     <label for="item">Item</label>
@@ -48,6 +74,28 @@
                     <input type="text" name="observacoes" v-model="observations" id="observacoes">
                 </div>
                 <button type="submit" class="btn btn-primary w-100">Salvar</button>
+            </form>
+        </div>
+        <div class="small-modal" id="modal-payment">
+            <form class="add-payment" id="informations-form" @submit.prevent="submitAddPayment()">
+                <div class="form-group">
+                    <label for="metodo_pagamento">Método de pagamento</label>
+                    <select name="metodo_pagamento" id="metodo_pagamento" required>
+                        <option value="">"Selecione um item"</option>
+                        <option value="dinheiro">Dinheiro</option>
+                        <option value="cartao">Cartão</option>
+                        <option value="pix">Pix</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="valor_pago">Valor pago</label>
+                    <input type="text" name="valor_pago" id="quantidade" v-model="amount_payed" required>
+                </div>
+                <div class="form-group">
+                    <label for="restante">Valor restante</label>
+                    <input type="text" id="restante" disabled>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Adicionar</button>
             </form>
         </div>
         <div class="small-modal-wrapper" v-on:click="closeSmallModal()"></div>
@@ -79,14 +127,30 @@ export default {
                     ]
                 },
                 total: "R$ 0,00",
-                cliente: null
+                cliente: null,
+                cep_entrega: null
             },
             order_dishes: [],
             dishes_list: [],
             selected_dish: [],
             quantity: null,
             order_total: null,
-            observations: ""
+            observations: "",
+            card_payment: "R$ 0",
+            cash_payment: "R$ 0",
+            pix_payment: "R$ 0",
+            amount_payed: "R$ 0"
+        }
+    },
+    computed: {
+        total_amout() {
+            let total = (this.formatDecimalValues(this.card_payment) + this.formatDecimalValues(this.cash_payment) + this.formatDecimalValues(this.pix_payment));
+            return total;
+        },
+        difference() {
+            let order_total = this.formatDecimalValues(this.order.total);
+            let difference = order_total - this.total_amout;
+            return this.formatCurrency(difference);
         }
     },
     watch: {
@@ -100,8 +164,12 @@ export default {
         }
     },
     methods: {
+        openPaymentModal: function () {
+            this.openSmallModal("#modal-payment");
+            this.descelectRows();
+        },
         addDish: function () {
-            this.openSmallModal();
+            this.openSmallModal("#modal-dishes");
             this.descelectRows();
         },
         excludeDish: function () {
@@ -176,6 +244,23 @@ export default {
 
             this.closeSmallModal();
         },
+        submitAddPayment: function () {
+            let metodoPagamento = $("#metodo_pagamento").val();
+
+            switch (metodoPagamento) {
+                case "dinheiro": 
+                    this.cash_payment = this.amount_payed;
+                    break;
+                case "cartao":
+                    this.card_payment = this.amount_payed;
+                    break;
+                case "pix":
+                    this.pix_payment = this.amount_payed;
+                    break;
+            }
+            this.amount_payed = "R$ 0";
+            this.closeSmallModal();
+        },
         selectThisDish: function () {
             let value = $("#item").val();
             let dish = this.dishes_list.find(obj => obj.id[1] == value);
@@ -193,7 +278,15 @@ export default {
             if (this.order_dishes.length == 0) {
                 this.setResponse("O pedido não pode estar vazio", "error");
                 $("#modal-submit-button").removeAttr("disabled").removeClass("btn-loading");
+                $("#modal-save-submit-button").removeAttr("disabled").removeClass("btn-loading");
                 return;
+            }
+
+            if ($("#submit_type").val() == "finish" && this.formatDecimalValues(this.difference) != 0) {
+                this.setResponse("O pedido possui valor em aberto", "error");
+                $("#modal-submit-button").removeAttr("disabled").removeClass("btn-loading");
+                $("#modal-save-submit-button").removeAttr("disabled").removeClass("btn-loading");
+                return
             }
             
             self.savingOrder = true;
@@ -254,4 +347,20 @@ export default {
 }
 </script>
 <style scoped>
+.payment, .payment-inner, .delivery {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.delivery, .payment-inner {
+    justify-content: flex-start;
+}
+
+.modal-body .custom-grid-container {
+    max-height: 160px;
+}
+.delivery-content, .payment-list, .payment-difference {
+    margin: 0 var(--space-5);
+}
 </style>

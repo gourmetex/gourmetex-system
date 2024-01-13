@@ -35,7 +35,7 @@
             </div>
             <gridView :gridoptions="gridOptions" :griddata="items" @dataclick="selectRow($event)"></gridView>
         </div>
-        <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :modalbutton2="modalButton2" @closeModal="closeModalFunction(); returnStock();">
+        <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :modalbutton2="modalButton2" :modalbutton3="modalButton3" @closeModal="closeModalFunction(); returnStock();">
             <addIngredientQuantityModalContent v-if="showAddIngredientQuantityModalContent" @savedContent="closeModalFunction(); returnStock();"></addIngredientQuantityModalContent>
             <deleteIngredientQuantityModalContent v-if="showDeleteIngredientQuantityModalContent" @savedContent="closeModalFunction(); returnStock();"></deleteIngredientQuantityModalContent>
         </modal>

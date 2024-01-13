@@ -19,10 +19,11 @@ export const globalMethods = {
             response.removeClass("error").removeClass("success");
         },
         //Métodos modal
-        showModalFunction: function (modalTitle, modalButton1, modalButton2) {
+        showModalFunction: function (modalTitle, modalButton1, modalButton2, modalButton3 = "") {
             this.modalTitle = modalTitle;
             this.modalButton1 = modalButton1;
             this.modalButton2 = modalButton2;
+            this.modalButton3 = modalButton3;
             this.showModal = true;
         },
         closeModalFunction: function () {
@@ -45,8 +46,8 @@ export const globalMethods = {
             let modal = $(".modal-container");
             modal.css("opacity", 0).css("transform", "translateY(-20vh)");
         },
-        openSmallModal: function () {
-            let smallModal = $(".small-modal");
+        openSmallModal: function (modalId = "") {
+            let smallModal = $(modalId || ".small-modal");
             let smallModalWrapper = $(".small-modal-wrapper");
 
             smallModal.show();
@@ -284,6 +285,7 @@ export const globalMethods = {
             modalTitle: "",
             modalButton1: "",
             modalButton2: "",
+            modalButton3: "",
             closeModal: false,
             reloadGrid: false,
             editId: null,

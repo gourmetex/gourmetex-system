@@ -395,6 +395,25 @@ form .btn {
         cursor: not-allowed;
     }
 
+.btn-blue {
+    background: var(--blue);
+    color: var(--white);
+}
+
+    .btn-blue:hover {
+        background: var(--blue-low);
+    }
+
+    .btn-blue:focus, .btn-blue:active {
+        outline: 2px solid var(--blue-high-2);
+    }
+
+    .btn-blue:disabled {
+        outline: none !important;
+        background: var(--blue-high);
+        cursor: not-allowed;
+    }
+
 /* CLASSES MODAIS */
 
 .small-modal {
@@ -447,6 +466,8 @@ form .btn {
 .inner-modal-content {
     position: relative;
     height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 /* CLASSES BUSCAS */

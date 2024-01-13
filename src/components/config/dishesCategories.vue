@@ -23,7 +23,7 @@
                 </button>
             </div>
         </div>
-        <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :excludepath="'/dishes/categories/' + editId" :modalbutton2="modalButton2" @closeModal="closeModalFunction(); returnDishesCategories();">
+        <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :excludepath="'/dishes/categories/' + editId" :modalbutton2="modalButton2" :modalbutton3="modalButton3" @closeModal="closeModalFunction(); returnDishesCategories();">
             <editDishesCategoriesModalContent v-if="showEditDishesCategoriesModalContent" :categoryid="editId" @savedContent="closeModalFunction(); returnDishesCategories();"></editDishesCategoriesModalContent>
         </modal>
     </div>
