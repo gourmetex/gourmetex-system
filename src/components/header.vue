@@ -235,6 +235,7 @@ header {
     width: 260px;
     height: calc(100vh - 80px);
     transition: transform 0.4s;
+    overflow: hidden;
 }
 
     .lateral-menu h3 {
@@ -245,7 +246,8 @@ header {
         margin: 0;
         padding: var(--space-3) 0;
         list-style-type: none;
-        min-height: 100%;
+        height: 100%;
+        overflow-y: auto;
     }
 
         .lateral-menu ul li {
