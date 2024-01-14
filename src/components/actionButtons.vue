@@ -34,9 +34,7 @@ export default {
         edit: function () {
             this.$emit("edit");
         },
-        disableRequestedButtons: function () {
-            if (this.disabledbuttons.length == 0) return;
-            
+        disableRequestedButtons: function () {            
             if (this.disabledbuttons.indexOf(1) != -1) {
                 $("#add-button-big").attr("disabled", "disabled");
             } else {
