@@ -3,7 +3,7 @@
         <div class="buttons-container">
             <button class="btn-big btn-primary" v-if="add_text" id="add-button-big" v-on:click="add()">
                 {{ add_text }}
-                <span class="material-icons">add</span>
+                <span class="material-icons">{{ chooseAddIcon() }}</span>
             </button>
             <button class="btn-big btn-red" v-if="exclude_text" id="exclude-button-big" v-on:click="exclude()">
                 {{ exclude_text }}
@@ -25,6 +25,12 @@ export default {
     mixins: [globalMethods],
     props: ["add_text", "exclude_text", "edit_text", "disabledbuttons"],
     methods: {
+        chooseAddIcon: function () {
+            if (this.add_text.indexOf("FINALIZAR") != -1) {
+                return "check";
+            }
+            return "add";
+        },
         add: function () {
             this.$emit("add");
         },
