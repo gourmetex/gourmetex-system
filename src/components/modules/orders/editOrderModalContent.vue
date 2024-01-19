@@ -154,11 +154,6 @@ export default {
     watch: {
         order_total: function () {
             this.order.total = this.formatCurrency(this.order_total);
-        },
-        order: function () {
-            if (this.order.status == "Cancelado" || this.order.status == "Finalizado") {
-                this.$emit("savedContent", true);
-            }
         }
     },
     methods: {
@@ -205,7 +200,8 @@ export default {
                     nome: this.selected_dish.nome,
                     quantidade: ["text", this.quantity, ""],
                     observacoes: ["text", this.observations, ""],
-                    preco: this.selected_dish.preco
+                    preco: this.selected_dish.preco,
+                    status: ["text", "Preparando", ""]
                 }
 
                 let newDish = {
@@ -288,6 +284,11 @@ export default {
                 $("#modal-submit-button").removeAttr("disabled").removeClass("btn-loading");
                 $("#modal-save-submit-button").removeAttr("disabled").removeClass("btn-loading");
                 return
+            }
+
+            if (this.order.status == "Cancelado" || this.order.status == "Finalizado") {
+                self.$emit("savedContent", true);
+                return;
             }
             
             self.savingOrder = true;

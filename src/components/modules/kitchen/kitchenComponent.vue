@@ -20,32 +20,36 @@ export default {
     mixins: [globalMethods],
     data() {
         return {
-            dishes: [],
+            orders: [],
             gridOptions: []
         }
     },
     methods: {
-        resetModalContents: function () {
-            this.showEditOrderModalContent = false;
-        }, 
         cancelDish: function () {
-            this.resetModalContents();
-            this.showModalFunction("Cancelar pedido", "Cancelar", "Cancelar");
-            this.showEditOrderModalContent = true;
-            this.descelectRows();
+            let self = this;
+            
+            api.delete("/kitchen/orders/" + self.editId).then(() => {
+                self.returnDishes();
+                self.editId = null;
+            }).catch((error) => {
+                console.log(error);
+            })
         },
         finishDish: function () {
-            this.resetModalContents();
-            this.showModalFunction("Adicionar pedido", "Adicionar", "Cancelar");
-            this.showEditOrderModalContent = true;
-            this.editId = null;
-            this.descelectRows();
+            let self = this;
+
+            api.post("/kitchen/orders/" + self.editId).then(() => {
+                self.returnDishes();
+                self.editId = null;
+            }).catch((error) => {
+                console.log(error);
+            })
         },
         returnDishes: function () {
             let self = this;
 
-            api.get("/orders").then((response) => {
-                self.dishes = response.data.returnObj.orders;
+            api.get("/kitchen/orders").then((response) => {
+                self.orders = response.data.returnObj.orders;
                 self.gridOptions = response.data.returnObj.labels;
                 self.editId = null;
             }).catch((error) => {

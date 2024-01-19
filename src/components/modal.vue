@@ -104,11 +104,11 @@ export default {
 <style scoped>
 
 .modal, .modal-overlay {
-    position: absolute;
-    top: 0;
+    position: fixed;
+    top: 80px;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: calc(100vh - 80px);
 }
 
 .modal {
