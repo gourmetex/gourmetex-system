@@ -119,7 +119,8 @@ export default {
                         "Nome do item",
                         "Qtd.",
                         "Obs",
-                        "Valor do item"
+                        "Valor do item",
+                        "Status"
                     ]
                 },
                 total: "R$ 0,00",
@@ -137,7 +138,8 @@ export default {
             card_payment: "R$ 0",
             cash_payment: "R$ 0",
             pix_payment: "R$ 0",
-            amount_payed: "R$ 0"
+            amount_payed: "R$ 0",
+            accumulatedQuantity: 0
         }
     },
     computed: {
@@ -194,53 +196,99 @@ export default {
         submitAddDish: function () {
             this.selectThisDish();
             
-            if (this.selected_dish.disponivel[1] == "Sim") {
-                let newDishGrid = {
-                    id: this.selected_dish.id,
-                    nome: this.selected_dish.nome,
-                    quantidade: ["text", this.quantity, ""],
-                    observacoes: ["text", this.observations, ""],
-                    preco: this.selected_dish.preco,
-                    status: ["text", "Preparando", ""]
-                }
+            let promises = [];
 
-                let newDish = {
-                    id: this.selected_dish.id[1],
-                    quantidade: this.quantity,
-                    observacoes: this.observations
-                }
+            this.resetResponse();
 
-                let selectedDishHaveInGrid = this.order.dishes.dishes.some(obj => obj.id[1] == this.selected_dish.id[1]);
-
-                if (this.order.dishes.dishes.length == 0 || !selectedDishHaveInGrid) {
-                    this.order.dishes.dishes.push(newDishGrid);
-                    this.order_dishes.push(newDish);
-                } else {
-                    this.order.dishes.dishes.map(obj => {
-                        if (obj.id[1] == this.selected_dish.id[1]) {
-                            obj.quantidade[1] = (parseInt(obj.quantidade[1]) + parseInt(this.quantity)).toString();
-                        }
-                    })
-
-                    this.order.dishes.dishes.push({});
-                    this.order.dishes.dishes.pop();
-
-                    this.order_dishes.map(obj => {
-                        if (obj.id == this.selected_dish.id[1]) {
-                            obj.quantidade = parseInt(obj.quantidade) + parseInt(this.quantity);
-                        }
-                    })
-                }
-
-                let total_value = (this.formatDecimalValues(newDishGrid.preco[1]) * parseFloat(this.quantity));
-                this.order_total += total_value;
+            if (this.quantity == 0) {
+                this.disposeSelectedDishAndCloseSmallModal();
             }
 
+            if (this.selected_dish.disponivel[1] == "Sim") {
+                let data = {
+                    id: this.selected_dish.id[1],
+                    quantidade: this.quantity
+                }
+
+                promises.push(
+                    api.post("/dishes/quantity_avalilable", data).then(() => {
+                        let newDishGrid = {
+                            id: this.selected_dish.id,
+                            nome: this.selected_dish.nome,
+                            quantidade: ["text", this.quantity, ""],
+                            observacoes: ["text", this.observations, ""],
+                            preco: this.selected_dish.preco,
+                            status: ["text", "Preparando", ""]
+                        }
+
+                        let newDish = {
+                            id: this.selected_dish.id[1],
+                            quantidade: this.quantity,
+                            observacoes: this.observations
+                        }
+
+                        let selectedDishHaveInGrid = this.order.dishes.dishes.some(obj => obj.id[1] == this.selected_dish.id[1]);
+                        
+                        if (this.order.dishes.dishes.length == 0 || !selectedDishHaveInGrid) {
+                            this.order.dishes.dishes.push(newDishGrid);
+                            this.order_dishes.push(newDish);
+
+                            let total_value = (this.formatDecimalValues(newDishGrid.preco[1]) * parseFloat(this.quantity));
+                            this.order_total += total_value;
+                        } else {
+                            let accumulatedQuantity = null;
+                            let promises2 = [];
+
+                            this.order.dishes.dishes.map(obj => {
+                                if (obj.id[1] == this.selected_dish.id[1]) {
+                                    accumulatedQuantity = (parseInt(obj.quantidade[1]) + parseInt(this.quantity)).toString();
+
+                                    let data = {
+                                        id: this.selected_dish.id[1],
+                                        quantidade: accumulatedQuantity
+                                    }
+
+                                    promises2.push(
+                                        api.post("/dishes/quantity_avalilable", data).then(() => {
+                                            obj.quantidade[1] = accumulatedQuantity;
+
+                                            let total_value = (this.formatDecimalValues(newDishGrid.preco[1]) * parseFloat(this.quantity));
+                                            this.order_total += total_value;
+                                        })
+                                    )
+                                }
+                            })
+
+                            Promise.all(promises2).then(() => {
+                                this.order.dishes.dishes.push({});
+                                this.order.dishes.dishes.pop();
+
+                                this.order_dishes.map(obj => {
+                                    if (obj.id == this.selected_dish.id[1]) {
+                                        obj.quantidade = parseInt(obj.quantidade) + parseInt(this.quantity);
+                                    }
+                                })
+                            }).catch((error) => {
+                                this.setResponse(error.response.data, "error");
+                            })
+                        }
+                    })
+                )
+            }
+
+            Promise.all(promises).then(() => {
+                this.disposeSelectedDishAndCloseSmallModal();
+            }).catch((error) => {
+                this.setResponse(error.response.data, "error");
+                this.disposeSelectedDishAndCloseSmallModal();
+            })
+        },
+        disposeSelectedDishAndCloseSmallModal: function () {
             this.selected_dish = {};
             this.quantity = null;
 
             this.closeSmallModal();
-        },
+        },  
         submitAddPayment: function () {
             let metodoPagamento = $("#metodo_pagamento").val();
 
@@ -272,17 +320,15 @@ export default {
             let self = this;
             if (self.savingOrder) return;
 
+            this.resetResponse();
+
             if (this.order_dishes.length == 0) {
                 this.setResponse("O pedido não pode estar vazio", "error");
-                $("#modal-submit-button").removeAttr("disabled").removeClass("btn-loading");
-                $("#modal-save-submit-button").removeAttr("disabled").removeClass("btn-loading");
                 return;
             }
 
             if ($("#submit_type").val() == "finish" && this.formatDecimalValues(this.difference) != 0) {
                 this.setResponse("O pedido possui valor em aberto", "error");
-                $("#modal-submit-button").removeAttr("disabled").removeClass("btn-loading");
-                $("#modal-save-submit-button").removeAttr("disabled").removeClass("btn-loading");
                 return
             }
 

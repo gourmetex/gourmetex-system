@@ -3,7 +3,7 @@
         <form class="edit-roles" id="informations-form" @submit.prevent="saveStock()">
             <div class="form-group">
                 <label for="ingredient">Item</label>
-                <select id="ingredient" name="ingredient" @change="selectThisIngredient()">
+                <select id="ingredient" name="ingredient" @change="selectThisIngredient()" required>
                     <option value="">Qualquer</option>
                     <option v-for="(item, index) in ingredients" :key="index" :value="item.id[1]">{{ item.nome[1] }}</option>
                 </select>

@@ -10,6 +10,12 @@ export const globalMethods = {
             let response = $(".response");
 
             response.addClass(objClass);
+
+            if (objClass == "error") {
+                $("#modal-submit-button").removeAttr("disabled").removeClass("btn-loading");
+                $("#modal-save-submit-button").removeAttr("disabled").removeClass("btn-loading");
+            }
+
             this.response = message;
         },
         resetResponse: function () {
