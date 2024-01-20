@@ -195,91 +195,71 @@ export default {
         },
         submitAddDish: function () {
             this.selectThisDish();
+            this.resetResponse();
             
+            if (this.quantity == 0 || this.selected_dish.disponivel[1] != "Sim") {
+                this.disposeSelectedDishAndCloseSmallModal();
+                return;
+            }
+
             let promises = [];
 
-            this.resetResponse();
-
-            if (this.quantity == 0) {
-                this.disposeSelectedDishAndCloseSmallModal();
+            let newDishGrid = {
+                id: this.selected_dish.id,
+                nome: this.selected_dish.nome,
+                quantidade: ["text", this.quantity, ""],
+                observacoes: ["text", this.observations, ""],
+                preco: this.selected_dish.preco,
+                status: ["text", "Preparando", ""]
             }
 
-            if (this.selected_dish.disponivel[1] == "Sim") {
-                let data = {
-                    id: this.selected_dish.id[1],
-                    quantidade: this.quantity
-                }
-
-                promises.push(
-                    api.post("/dishes/quantity_avalilable", data).then(() => {
-                        let newDishGrid = {
-                            id: this.selected_dish.id,
-                            nome: this.selected_dish.nome,
-                            quantidade: ["text", this.quantity, ""],
-                            observacoes: ["text", this.observations, ""],
-                            preco: this.selected_dish.preco,
-                            status: ["text", "Preparando", ""]
-                        }
-
-                        let newDish = {
-                            id: this.selected_dish.id[1],
-                            quantidade: this.quantity,
-                            observacoes: this.observations
-                        }
-
-                        let selectedDishHaveInGrid = this.order.dishes.dishes.some(obj => obj.id[1] == this.selected_dish.id[1]);
-                        
-                        if (this.order.dishes.dishes.length == 0 || !selectedDishHaveInGrid) {
-                            this.order.dishes.dishes.push(newDishGrid);
-                            this.order_dishes.push(newDish);
-
-                            let total_value = (this.formatDecimalValues(newDishGrid.preco[1]) * parseFloat(this.quantity));
-                            this.order_total += total_value;
-                        } else {
-                            let accumulatedQuantity = null;
-                            let promises2 = [];
-
-                            this.order.dishes.dishes.map(obj => {
-                                if (obj.id[1] == this.selected_dish.id[1]) {
-                                    accumulatedQuantity = (parseInt(obj.quantidade[1]) + parseInt(this.quantity)).toString();
-
-                                    let data = {
-                                        id: this.selected_dish.id[1],
-                                        quantidade: accumulatedQuantity
-                                    }
-
-                                    promises2.push(
-                                        api.post("/dishes/quantity_avalilable", data).then(() => {
-                                            obj.quantidade[1] = accumulatedQuantity;
-
-                                            let total_value = (this.formatDecimalValues(newDishGrid.preco[1]) * parseFloat(this.quantity));
-                                            this.order_total += total_value;
-                                        })
-                                    )
-                                }
-                            })
-
-                            Promise.all(promises2).then(() => {
-                                this.order.dishes.dishes.push({});
-                                this.order.dishes.dishes.pop();
-
-                                this.order_dishes.map(obj => {
-                                    if (obj.id == this.selected_dish.id[1]) {
-                                        obj.quantidade = parseInt(obj.quantidade) + parseInt(this.quantity);
-                                    }
-                                })
-                            }).catch((error) => {
-                                this.setResponse(error.response.data, "error");
-                            })
-                        }
-                    })
-                )
+            let newDish = {
+                id: this.selected_dish.id[1],
+                quantidade: this.quantity,
+                observacoes: this.observations
             }
+
+            let selectedDishHaveInGrid = this.order.dishes.dishes.some(obj => obj.id[1] == this.selected_dish.id[1]);
+
+            let accumulatedQuantity = this.quantity;
+
+            if (this.order.dishes.dishes.length != 0 && selectedDishHaveInGrid) {
+                this.order.dishes.dishes.map(obj => {
+                    if (obj.id[1] == this.selected_dish.id[1]) {
+                        accumulatedQuantity = (parseInt(obj.quantidade[1]) + parseInt(this.quantity)).toString();
+                    }
+                })
+            }
+
+            let data = {
+                id: this.selected_dish.id[1],
+                quantidade: accumulatedQuantity
+            }
+
+            promises.push(
+                api.post("/dishes/quantity_avalilable", data)
+            )
 
             Promise.all(promises).then(() => {
-                this.disposeSelectedDishAndCloseSmallModal();
+                if (this.order.dishes.dishes.length == 0 || !selectedDishHaveInGrid) {
+                    this.order.dishes.dishes.push(newDishGrid);
+                    this.order_dishes.push(newDish);
+                } else {
+                    this.order.dishes.dishes.push({});
+                    this.order.dishes.dishes.pop();
+
+                    this.order_dishes.map(obj => {
+                        if (obj.id == this.selected_dish.id[1]) {
+                            obj.quantidade = parseInt(obj.quantidade) + parseInt(this.quantity);
+                        }
+                    })
+                }
+
+                let total_value = (this.formatDecimalValues(newDishGrid.preco[1]) * parseFloat(this.quantity));
+                this.order_total += total_value;
             }).catch((error) => {
                 this.setResponse(error.response.data, "error");
+            }).then(() => {
                 this.disposeSelectedDishAndCloseSmallModal();
             })
         },
