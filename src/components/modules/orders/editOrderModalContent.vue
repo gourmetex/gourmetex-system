@@ -179,7 +179,6 @@ export default {
             this.order_total -= item_value;
 
             this.closeSmallModal();
-            this.descelectRows();
         },
         fillOrderDishes: function () {
             for (let i = 0; i < this.order.dishes.dishes.length; i++) {
@@ -245,6 +244,12 @@ export default {
                     this.order.dishes.dishes.push(newDishGrid);
                     this.order_dishes.push(newDish);
                 } else {
+                    this.order.dishes.dishes.map(obj => {
+                        if (obj.id[1] == this.selected_dish.id[1]) {
+                            obj.quantidade[1] = accumulatedQuantity;
+                        }
+                    })
+
                     this.order.dishes.dishes.push({});
                     this.order.dishes.dishes.pop();
 

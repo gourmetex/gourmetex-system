@@ -46,6 +46,7 @@ export const globalMethods = {
                 this.submitContent = false;
 
                 this.reloadGrid = false;
+                this.descelectRows();
             }, 400);
         },
         closeModalContent: function () {
@@ -196,7 +197,7 @@ export const globalMethods = {
         },
         descelectRows: function () {
             let allRows = $(".grid-row");
-            
+
             allRows.removeClass("row-selected");
             this.editId = null;
             this.hideEditButtons();

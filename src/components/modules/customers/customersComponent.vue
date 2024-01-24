@@ -61,18 +61,15 @@ export default {
             this.showModalFunction("Adicionar cliente", "Salvar", "Cancelar");
             this.showEditCustomerModalContent = true;
             this.editId = null;
-            this.descelectRows();
         },
         excludeCustomer: function () {
             this.resetModalContents();
             this.showModalFunction("Excluir cliente", "Excluir", "Cancelar");
-            this.descelectRows();
         }, 
         editCustomer: function () {
             this.resetModalContents();
             this.showModalFunction("Editar cliente", "Salvar", "Cancelar");
             this.showEditCustomerModalContent = true;
-            this.descelectRows();
         },
         returnCustomers: function () {
             let self = this;

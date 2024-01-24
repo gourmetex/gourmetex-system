@@ -40,21 +40,17 @@ export default {
         cancelOrder: function () {
             this.resetModalContents();
             this.showModalFunction("Cancelar pedido", "Cancelar", "Cancelar");
-            this.showEditOrderModalContent = true;
-            this.descelectRows();
         },
         addOrder: function () {
             this.resetModalContents();
             this.showModalFunction("Adicionar pedido", "Adicionar", "Cancelar");
             this.showEditOrderModalContent = true;
             this.editId = null;
-            this.descelectRows();
         },
         editOrder: function () {
             this.resetModalContents();
             this.showModalFunction("Editar pedido", "Salvar", "Cancelar", "Finalizar");
             this.showEditOrderModalContent = true;
-            this.descelectRows();
         },
         returnOrders: function () {
             let self = this;

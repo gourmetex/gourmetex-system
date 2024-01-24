@@ -60,13 +60,11 @@ export default {
         },
         deleteCategory: function () {
             this.showModalFunction("Excluir categoria", "Excluir", "Cancelar");
-            this.descelectRows();
         },
         createNewCategory: function () {
             this.showModalFunction("Cadastrar categoria", "Cadastrar", "Cancelar");
             this.showEditDishesCategoriesModalContent = true;
             this.editId = null;
-            this.descelectRows();
         },
         editCategory: function () {
             this.showModalFunction("Editar categoria", "Salvar", "Cancelar");
