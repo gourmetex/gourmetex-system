@@ -6,11 +6,11 @@
                 <h2>LOGIN</h2>
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="text" id="email" name="email" placeholder="example@domain.com" required>
+                    <input type="text" id="email" name="email" v-model="email" placeholder="example@domain.com" required>
                 </div>
                 <div class="form-group">
                     <label for="password">Senha</label>
-                    <input type="password" name="password" id="password" required>
+                    <input type="password" name="password" id="password" v-model="temporary_password" required>
                 </div>
                 <button type="submit" class="btn btn-primary" id="login-button">Entrar</button>
                 <div class="complement">
@@ -30,6 +30,12 @@ import $ from 'jquery';
 export default {
     name: "loginPage",
     mixins: [globalMethods],
+    data() {
+        return {
+            email: "",
+            temporary_password: ""
+        }
+    },
     methods: {
         login: function () {
             let self = this;
@@ -51,10 +57,26 @@ export default {
             }).then(() => {
                 loginButton.removeAttr("disabled").removeClass("btn-loading");
             })
+        },
+        verifyParams: function () {
+            let url = new URLSearchParams(window.location.search);
+            let email = decodeURI(url.get("email"))
+            let temporaryPassword = url.get("tp");
+
+            if (email && temporaryPassword) {
+                this.email = email;
+                this.temporary_password = temporaryPassword;
+
+                return true;
+            }
+
+            return false;
         }
     },
     mounted: function () {
-        this.checkIfUserIsAuthenticated();
+        if (!this.verifyParams()) {
+            this.checkIfUserIsAuthenticated();
+        }
     }
 }
 </script>

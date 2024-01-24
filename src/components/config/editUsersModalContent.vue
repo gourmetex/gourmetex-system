@@ -77,6 +77,7 @@ export default {
             }, {});
 
             data["company_id"] = self.$root.company.id;
+            data["company_name"] = self.$root.company.nome;
             data["token"] = "";
 
             let path = "register";

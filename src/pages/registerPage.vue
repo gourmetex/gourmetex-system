@@ -66,6 +66,7 @@ export default {
             data["temporary_password"] = "";
             data["salary"] = 0;
             data["role"] = "";
+            data["company_name"] = "";
 
             let password = $("#password").val();
             let repeatPassword = $("#repeat-password").val();
