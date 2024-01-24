@@ -43,18 +43,16 @@ export default {
             this.showModalFunction("Criar prato", "Criar", "Cancelar");
             this.showEditDishModalContent = true;
             this.editId = null;
-            this.descelectRows();
         },
         excludeDish: function () {
             this.resetModalContents();
             this.showModalFunction("Excluir prato", "Remover", "Cancelar");
-            this.descelectRows();
         }, 
         editDish: function () {
             this.resetModalContents();
+
             this.showModalFunction("Editar prato", "Salvar", "Cancelar");
             this.showEditDishModalContent = true;
-            this.descelectRows();
         },
         returnDishes: function () {
             let self = this;
