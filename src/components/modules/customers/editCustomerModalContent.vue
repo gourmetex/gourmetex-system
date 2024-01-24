@@ -40,7 +40,7 @@ export default {
             customer: {
                 nome: "",
                 email: "",
-                telefone: "+5543996352536",
+                telefone: "",
                 especial: false,
                 porcentagem_desconto: null
             },
@@ -55,7 +55,7 @@ export default {
                 return;
             } 
 
-            api.get("/dishes/" + self.dishid).then((response) => {
+            api.get("/customers/" + self.customerid).then((response) => {
                 self.customer = response.data.returnObj;
             }).catch((error) => {
                 console.log(error);
@@ -73,24 +73,21 @@ export default {
                 return obj;
             }, {});
 
+            data["telefone"] = self.formatTelToSubmit($("#telefone").val());
+
             let path = "new_customer";
 
-            if (self.orderid != null) {
+            if (self.customerid != null) {
                 path = "edit_customer/" + self.customerid;
             }
 
-            data["telefone"] = self.formatTelToSubmit($("#telefone").val());
-
-            console.log(data)
-            console.log(path)
-
-            /*api.post("/orders/" + path, data).then(() => {
+            api.post("/customers/" + path, data).then(() => {
                 self.$emit("savedContent", true);
             }).catch((error) => {
                 console.log(error);
             }).then(() => {
-                self.savingOrder = false;
-            })*/
+                self.savingCustomer = false;
+            })
         }
     },
     mounted: function () {

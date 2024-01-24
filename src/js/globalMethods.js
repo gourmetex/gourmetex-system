@@ -188,8 +188,7 @@ export const globalMethods = {
             let row = $("#grid-row-" + rowKey);
 
             if (row.hasClass("row-selected")) {
-                allRows.removeClass("row-selected");
-                this.hideEditButtons();
+                this.descelectRows();
             } else {
                 allRows.removeClass("row-selected");
                 row.addClass("row-selected");
@@ -197,8 +196,9 @@ export const globalMethods = {
         },
         descelectRows: function () {
             let allRows = $(".grid-row");
-
+            
             allRows.removeClass("row-selected");
+            this.editId = null;
             this.hideEditButtons();
         },
         inputMoneyCheck: function (event) {

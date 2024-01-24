@@ -7,10 +7,19 @@
         <div class="dishes-container">
             <div class="filter-container-header">
                 <h2>Lista de clientes</h2>
+                <div class="filters">
+                    <form id="filter-form" @submit.prevent="search()">
+                        <div class="filter-field">
+                            <label for="nome">Nome do cliente</label>
+                            <input type="text" name="nome" id="nome" placeholder="Ex. João">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Buscar</button>
+                    </form>
+                </div>
             </div>
             <gridView :gridoptions="gridOptions" :griddata="customers" @dataclick="selectRow($event)"></gridView>
         </div>
-        <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :excludepath="'/dishes/' + editId" :modalbutton2="modalButton2" :modalbutton3="modalButton3" @closeModal="closeModalFunction(); returnCustomers();">
+        <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :excludepath="'/customers/' + editId" :modalbutton2="modalButton2" :modalbutton3="modalButton3" @closeModal="closeModalFunction(); returnCustomers();">
             <editCustomerModalContent v-if="showEditCustomerModalContent" :customerid="editId" @savedContent="closeModalFunction(); returnCustomers();"></editCustomerModalContent>
         </modal>
     </div>
@@ -22,6 +31,7 @@ import { globalMethods } from "@/js/globalMethods";
 import modal from "../../modal.vue";
 import editCustomerModalContent from "./editCustomerModalContent.vue";
 import api from "../../../configs/api";
+import $ from 'jquery';
 
 export default {
     name: "customersComponent",
@@ -30,10 +40,19 @@ export default {
         return {
             customers: [],
             gridOptions: [],
-            showEditCustomerModalContent: false
+            showEditCustomerModalContent: false,
+            filters: []
         }
     },
     methods: {
+        search: function () {
+            let data = $("#filter-form").serializeArray().reduce(function (obj, item) { // Pega todos os dados do formulário e coloca em um objeto.
+                obj[item.name] = item.value;
+                return obj;
+            }, {});
+            this.filters = data;
+            this.returnCustomers();
+        },
         resetModalContents: function () {
             this.showEditCustomerModalContent = false;
         },  
@@ -58,10 +77,13 @@ export default {
         returnCustomers: function () {
             let self = this;
 
-            api.get("/dishes").then((response) => {
-                self.customers = response.data.returnObj.dishes;
+            let data = {
+                filters: self.filters
+            }
+
+            api.post("/customers", data).then((response) => {
+                self.customers = response.data.returnObj.customers;
                 self.gridOptions = response.data.returnObj.labels;
-                self.editId = null;
             }).catch((error) => {
                 console.log(error);
             })
