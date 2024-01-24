@@ -155,7 +155,6 @@ export default {
 
             if (this.ingredients_list.length == 0) {
                 this.setResponse("O prato não pode estar vazio", "error");
-                $("#modal-submit-button").removeAttr("disabled").removeClass("btn-loading");
                 return;
             }
 

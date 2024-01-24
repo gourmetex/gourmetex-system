@@ -54,7 +54,6 @@ export default {
 
             if (this.category.cor == null) {
                 this.setResponse("Cor não pode ser vazia", "error");
-                $("#modal-submit-button").removeAttr("disabled").removeClass("btn-loading");
                 return;
             }
 
