@@ -71,13 +71,11 @@ export default {
         },
         deleteUser: function () {
             this.showModalFunction("Excluir usuário", "Excluir", "Cancelar");
-            this.descelectRows();
         },
         createNewUser: function () {
             this.showModalFunction("Cadastrar usuário", "Salvar", "Cancelar");
             this.showEditUsersModalContent = true;
             this.editId = null;
-            this.descelectRows();
         },
         editUser: function () {
             this.showModalFunction("Editar usuário", "Salvar", "Cancelar");

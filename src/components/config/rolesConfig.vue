@@ -71,13 +71,11 @@ export default {
         },
         deleteRole: function () {
             this.showModalFunction("Excluir cargo", "Excluir", "Cancelar");
-            this.descelectRows();
         },
         createNewRole: function () {
             this.showModalFunction("Criar cargo", "Salvar", "Cancelar");
             this.showEditRoleModalContent = true;
             this.editId = null;
-            this.descelectRows();
         },
         editRole: function () {
             this.showModalFunction("Editar cargo", "Salvar", "Cancelar");

@@ -161,11 +161,9 @@ export default {
     methods: {
         openPaymentModal: function () {
             this.openSmallModal("#modal-payment");
-            this.descelectRows();
         },
         addDish: function () {
             this.openSmallModal("#modal-dishes");
-            this.descelectRows();
         },
         excludeDish: function () {
             let self = this;

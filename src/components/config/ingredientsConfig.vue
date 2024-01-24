@@ -64,13 +64,11 @@ export default {
         },
         deleteIngredient: function () {
             this.showModalFunction("Excluir ingrediente", "Excluir", "Cancelar");
-            this.descelectRows();
         },
         createNewIngredient: function () {
             this.showModalFunction("Cadastrar ingrediente", "Salvar", "Cancelar");
             this.showEditIngredientModalContent = true;
             this.editId = null;
-            this.descelectRows();
         },
         editIngredient: function () {
             this.showModalFunction("Editar ingrediente", "Salvar", "Cancelar");
