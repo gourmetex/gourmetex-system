@@ -9,7 +9,7 @@
                 </div>
                 <div class="form-group">
                     <label for="id_cliente">Nome do cliente</label>
-                    <input type="text" name="id_cliente" id="id_cliente" v-model="order.cliente" required>
+                    <ajaxAutoComplete @select="setCustomer($event)" ajaxtype="clientes" :entity="order.id_cliente" :required="true" />
                 </div>
             </div>
             <input type="submit" id="submit-button" style="display: none;">
@@ -103,6 +103,7 @@ import api from "../../../configs/api";
 import { globalMethods } from "@/js/globalMethods";
 import $ from 'jquery';
 import gridView from "../../gridView.vue";
+import ajaxAutoComplete from "../../ajaxAutoComplete.vue";
 
 export default {
     name: "editOrderModalContent",
@@ -124,7 +125,8 @@ export default {
                     ]
                 },
                 total: "R$ 0,00",
-                cliente: null,
+                id_cliente: null,
+                nome_cliente: "",
                 cep_entrega: null
             },
             order_dishes: [],
@@ -159,6 +161,10 @@ export default {
         }
     },
     methods: {
+        setCustomer: function (event) {
+            this.cliente_nome = event.nome;
+            this.cliente_id = event.id;
+        },
         openPaymentModal: function () {
             this.openSmallModal("#modal-payment");
         },
@@ -382,7 +388,8 @@ export default {
         this.returnOrder();        
     },
     components: {
-        gridView
+        gridView,
+        ajaxAutoComplete
     }
 }
 </script>
