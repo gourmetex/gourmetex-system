@@ -292,6 +292,7 @@ form .btn {
 @media (max-width: 960px) {
     .btn-big {
         width: 100%;
+        margin: 0.7rem 0;
     }
 }
 
@@ -436,7 +437,7 @@ form .btn {
     opacity: 0;
     display: none;
     transform: translateY(-10vh);
-    z-index: 1;
+    z-index: 8;
 }
 
 .small-modal-wrapper {
@@ -447,6 +448,7 @@ form .btn {
     top: 0;
     right: 0;
     display: none;
+    z-index: 7;
 }
 
 .modal-edit-grid {

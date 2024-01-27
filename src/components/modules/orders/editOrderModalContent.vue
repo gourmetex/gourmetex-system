@@ -9,7 +9,7 @@
                 </div>
                 <div class="form-group">
                     <label for="id_cliente">Nome do cliente</label>
-                    <ajaxAutoComplete @select="setCustomer($event)" ajaxtype="clientes" :entity="order.id_cliente" :required="true" />
+                    <ajaxAutoComplete @select="setCustomer($event)" ajaxtype="clientes" :entityid="this.order.id_cliente" :entityname="this.order.nome_cliente" :required="true" />
                 </div>
             </div>
             <input type="submit" id="submit-button" style="display: none;">
@@ -40,6 +40,7 @@
                         <h3>Dinheiro: {{ cash_payment }}</h3>
                     </div>
                     <div class="payment-difference">
+                        <h3>Desconto: {{ total_desconto }}</h3>
                         <h3 class="font-bold">Restante: {{ difference }}</h3>
                         <h3 class="font-bold" v-if="have_delivery_module">Entrega: {{ delivery_amount }}</h3>
                     </div>
@@ -125,8 +126,8 @@ export default {
                     ]
                 },
                 total: "R$ 0,00",
-                id_cliente: null,
                 nome_cliente: "",
+                id_cliente: "",
                 cep_entrega: null
             },
             order_dishes: [],
@@ -141,7 +142,11 @@ export default {
             cash_payment: "R$ 0",
             pix_payment: "R$ 0",
             amount_payed: "R$ 0",
-            accumulatedQuantity: 0
+            accumulatedQuantity: 0,
+            cliente_nome: null,
+            cliente_id: null,
+            cliente_desconto: 0,
+            total_desconto: "R$ 0"
         }
     },
     computed: {
@@ -157,13 +162,23 @@ export default {
     },
     watch: {
         order_total: function () {
-            this.order.total = this.formatCurrency(this.order_total);
+            this.calculateOrderTotal();
         }
     },
     methods: {
+        calculateOrderTotal: function () {
+            let total = this.order_total;
+            let desconto = ((parseInt(this.cliente_desconto) / 100) * total).toFixed(2);
+            let totalWithDiscount = total - desconto;
+
+            this.total_desconto = this.formatCurrency(desconto);
+            this.order.total = this.formatCurrency(totalWithDiscount);
+        },
         setCustomer: function (event) {
+            this.cliente_desconto = event.porcentagem_desconto != undefined && event.porcentagem_desconto != "" ? event.porcentagem_desconto.replace("%", "") : 0;
             this.cliente_nome = event.nome;
             this.cliente_id = event.id;
+            this.calculateOrderTotal();
         },
         openPaymentModal: function () {
             this.openSmallModal("#modal-payment");
@@ -318,14 +333,19 @@ export default {
 
             if ($("#submit_type").val() == "finish" && this.formatDecimalValues(this.difference) != 0) {
                 this.setResponse("O pedido possui valor em aberto", "error");
-                return
+                return;
+            }
+
+            if ($(".ajax-autocomplete").attr("invalid") == "true") {
+                this.setResponse("Campo cliente não pode ser vazio", "error");7
+                return;
             }
 
             if (this.order.status == "Cancelado" || this.order.status == "Finalizado") {
                 self.$emit("savedContent", true);
                 return;
             }
-            
+
             self.savingOrder = true;
 
             let data = $("#informations-form").serializeArray().reduce(function (obj, item) { // Pega todos os dados do formulário e coloca em um objeto.
@@ -339,6 +359,8 @@ export default {
             data["pagamento_dinheiro"] = this.cash_payment;
             data["cep_entrega"] = this.order.cep_entrega;
             data["save_type"] = $("#submit_type").val();
+            data["cliente_nome"] = this.cliente_nome != null ? this.cliente_nome : $("#ajax-autocomplete-input").val();
+            data["cliente_id"] = this.cliente_id;
 
             let path = "new_order";
 
@@ -377,7 +399,11 @@ export default {
                 self.pix_payment = self.formatCurrency(self.order.pagamento_pix);
                 self.card_payment = self.formatCurrency(self.order.pagamento_cartao);
                 self.cash_payment = self.formatCurrency(self.order.pagamento_dinheiro);
+                self.cliente_nome = self.order.nome_cliente;
+                self.cliente_id = self.order.id_cliente;
+                self.cliente_desconto = self.order.porcentagem_desconto;
                 self.fillOrderDishes();
+                self.calculateOrderTotal();
             }).catch((error) => {
                 console.log(error);
             })

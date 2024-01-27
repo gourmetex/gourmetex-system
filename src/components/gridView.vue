@@ -110,6 +110,7 @@ export default {
     width: 100%;
     display: flex;
     justify-content: center;
+    text-align: center;
 }
 
 .grid-cell {
