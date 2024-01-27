@@ -326,6 +326,11 @@ export default {
 
             this.resetResponse();
 
+            if (this.order.status == "Cancelado" || this.order.status == "Finalizado") {
+                self.$emit("savedContent", true);
+                return;
+            }
+
             if (this.order_dishes.length == 0) {
                 this.setResponse("O pedido não pode estar vazio", "error");
                 return;
@@ -338,11 +343,6 @@ export default {
 
             if ($(".ajax-autocomplete").attr("invalid") == "true") {
                 this.setResponse("Campo cliente não pode ser vazio", "error");7
-                return;
-            }
-
-            if (this.order.status == "Cancelado" || this.order.status == "Finalizado") {
-                self.$emit("savedContent", true);
                 return;
             }
 

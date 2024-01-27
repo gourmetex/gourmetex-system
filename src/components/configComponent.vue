@@ -27,6 +27,7 @@
                 <usersConfig v-if="showSections.usersConfig"></usersConfig>
                 <ingredientsConfig v-if="showSections.ingredientsConfig"></ingredientsConfig>
                 <dishesCategories v-if="showSections.dishesCategories"></dishesCategories>
+                <tablesConfig v-if="showSections.tablesConfig"></tablesConfig>
             </div>
         </div>
     </div>
@@ -38,6 +39,7 @@ import rolesConfig from "./config/rolesConfig.vue";
 import usersConfig from "./config/usersConfig.vue";
 import ingredientsConfig from "./config/ingredientsConfig.vue";
 import dishesCategories from "./config/dishesCategories.vue";
+import tablesConfig from "./config/tablesConfig.vue";
 
 export default {
     name: "configComponent",
@@ -92,6 +94,17 @@ export default {
                             link: "systemConfig"
                         }
                     ]
+                },
+                {
+                    id: 4,
+                    name: "Mesas",
+                    subMenus: [
+                        {
+                            id: 0,
+                            name: "Listar mesas",
+                            link: "tablesConfig"
+                        }
+                    ]
                 }
             ],
             showSections: {
@@ -99,7 +112,8 @@ export default {
                 rolesConfig: false,
                 usersConfig: false,
                 ingredientsConfig: false,
-                dishesCategories: false
+                dishesCategories: false,
+                tablesConfig: false
             }
         }
     },
@@ -148,7 +162,8 @@ export default {
         rolesConfig,
         usersConfig,
         ingredientsConfig,
-        dishesCategories
+        dishesCategories,
+        tablesConfig
     }
 }
 </script>
