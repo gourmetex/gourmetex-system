@@ -33,7 +33,7 @@ import gridView from "../gridView.vue";
 import { globalMethods } from "@/js/globalMethods";
 import modal from "../modal.vue";
 import editTablesModalContent from "./editTablesModalContent.vue";
-//import api from "../../configs/api";
+import api from "../../configs/api";
 import $ from 'jquery';
 
 export default {
@@ -70,7 +70,18 @@ export default {
             this.showEditTablesModalContent = true;
         },
         returnAllTables: function () {
+            let self = this;
 
+            let data = {
+                filters: self.filters
+            }
+
+            api.post("/tables", data).then((response) => {
+                self.tables = response.data.returnObj.tables;
+                self.gridOptions = response.data.returnObj.labels;
+            }).catch((error) => {
+                self.setResponse(error.response.data, "error");
+            })
         }
     },
     mounted: function () {

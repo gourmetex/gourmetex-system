@@ -16,12 +16,13 @@
                         id="qr-code"
                         :text="table.qrcode"
                         :size="152"
-                        :class="table.id == null ? 'blur-image' : ''"
+                        :class="tableid == null ? 'blur-image' : ''"
                     />
-                    <button v-if="table.id != null" type="button" class="btn btn-primary" v-on:click="printOutTableQRCode()">Imprimir</button>
+                    <button v-if="tableid != null" type="button" class="btn btn-primary" v-on:click="printOutTableQRCode()">Imprimir</button>
                     <h3 v-else>Faça a inclusão da mesa para ver o QR Code</h3>
                 </div>
             </div>
+            <p class="response">{{ response }}</p>
             <input type="submit" id="submit-button" style="display: none;">
         </form>
     </div>
@@ -29,9 +30,12 @@
 <script>
 import Qrcode from 'vue-qrcode-component';
 import $ from 'jquery';
+import api from "../../configs/api";
+import { globalMethods } from "@/js/globalMethods";
 
 export default {
     name: "editTablesModalContent",
+    mixins: [globalMethods],
     props: ["tableid"],
     data() {
         return {
@@ -39,22 +43,57 @@ export default {
                 id: null,
                 descricao: "",
                 qrcode: "https://rabsystems.com.br?utm_source=gourmetech_table_qr_code"
-            }
-        }
-    },
-    watch: {
-        "table.qrcode": function () {
-            console.log(this.table.qrcode)
+            },
+            savingTable: false
         }
     },
     methods: {
         printOutTableQRCode: function () {
             let qrCodeBase64 = $("#qr-code img").attr("src");
             this.$router.push("/home/printout?image=" + encodeURIComponent(qrCodeBase64));
-        }
+        },
+        saveTable: function () {
+            let self = this;
+
+            if (self.savingTable) return;
+
+            self.savingTable = true;
+            
+            let data = $("#informations-form").serializeArray().reduce(function (obj, item) { // Pega todos os dados do formulário e coloca em um objeto.
+                obj[item.name] = item.value;
+                return obj;
+            }, {});
+
+            data["old_id"] = self.tableid;
+
+            let path = "create_table";
+
+            if (self.tableid != null) {
+                path = "edit_table";
+            }
+
+            api.post("/tables/" + path, data).then(() => {
+                self.$emit("savedContent", true);
+            }).catch((error) => {
+                self.setResponse(error.response.data, "error");
+            }).then(() => {
+                self.savingTable = false;
+            })
+        },
+        returnTable: function () {
+            let self = this;
+            
+            if (self.tableid == 0 || self.tableid == null) return;
+
+            api.get("/tables/" + self.tableid).then((response) => {
+                self.table = response.data.returnObj;
+            }).catch((error) => {
+                console.log(error);
+            })
+        },
     },
     mounted: function () {
-        
+        this.returnTable();
     },
     components: {
         Qrcode
