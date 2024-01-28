@@ -55,7 +55,6 @@ export default {
         return {
             roles: [],
             gridOptions: [],
-            selectedRow: null,
             showEditRoleModalContent: false,
             filters: []
         }

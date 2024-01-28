@@ -20,7 +20,7 @@
                 <button type="submit" class="btn btn-primary">Buscar</button>
             </form>
         </div>
-        <gridView :gridoptions="gridOptions" :griddata="users" :selected="selectedRow" @dataclick="selectRow($event)"></gridView>
+        <gridView :gridoptions="gridOptions" :griddata="users" @dataclick="selectRow($event)"></gridView>
         <div class="edit-buttons">
             <button type="button" class="rounded-btn btn-primary" v-on:click="createNewUser()">
                 <span class="material-icons">add</span>
@@ -55,7 +55,6 @@ export default {
             users: [],
             roles: [],
             gridOptions: [],
-            selectedRow: null,
             showEditUsersModalContent: false,
             filters: []
         }

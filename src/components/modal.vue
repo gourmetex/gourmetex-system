@@ -155,8 +155,8 @@ export default {
 
 .modal-body {
     flex: 1;
-    overflow-y: auto;
     overflow: hidden;
+    overflow-y: auto;
 }
 
 .modal-body > div {

@@ -609,3 +609,7 @@ label {
         .options-ul li:hover, .selected {
             background: var(--gray-3);
         }
+
+.blur-image {
+    filter: blur(2px);
+}

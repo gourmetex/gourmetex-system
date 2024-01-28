@@ -9,7 +9,7 @@
                 <button type="submit" class="btn btn-primary">Buscar</button>
             </form>
         </div>
-        <gridView :gridoptions="gridOptions" :griddata="dishes_categories" :selected="selectedRow" @dataclick="selectRow($event)"></gridView>
+        <gridView :gridoptions="gridOptions" :griddata="dishes_categories" @dataclick="selectRow($event)"></gridView>
         <div class="edit-buttons">
             <button type="button" class="rounded-btn btn-primary" v-on:click="createNewCategory()">
                 <span class="material-icons">add</span>
@@ -43,7 +43,6 @@ export default {
         return {
             dishes_categories: [],
             gridOptions: [],
-            selectedRow: null,
             showEditDishesCategoriesModalContent: false,
             filters: [],
             ingredients_categories: []
