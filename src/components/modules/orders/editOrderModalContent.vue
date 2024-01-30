@@ -348,9 +348,6 @@ export default {
                     return;
                 }
 
-                console.log(validTable)
-                console.log(sameTable)
-
                 if (!validTable && !sameTable) {
                     this.setResponse("Número da mesa não existe ou ja está em uso", "error");
                     return;

@@ -2,7 +2,7 @@ import axios from 'axios'
 
 let url_api;
 
-const dev_environment = "http://192.168.15.43:3000/"; //Ambiente de desenvolvimento.
+const dev_environment = "http://192.168.15.167:3000/"; //Ambiente de desenvolvimento.
 const publish_environment = "https://gourmetech-coreteste-5d758e07e0da.herokuapp.com/"; //Ambiente de teste ou produção.
 // TROCA DO AMBIENTE DA API
 //
@@ -11,7 +11,7 @@ const publish_environment = "https://gourmetech-coreteste-5d758e07e0da.herokuapp
 // 1 - Ambiente de produção
 // 
 // ==============================
-let test_or_publish = 1;
+let test_or_publish = 0;
 // ==============================
 //
 

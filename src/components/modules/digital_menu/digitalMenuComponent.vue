@@ -8,7 +8,7 @@
             <gridView :gridoptions="gridOptions" :griddata="digitalMenu" @dataclick="selectRow($event)"></gridView>
         </div>
         <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :excludepath="'/orders/' + editId" :modalbutton2="modalButton2" :modalButton3="modalButton3" @closeModal="closeModalFunction(); returnMenuDigital();">
-            <editOrderModalContent v-if="showEditOrderModalContent" :payment="false" :orderid="editId" @savedContent="closeModalFunction(); returnMenuDigital();"></editOrderModalContent>
+            <editOrderModalContent v-if="showEditOrderModalContent" :payment="payment" :orderid="editId" @savedContent="closeModalFunction(); returnMenuDigital();"></editOrderModalContent>
         </modal>
     </div>
 </template>
@@ -27,7 +27,8 @@ export default {
         return {
             gridOptions: [],
             digitalMenu: [],
-            showEditOrderModalContent: false
+            showEditOrderModalContent: false,
+            payment: false
         }
     },
     methods: {
@@ -41,7 +42,10 @@ export default {
             this.editId = null;
         },
         closeTable: function () {
-            
+            this.payment = true;
+            this.resetModalContents();
+            this.showModalFunction("Fechar mesa", "Salvar", "Cancelar", "Finalizar");
+            this.showEditOrderModalContent = true;
         },
         editTable: function () {
             this.resetModalContents();
