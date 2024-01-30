@@ -5,7 +5,7 @@
             <div class="form-group-horizontal inputs-50">
                 <div class="form-group">
                     <label for="mesa">Mesa vinculada</label>
-                    <input type="number" name="mesa" v-model="order.mesa">
+                    <input type="number" name="mesa" id="mesa" v-model="order.mesa">
                 </div>
                 <div class="form-group">
                     <label for="id_cliente">Nome do cliente</label>
@@ -30,7 +30,7 @@
                 </div>
             </div>
         </div>
-        <div class="order-submit-informations">
+        <div class="order-submit-informations" v-if="payment != false">
             <div class="payment">
                 <div class="payment-inner">
                     <button class="btn btn-primary" v-on:click="openPaymentModal()">Pagamento</button>
@@ -109,7 +109,7 @@ import ajaxAutoComplete from "../../ajaxAutoComplete.vue";
 export default {
     name: "editOrderModalContent",
     mixins: [globalMethods],
-    props: ["orderid"],
+    props: ["orderid", "payment"],
     data() {
         return {
             savingOrder: false,
@@ -128,7 +128,8 @@ export default {
                 total: "R$ 0,00",
                 nome_cliente: "",
                 id_cliente: "",
-                cep_entrega: null
+                cep_entrega: null,
+                mesa: null
             },
             order_dishes: [],
             dishes_list: [],
@@ -146,7 +147,8 @@ export default {
             cliente_nome: null,
             cliente_id: null,
             cliente_desconto: 0,
-            total_desconto: "R$ 0"
+            total_desconto: "R$ 0",
+            frozen_table: null
         }
     },
     computed: {
@@ -324,56 +326,81 @@ export default {
             let self = this;
             if (self.savingOrder) return;
 
+            let promises = [];
+
             this.resetResponse();
 
-            if (this.order.status == "Cancelado" || this.order.status == "Finalizado") {
-                self.$emit("savedContent", true);
-                return;
-            }
+            let validTable = false
 
-            if (this.order_dishes.length == 0) {
-                this.setResponse("O pedido não pode estar vazio", "error");
-                return;
-            }
+            promises.push(
+                api.get("/tables/valid_table/" + self.order.mesa).then((response) => {
+                    if (response.data.returnObj || self.payment != false && self.order.mesa == "") {
+                        validTable = true;
+                    }
+                })
+            )
+            
+            let sameTable = self.frozen_table == self.order.mesa ? true : false;
 
-            if ($("#submit_type").val() == "finish" && this.formatDecimalValues(this.difference) != 0) {
-                this.setResponse("O pedido possui valor em aberto", "error");
-                return;
-            }
+            Promise.all(promises).then(() => {
+                if (this.order.status == "Cancelado" || this.order.status == "Finalizado") {
+                    self.$emit("savedContent", true);
+                    return;
+                }
 
-            if ($(".ajax-autocomplete").attr("invalid") == "true") {
-                this.setResponse("Campo cliente não pode ser vazio", "error");7
-                return;
-            }
+                console.log(validTable)
+                console.log(sameTable)
 
-            self.savingOrder = true;
+                if (!validTable && !sameTable) {
+                    this.setResponse("Número da mesa não existe ou ja está em uso", "error");
+                    return;
+                }
 
-            let data = $("#informations-form").serializeArray().reduce(function (obj, item) { // Pega todos os dados do formulário e coloca em um objeto.
-                obj[item.name] = item.value;
-                return obj;
-            }, {});
+                if (this.order_dishes.length == 0) {
+                    this.setResponse("O pedido não pode estar vazio", "error");
+                    return;
+                }
 
-            data["pratos"] = self.order_dishes;
-            data["pagamento_pix"] = this.pix_payment;
-            data["pagamento_cartao"] = this.card_payment;
-            data["pagamento_dinheiro"] = this.cash_payment;
-            data["cep_entrega"] = this.order.cep_entrega;
-            data["save_type"] = $("#submit_type").val();
-            data["cliente_nome"] = this.cliente_nome != null ? this.cliente_nome : $("#ajax-autocomplete-input").val();
-            data["cliente_id"] = this.cliente_id;
+                if ($("#submit_type").val() == "finish" && this.formatDecimalValues(this.difference) != 0) {
+                    this.setResponse("O pedido possui valor em aberto", "error");
+                    return;
+                }
 
-            let path = "new_order";
+                if ($(".ajax-autocomplete").attr("invalid") == "true") {
+                    this.setResponse("Campo cliente não pode ser vazio", "error");7
+                    return;
+                }
 
-            if (self.orderid != null) {
-                path = "edit_order/" + self.orderid;
-            }
+                self.savingOrder = true;
 
-            api.post("/orders/" + path, data).then(() => {
-                self.$emit("savedContent", true);
-            }).catch((error) => {
-                console.log(error);
-            }).then(() => {
-                self.savingOrder = false;
+                let data = $("#informations-form").serializeArray().reduce(function (obj, item) { // Pega todos os dados do formulário e coloca em um objeto.
+                    obj[item.name] = item.value;
+                    return obj;
+                }, {});
+
+                data["pratos"] = self.order_dishes;
+                data["pagamento_pix"] = this.pix_payment;
+                data["pagamento_cartao"] = this.card_payment;
+                data["pagamento_dinheiro"] = this.cash_payment;
+                data["cep_entrega"] = this.order.cep_entrega;
+                data["mesa"] = this.order.mesa == "" ? null : this.order.mesa;
+                data["save_type"] = $("#submit_type").val();
+                data["cliente_nome"] = this.cliente_nome != null ? this.cliente_nome : $("#ajax-autocomplete-input").val();
+                data["cliente_id"] = this.cliente_id;
+
+                let path = "new_order";
+
+                if (self.orderid != null) {
+                    path = "edit_order/" + self.orderid;
+                }
+
+                api.post("/orders/" + path, data).then(() => {
+                    self.$emit("savedContent", true);
+                }).catch((error) => {
+                    console.log(error);
+                }).then(() => {
+                    self.savingOrder = false;
+                })
             })
         },
         returnAllDishes: function () {
@@ -402,6 +429,14 @@ export default {
                 self.cliente_nome = self.order.nome_cliente;
                 self.cliente_id = self.order.id_cliente;
                 self.cliente_desconto = self.order.porcentagem_desconto;
+
+                let originalObj = self.order;
+                let frozenObj = JSON.parse(JSON.stringify(originalObj));
+
+                Object.freeze(frozenObj);
+
+                self.frozen_table = frozenObj.mesa == '' ? null : frozenObj.mesa;
+
                 self.fillOrderDishes();
                 self.calculateOrderTotal();
             }).catch((error) => {
@@ -411,7 +446,11 @@ export default {
     },
     mounted: function () {
         this.returnAllDishes();
-        this.returnOrder();        
+        this.returnOrder();   
+        
+        if (this.payment == false) {
+            $("#mesa").attr("required", "required");
+        }
     },
     components: {
         gridView,

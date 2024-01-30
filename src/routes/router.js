@@ -8,7 +8,6 @@ import loginPage from '../pages/loginPage.vue';
 import registerPage from '../pages/registerPage.vue';
 import adminComponent from '../components/adminComponent.vue';
 import dishesComponent from '../components/modules/dishes/dishesComponent.vue';
-import digitalMenuComponent from '../components/digitalMenuComponent.vue';
 import homeComponent from '../components/homeComponent.vue';
 import configComponent from "../components/configComponent.vue"
 import stockComponent from "../components/modules/stock/stockComponent.vue";
@@ -16,6 +15,7 @@ import ordersComponent from "../components/modules/orders/ordersComponent.vue";
 import customersComponent from "../components/modules/customers/customersComponent.vue";
 import kitchenComponent from "../components/modules/kitchen/kitchenComponent.vue";
 import printOut from "../components/printOut.vue";
+import digitalMenuComponent from "../components/modules/digital_menu/digitalMenuComponent.vue";
 
 const routes = [
     {
@@ -48,10 +48,6 @@ const routes = [
                 component: dishesComponent
             },
             {
-                path: 'digital-menu',
-                component: digitalMenuComponent
-            },
-            {
                 path: "config",
                 component: configComponent
             },
@@ -74,6 +70,10 @@ const routes = [
             {
                 path: "printout",
                 component: printOut
+            },
+            {
+                path: "digital_menu",
+                component: digitalMenuComponent
             }
         ]
     },
