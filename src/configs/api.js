@@ -11,7 +11,7 @@ const publish_environment = "https://gourmetech-coreteste-5d758e07e0da.herokuapp
 // 1 - Ambiente de produção
 // 
 // ==============================
-let test_or_publish = 0;
+let test_or_publish = 1;
 // ==============================
 //
 
