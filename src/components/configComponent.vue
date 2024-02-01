@@ -28,6 +28,7 @@
                 <ingredientsConfig v-if="showSections.ingredientsConfig"></ingredientsConfig>
                 <dishesCategories v-if="showSections.dishesCategories"></dishesCategories>
                 <tablesConfig v-if="showSections.tablesConfig"></tablesConfig>
+                <financialConfig v-if="showSections.financialConfig"></financialConfig>
             </div>
         </div>
     </div>
@@ -40,6 +41,7 @@ import usersConfig from "./config/usersConfig.vue";
 import ingredientsConfig from "./config/ingredientsConfig.vue";
 import dishesCategories from "./config/dishesCategories.vue";
 import tablesConfig from "./config/tablesConfig.vue";
+import financialConfig from "./config/financialConfig.vue";
 
 export default {
     name: "configComponent",
@@ -105,6 +107,17 @@ export default {
                             link: "tablesConfig"
                         }
                     ]
+                },
+                {
+                    id: 5,
+                    name: "Financeiro",
+                    subMenus: [
+                        {
+                            id: 0,
+                            name: "Categorias de contas",
+                            link: "financialConfig"
+                        }
+                    ]
                 }
             ],
             showSections: {
@@ -113,7 +126,8 @@ export default {
                 usersConfig: false,
                 ingredientsConfig: false,
                 dishesCategories: false,
-                tablesConfig: false
+                tablesConfig: false,
+                financialConfig: false
             }
         }
     },
@@ -163,7 +177,8 @@ export default {
         usersConfig,
         ingredientsConfig,
         dishesCategories,
-        tablesConfig
+        tablesConfig,
+        financialConfig
     }
 }
 </script>
