@@ -147,7 +147,7 @@ export default {
 
         $(window).on("resize", () => {
             let windowWidth = $(window).width();
-
+            
             if (windowWidth <= 960) {
                 if (this.menuMovement) return;
 

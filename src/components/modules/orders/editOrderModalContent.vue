@@ -268,6 +268,7 @@ export default {
                     this.order.dishes.dishes.map(obj => {
                         if (obj.id[1] == this.selected_dish.id[1]) {
                             obj.quantidade[1] = accumulatedQuantity;
+                            obj.observacoes[1] = this.observations;
                         }
                     })
 
@@ -277,12 +278,15 @@ export default {
                     this.order_dishes.map(obj => {
                         if (obj.id == this.selected_dish.id[1]) {
                             obj.quantidade = parseInt(obj.quantidade) + parseInt(this.quantity);
+                            obj.observacoes = this.observations;
                         }
                     })
                 }
 
                 let total_value = (this.formatDecimalValues(newDishGrid.preco[1]) * parseFloat(this.quantity));
                 this.order_total += total_value;
+
+                this.observations = "";
             }).catch((error) => {
                 this.setResponse(error.response.data, "error");
             }).then(() => {

@@ -52,7 +52,7 @@ export default {
         returnDebtCategories: function () {
             let self = this;
 
-            api.get("/financial/debt_categories").then((response) => {
+            api.get("/financial/debt_categories?all=true").then((response) => {
                 self.debtCategories = response.data.returnObj.debtCategories;
                 self.gridOptions = response.data.returnObj.labels;
             }).catch((error) => {
