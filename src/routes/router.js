@@ -16,6 +16,7 @@ import customersComponent from "../components/modules/customers/customersCompone
 import kitchenComponent from "../components/modules/kitchen/kitchenComponent.vue";
 import printOut from "../components/printOut.vue";
 import digitalMenuComponent from "../components/modules/digital_menu/digitalMenuComponent.vue";
+import financialComponent from "../components/modules/financial/financialComponent.vue";
 
 const routes = [
     {
@@ -74,6 +75,10 @@ const routes = [
             {
                 path: "digital_menu",
                 component: digitalMenuComponent
+            },
+            {
+                path: "financial",
+                component: financialComponent
             }
         ]
     },

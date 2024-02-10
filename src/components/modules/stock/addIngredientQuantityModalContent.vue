@@ -63,7 +63,7 @@ export default {
             }).catch((error) => {
                 console.log(error);
             }).then(() => {
-                self.savingRole = false;
+                self.savingStock = false;
             })
         },
         returnAllIngredients: function () {
