@@ -8,7 +8,7 @@
                     <div class="profile-menu-wrapper" v-on:click="toggleProfileMenu()"></div>
                     <div class="profile-menu-container">
                         <ul>
-                            <li>Perfil</li>
+                            <li v-on:click="goToProfile()">Perfil</li>
                             <li v-on:click="logoutUser()">Sair</li>
                         </ul>
                     </div>
@@ -51,6 +51,10 @@ export default {
         }
     },
     methods: {
+        goToProfile: function () {
+            this.toggleProfileMenu();
+            this.$router.push("/home/profile");
+        },
         returnMenuOptions: function () {
             let self = this;
 

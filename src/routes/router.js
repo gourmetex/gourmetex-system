@@ -17,6 +17,12 @@ import kitchenComponent from "../components/modules/kitchen/kitchenComponent.vue
 import printOut from "../components/printOut.vue";
 import digitalMenuComponent from "../components/modules/digital_menu/digitalMenuComponent.vue";
 import financialComponent from "../components/modules/financial/financialComponent.vue";
+import whatsappComponent from "../components/modules/whatsapp/whatsappComponent.vue";
+import newsletterComponent from "../components/modules/newsletter/newsletterComponent.vue";
+import shippingComponent from "../components/modules/shipping/shippingComponent.vue";
+import reportsComponent from "../components/modules/reports/reportsComponent.vue";
+import reservationsComponent from "../components/modules/reservations/reservationsComponent.vue";
+import profileComponent from "../components/modules/profile/profileComponent.vue";
 
 const routes = [
     {
@@ -79,6 +85,30 @@ const routes = [
             {
                 path: "financial",
                 component: financialComponent
+            },
+            {
+                path: "whatsapp",
+                component: whatsappComponent
+            },
+            {
+                path: "newsletter",
+                component: newsletterComponent
+            },
+            {
+                path: "shipping",
+                component: shippingComponent
+            },
+            {
+                path: "reports",
+                component: reportsComponent
+            },
+            {
+                path: "reservations",
+                component: reservationsComponent
+            },
+            {
+                path: "profile",
+                component: profileComponent
             }
         ]
     },
