@@ -6,6 +6,8 @@
 
 <script>
 import './style/global.css';
+import 'animate.css';
+import '@lottiefiles/lottie-player';
 
 export default {
   name: 'App'
