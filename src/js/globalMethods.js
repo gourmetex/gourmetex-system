@@ -213,7 +213,7 @@ export const globalMethods = {
                 style: 'currency',
                 currency: 'BRL'
             });
-            
+
             // Atualiza o valor do input
             event.target.value = valorFormatado;
 
@@ -284,6 +284,36 @@ export const globalMethods = {
             const numeroLimpo = value.toString().replace(/[^\d,]/g, '').replace(",", ".");
             let formattedFloat = parseFloat(numeroLimpo);
             return formattedFloat;
+        },
+        //Métodos para tratamento de strings
+        groupObservations: function (input) {
+            // Divide a string em itens baseados na vírgula e remove espaços em branco extras
+            const itens = input.split(',').map(item => item.trim());
+
+            // Contador para armazenar a frequência de cada item
+            const contador = {};
+
+            // Preenche o contador
+            itens.forEach(item => {
+                if (item in contador) {
+                    contador[item]++;
+                } else {
+                    contador[item] = 1;
+                }
+            });
+
+            // Verifica se existe apenas uma observação e se a contagem é 1
+            const chaves = Object.keys(contador);
+            if (chaves.length === 1 && contador[chaves[0]] === 1) {
+                return chaves[0]; // Retorna apenas a observação sem número
+            }
+
+            // Constrói a string de resultado agrupando os itens com suas contagens
+            const resultado = chaves.map(key => {
+                return `${contador[key]} ${key}`;
+            }).join(', ');
+
+            return resultado;
         }
     },
     watch: {

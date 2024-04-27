@@ -51,10 +51,16 @@ export default {
             api.get("/kitchen/orders").then((response) => {
                 self.orders = response.data.returnObj.orders;
                 self.gridOptions = response.data.returnObj.labels;
+                self.reorganizeDishesObservations();
                 self.editId = null;
             }).catch((error) => {
                 console.log(error);
             })
+        },
+        reorganizeDishesObservations: function () {
+            for (let i = 0; i < this.orders.length; i++) {
+                this.orders[i].observacoes[1] = this.groupObservations(this.orders[i].observacoes[1]);
+            }
         }
     },
     mounted: function () {

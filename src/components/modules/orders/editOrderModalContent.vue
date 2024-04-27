@@ -231,6 +231,11 @@ export default {
                 this.order_dishes.push(newDish);
             }
         },
+        reorganizeDishesObservations: function () {
+            for (let i = 0; i < this.order.dishes.dishes.length; i++) {
+                this.order.dishes.dishes[i].observacoes[1] = this.groupObservations(this.order.dishes.dishes[i].observacoes[1]);
+            }
+        },
         submitAddDish: function () {
             this.selectThisDish();
             this.resetResponse();
@@ -242,11 +247,22 @@ export default {
 
             let promises = [];
 
+            let sameDish = this.order.dishes.dishes.filter(dish => dish.id[1] == this.selected_dish.id[1]);
+            let dishObservations = sameDish.length > 0 ? sameDish[0].observacoes[1] : "";
+
+            if (dishObservations != "") {
+                dishObservations += ", " + this.observations;
+            } else {
+                dishObservations = this.observations;
+            }
+
+            let gridDishObservations = this.groupObservations(dishObservations);      
+
             let newDishGrid = {
                 id: this.selected_dish.id,
                 nome: this.selected_dish.nome,
                 quantidade: ["text", this.quantity, ""],
-                observacoes: ["text", this.observations, ""],
+                observacoes: ["text", gridDishObservations, ""],
                 preco: this.selected_dish.preco,
                 status: ["text", "Preparando", ""]
             }
@@ -254,7 +270,7 @@ export default {
             let newDish = {
                 id: this.selected_dish.id[1],
                 quantidade: this.quantity,
-                observacoes: this.observations
+                observacoes: dishObservations
             }
 
             let selectedDishHaveInGrid = this.order.dishes.dishes.some(obj => obj.id[1] == this.selected_dish.id[1]);
@@ -286,7 +302,7 @@ export default {
                     this.order.dishes.dishes.map(obj => {
                         if (obj.id[1] == this.selected_dish.id[1]) {
                             obj.quantidade[1] = accumulatedQuantity;
-                            obj.observacoes[1] = this.observations;
+                            obj.observacoes[1] = gridDishObservations;
                         }
                     })
 
@@ -296,7 +312,7 @@ export default {
                     this.order_dishes.map(obj => {
                         if (obj.id == this.selected_dish.id[1]) {
                             obj.quantidade = parseInt(obj.quantidade) + parseInt(this.quantity);
-                            obj.observacoes = this.observations;
+                            obj.observacoes = dishObservations;
                         }
                     })
                 }
@@ -332,7 +348,7 @@ export default {
                     this.pix_payment = amountPayed;
                     break;
             }
-            
+
             this.amount_payed = "R$ 0";
             this.closeSmallModal();
         },
@@ -354,15 +370,23 @@ export default {
 
             this.resetResponse();
 
-            let validTable = false
-
-            promises.push(
-                api.get("/tables/valid_table/" + self.order.mesa).then((response) => {
-                    if (response.data.returnObj || self.payment != false && self.order.mesa == "") {
-                        validTable = true;
-                    }
-                })
-            )
+            let validTable = false;
+            
+            if (self.order.mesa != null) {
+                promises.push(
+                    api.get("/tables/valid_table/" + self.order.mesa).then((response) => {
+                        if (response.data.returnObj || self.payment != false && self.order.mesa == "") {
+                            validTable = true;
+                        }
+                    })
+                )
+            } else {
+                promises.push(
+                    new Promise((resolve) => {
+                        resolve();
+                    })
+                )
+            }
             
             let sameTable = self.frozen_table == self.order.mesa ? true : false;
 
@@ -443,6 +467,7 @@ export default {
 
             api.get("/orders/" + self.orderid).then((response) => {
                 self.order = response.data.returnObj;
+                
                 self.order_total = self.formatDecimalValues(self.order.total);
                 self.pix_payment = self.formatCurrency(self.order.pagamento_pix);
                 self.card_payment = self.formatCurrency(self.order.pagamento_cartao);
@@ -460,6 +485,7 @@ export default {
 
                 self.fillOrderDishes();
                 self.calculateOrderTotal();
+                self.reorganizeDishesObservations();
             }).catch((error) => {
                 console.log(error);
             })
