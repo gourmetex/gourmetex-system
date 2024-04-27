@@ -322,6 +322,7 @@ export const globalMethods = {
                 this.disableActionsButtons(false, false, false);
             } else {
                 this.disableActionsButtons(false, true, true);
+                this.descelectRows();
             }
         }
     },

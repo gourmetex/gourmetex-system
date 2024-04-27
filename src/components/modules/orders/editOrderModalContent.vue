@@ -216,6 +216,7 @@ export default {
             let item_value = (this.formatDecimalValues(excludedDish.preco[1]) * parseFloat(excludedDish.quantidade[1]));
 
             this.order_total -= item_value;
+            this.editId = null;
 
             this.closeSmallModal();
         },
@@ -248,9 +249,9 @@ export default {
             let promises = [];
 
             let sameDish = this.order.dishes.dishes.filter(dish => dish.id[1] == this.selected_dish.id[1]);
-            let dishObservations = sameDish.length > 0 ? sameDish[0].observacoes[1] : "";
+            let dishObservations = sameDish.length > 0 ? sameDish[0].observacoes[1] : null;
 
-            if (dishObservations != "") {
+            if (dishObservations != null) {
                 dishObservations += ", " + this.observations;
             } else {
                 dishObservations = this.observations;
