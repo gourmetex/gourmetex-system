@@ -159,12 +159,30 @@ export default {
         difference() {
             let order_total = this.formatDecimalValues(this.order.total);
             let difference = order_total - this.total_amout;
-            return this.formatCurrency(difference);
+
+            return difference.toLocaleString('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            });
         }
     },
     watch: {
         order_total: function () {
             this.calculateOrderTotal();
+        },
+        amount_payed: function () {
+            var valor = this.amount_payed.replace(/\D/g, '');
+            
+            // Transforma em número decimal com duas casas
+            var valorNumerico = parseInt(valor) / 100;
+
+            // Formata para o formato monetário brasileiro
+            var valorFormatado = valorNumerico.toLocaleString('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            });
+
+            this.amount_payed = valorFormatado;
         }
     },
     methods: {
@@ -301,18 +319,20 @@ export default {
         },  
         submitAddPayment: function () {
             let metodoPagamento = $("#metodo_pagamento").val();
+            let amountPayed = this.amount_payed;
 
             switch (metodoPagamento) {
                 case "dinheiro": 
-                    this.cash_payment = this.amount_payed;
+                    this.cash_payment = amountPayed;
                     break;
                 case "cartao":
-                    this.card_payment = this.amount_payed;
+                    this.card_payment = amountPayed;
                     break;
                 case "pix":
-                    this.pix_payment = this.amount_payed;
+                    this.pix_payment = amountPayed;
                     break;
             }
+            
             this.amount_payed = "R$ 0";
             this.closeSmallModal();
         },

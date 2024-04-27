@@ -203,9 +203,22 @@ export const globalMethods = {
             this.hideEditButtons();
         },
         inputMoneyCheck: function (event) {
-            let target = $(event.target);
-            const formattedValue = this.formatCurrency(target.val());
-            target.val(formattedValue);
+            var valor = event.target.value.replace(/\D/g, '');
+            
+            // Transforma em número decimal com duas casas
+            var valorNumerico = parseInt(valor) / 100;
+
+            // Formata para o formato monetário brasileiro
+            var valorFormatado = valorNumerico.toLocaleString('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            });
+            
+            // Atualiza o valor do input
+            event.target.value = valorFormatado;
+
+            // Mantém a posição do cursor no final do texto
+            event.target.setSelectionRange(valorFormatado.length, valorFormatado.length);
         },
         inputTelCheck: function (event) {
             let target = $(event.target);

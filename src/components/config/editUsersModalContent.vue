@@ -59,7 +59,7 @@ export default {
     watch: {
         user: function () {
             if (this.user.admin == 1) {
-                this.$emit("savedContent", true);
+                //this.$emit("savedContent", true);
             }
         }
     },
