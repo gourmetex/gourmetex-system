@@ -3,15 +3,15 @@
         <form class="edit-customer" id="informations-form" @submit.prevent="saveReservation()">
             <div class="form-group">
                 <label for="nome">Está no nome de</label>
-                <input type="text" name="nome" v-model="reservation.nome" placeholder="Ex. João" required>
+                <input type="text" name="nome" v-model="reservation.nome" placeholder="Ex. João" maxlength="45" required>
             </div>
             <div class="form-group">
-                <label for="quantidade">Quantidade de pessoas</label>
-                <input type="number" name="quantidade" id="quantidade" v-model="reservation.quantidade" required>
+                <label for="quantidade_pessoas">Quantidade de pessoas</label>
+                <input type="number" name="quantidade_pessoas" id="quantidade_pessoas" v-model="reservation.quantidade_pessoas" required>
             </div>
             <div class="form-group">
-                <label for="data">Data</label>
-                <input type="datetime-local" name="data" id="data" v-model="reservation.data" required>
+                <label for="data_reserva">Data</label>
+                <input type="datetime-local" name="data_reserva" id="data_reserva" v-model="reservation.data_reserva" required>
             </div>
             <input type="submit" id="submit-button" style="display: none;">
         </form>
@@ -41,7 +41,7 @@ export default {
         returnReservation: function () {
             let self = this;
 
-            if (self.customerid == null) {
+            if (self.reservationid == null) {
                 return;
             } 
 

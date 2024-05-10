@@ -7,7 +7,7 @@
         <div class="reservations-container">
             <gridView :gridoptions="gridOptions" :griddata="reservationsList" @dataclick="selectRow($event)"></gridView>
         </div>
-        <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :excludepath="'/orders/' + editId" :modalbutton2="modalButton2" :modalButton3="modalButton3" @closeModal="closeModalFunction(); returnReservations();">
+        <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :excludepath="'/reservations/' + editId" :modalbutton2="modalButton2" :modalButton3="modalButton3" @closeModal="closeModalFunction(); returnReservations();">
             <editReservationModalContent v-if="showEditReservationModalContent" :reservationid="editId" @savedContent="closeModalFunction(); returnReservations();"></editReservationModalContent>
         </modal>
     </div>
@@ -53,10 +53,14 @@ export default {
             let self = this;
 
             api.get("/reservations").then((response) => {
-                self.reservationsList = response.data.returnObj.reservationsList;
+                self.reservationsList = response.data.returnObj.reservations;
                 self.gridOptions = response.data.returnObj.labels;
             })
         }
+    },
+    mounted: function () {
+        this.returnReservations();
+        this.disableActionsButtons(false, true, true);
     },
     components: {
         actionButtons,
