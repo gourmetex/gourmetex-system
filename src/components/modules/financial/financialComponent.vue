@@ -60,6 +60,15 @@ export default {
             debt_categories: []
         }
     },
+    watch: {
+        editId: function () {
+            if (this.editId != null) {
+                this.disableActionsButtons(false, false, false);
+            } else {
+                this.disableActionsButtons(false, true, false);
+            }
+        }
+    },
     methods: {
         search: function () {
             let data = $("#filter-form").serializeArray().reduce(function (obj, item) { // Pega todos os dados do formulário e coloca em um objeto.
