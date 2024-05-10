@@ -158,10 +158,12 @@ export default {
                 self.hideLateralMenu();
                 self.showResponsiveButton();
             } else {
-                if (this.menuMovement) return;
-
                 self.showLateralMenu();
                 self.hideResponsiveButton();
+
+                let lateralMenuWrapper = $(".lateral-menu-wrapper");
+
+                lateralMenuWrapper.hide();
             }
         })
 
