@@ -285,11 +285,31 @@ export const globalMethods = {
             let formattedFloat = parseFloat(numeroLimpo);
             return formattedFloat;
         },
-        //Métodos para tratamento de strings
         groupObservations: function (input) {
-            // Divide a string em itens baseados na vírgula e remove espaços em branco extras
-            const itens = input.split(',').map(item => item.trim());
+            if (input == null) {
+                return "";
+            }
 
+            // Divide a string em itens baseados na vírgula e remove espaços em branco extras
+            let itens = input.split(',')
+                       .map(item => item.trim())
+                       .filter(item => item !== "");
+
+            // Se não houver itens válidos, retorna vazio
+            if (itens.length === 0) {
+                return "";
+            }
+            
+            itens = itens.flatMap(item => {
+                const parts = item.split(' '); // Divide a string inteira em partes baseadas em espaços
+                const count = parseInt(parts[0], 10); // Tenta converter o primeiro elemento em um número
+                if (!isNaN(count) && parts.length > 1) {
+                    const description = parts.slice(1).join(' '); // Junta os restantes elementos como a descrição
+                    return Array(count).fill(description);
+                }
+                return [item];
+            });
+            
             // Contador para armazenar a frequência de cada item
             const contador = {};
 
@@ -309,9 +329,7 @@ export const globalMethods = {
             }
 
             // Constrói a string de resultado agrupando os itens com suas contagens
-            const resultado = chaves.map(key => {
-                return `${contador[key]} ${key}`;
-            }).join(', ');
+            const resultado = chaves.map(key => `${contador[key]} ${key}`).join(', ');
 
             return resultado;
         }

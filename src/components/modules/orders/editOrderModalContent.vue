@@ -250,11 +250,17 @@ export default {
 
             let sameDish = this.order.dishes.dishes.filter(dish => dish.id[1] == this.selected_dish.id[1]);
             let dishObservations = sameDish.length > 0 ? sameDish[0].observacoes[1] : null;
-
-            if (dishObservations != null) {
+            
+            if (dishObservations != null && dishObservations.trim() != "") {
                 dishObservations += ", " + this.observations;
             } else {
-                dishObservations = this.observations;
+                for (let i = 0; i < parseInt(this.quantity); i++) {
+                    if (i == 0) {
+                        dishObservations = this.observations;
+                    } else {
+                        dishObservations += ", " + this.observations;
+                    }
+                }
             }
 
             let gridDishObservations = this.groupObservations(dishObservations);      
