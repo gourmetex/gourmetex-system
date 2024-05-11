@@ -29,6 +29,7 @@
                 <dishesCategories v-if="showSections.dishesCategories"></dishesCategories>
                 <tablesConfig v-if="showSections.tablesConfig"></tablesConfig>
                 <financialConfig v-if="showSections.financialConfig"></financialConfig>
+                <reservationPreferences v-if="showSections.reservationPreferences" @cancel="resetConfigOptions"></reservationPreferences>
             </div>
         </div>
     </div>
@@ -42,6 +43,7 @@ import ingredientsConfig from "./config/ingredientsConfig.vue";
 import dishesCategories from "./config/dishesCategories.vue";
 import tablesConfig from "./config/tablesConfig.vue";
 import financialConfig from "./config/financialConfig.vue";
+import reservationPreferences from "./config/reservationPreferences.vue";
 
 export default {
     name: "configComponent",
@@ -118,6 +120,17 @@ export default {
                             link: "financialConfig"
                         }
                     ]
+                },
+                {
+                    id: 6,
+                    name: "Reservas",
+                    subMenus: [
+                        {
+                            id: 0,
+                            name: "Preferências",
+                            link: "reservationPreferences"
+                        }
+                    ]
                 }
             ],
             showSections: {
@@ -127,7 +140,8 @@ export default {
                 ingredientsConfig: false,
                 dishesCategories: false,
                 tablesConfig: false,
-                financialConfig: false
+                financialConfig: false,
+                reservationPreferences: false
             }
         }
     },
@@ -148,24 +162,27 @@ export default {
             subMenuItem.addClass("selected");
             let dataLink = subMenuItem.attr("dataLink");
 
-            for (let key in this.showSections) {
-                this.showSections[key] = false;
-            }
+            this.resetMenus();
 
             this.showSections[dataLink] = true;
         },
+        resetMenus: function () {
+            for (let key in this.showSections) {
+                this.showSections[key] = false;
+            }
+        },
         selectConfigOption: function (path) {
-            $(".principal-options .config-option").removeClass("selected");
-            $("#config-menu-" + path).addClass("selected");
-
-            this.resetConfigOptions();
-
             let subMenu = "sub-menu-" + path;
 
+            this.resetConfigOptions();
+            $("#config-menu-" + path).addClass("selected");
             $("#" + subMenu).show();
         },
         resetConfigOptions: function () {
+            $(".principal-options .config-option").removeClass("selected");
             $(".sub-menu").hide();
+            $(".sub-menu li").removeClass("selected");
+            this.resetMenus();
         }
     },
     mounted: function () {
@@ -178,7 +195,8 @@ export default {
         ingredientsConfig,
         dishesCategories,
         tablesConfig,
-        financialConfig
+        financialConfig,
+        reservationPreferences
     }
 }
 </script>

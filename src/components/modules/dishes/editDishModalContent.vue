@@ -46,7 +46,7 @@
                         <option v-for="(item, index) in ingredients" :key="index" :value="item.id[1]">{{ item.nome[1] }}</option>
                     </select>
                 </div>
-                <div class="radio-group">
+                <div class="form-group">
                     <label for="quantity">Quantidade {{ selected_ingredient_measure_unit != "" ? `(${selected_ingredient_measure_unit})` : "" }}</label>
                     <input type="text" name="quantity" id="quantity" required v-model="quantity" @keypress="formatDecimalValues(quantity)">
                 </div>

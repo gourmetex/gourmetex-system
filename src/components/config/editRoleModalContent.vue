@@ -5,7 +5,7 @@
                 <label for="role">Cargo</label>
                 <input type="text" name="role" id="role" placeholder="Ex. Gerente" v-model="role.role" required>
             </div>
-            <div class="radio-group">
+            <div class="form-group">
                 <label for="permission">Permissão</label>
                 <select name="permission" id="permission" v-model="role.permission" required>
                     <option value="">Escolha uma opção</option>

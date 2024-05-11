@@ -7,7 +7,7 @@
         <div class="reservations-container">
             <gridView :gridoptions="gridOptions" :griddata="reservationsList" @dataclick="selectRow($event)"></gridView>
         </div>
-        <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :excludepath="'/reservations/' + editId" :modalbutton2="modalButton2" :modalButton3="modalButton3" @closeModal="closeModalFunction(); returnReservations();">
+        <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :excludepath="'/reservations/delete_reservation' + editId" :modalbutton2="modalButton2" :modalButton3="modalButton3" @closeModal="closeModalFunction(); returnReservations();">
             <editReservationModalContent v-if="showEditReservationModalContent" :reservationid="editId" @savedContent="closeModalFunction(); returnReservations();"></editReservationModalContent>
         </modal>
     </div>

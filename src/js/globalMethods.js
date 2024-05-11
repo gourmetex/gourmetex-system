@@ -289,6 +289,14 @@ export const globalMethods = {
 
             return resultado;
         },
+        loadPreferences: function () {
+            for (let i = 0; i < this.preferences.length; i++) {
+                let currentPreferenceGroup = this.preferences[i];
+                let groupElement = $(".preferences-group[datalabel='" + currentPreferenceGroup.label + "']");
+
+                groupElement.find("input[type='radio'][value='" + currentPreferenceGroup.preferences[0].nome + "']").prop('checked', true);
+            }
+        },
         //Métodos de formatação de valores ou strings
         formatCurrency: function (value) {
             const numeroLimpo = value.toString().replace(/[^\d.]/g, ''); // Remove caracteres não numéricos, exceto ponto
@@ -336,6 +344,10 @@ export const globalMethods = {
         },
         formatDateFromDb: function (date) {
             return date.replace(' ', 'T').slice(0, -3);
+        },
+        //Métodos configurações
+        cancel: function () {
+            this.$emit("cancel");
         }
     },
     watch: {
@@ -362,7 +374,8 @@ export const globalMethods = {
             closeModal: false,
             reloadGrid: false,
             editId: null,
-            disabledButtons: []
+            disabledButtons: [],
+            preferences: []
         }
     }
 }

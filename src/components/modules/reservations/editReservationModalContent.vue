@@ -45,7 +45,7 @@ export default {
                 return;
             } 
 
-            api.get("/reservations/" + self.reservationid).then((response) => {
+            api.get("/reservations/return_reservation" + self.reservationid).then((response) => {
                 self.reservation = response.data.returnObj;
             }).catch((error) => {
                 console.log(error);

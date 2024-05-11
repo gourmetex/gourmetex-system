@@ -5,14 +5,14 @@
                 <label for="name">Nome do ingrediente</label>
                 <input type="text" name="name" id="name" v-model="ingredient.nome" required>
             </div>
-            <div class="radio-group">
+            <div class="form-group">
                 <label for="category">Categoria</label>
                 <select name="category" id="category" v-model="ingredient.categoria" required>
                     <option value="">Escolha uma opção</option>
                     <option v-for="(category, index) in ingredients_categories" :key="index" :value="category.id">{{ category.nome }}</option>
                 </select>
             </div>
-            <div class="radio-group">
+            <div class="form-group">
                 <label for="measurement">Unidade de medida</label>
                 <select name="measurement" id="measurement" v-model="ingredient.unidade_medida" required>
                     <option value="">Escolha uma opção</option>

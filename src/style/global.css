@@ -526,7 +526,22 @@ input[type="radio"], input[type="checkbox"] {
 
 label {
     margin: var(--space-2) 0;
+    cursor: pointer;
 }
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    left: 0;
+    display: flex;
+    justify-content: flex-end;
+    padding: var(--space-3);
+}
+
+    .footer .btn:first-child {
+        margin-right: var(--space-3);
+    }
 
 .form-group {
     display: flex;
@@ -536,6 +551,8 @@ label {
 
 .radio-group {
     margin: var(--space-3) 0;
+    display: flex;
+    align-items: center;
 }
 
     .radio-group input {
@@ -612,4 +629,11 @@ label {
 
 .blur-image {
     filter: blur(2px);
+}
+
+.panel {
+    padding: var(--space-3);
+    margin: var(--space-3);
+    border: 1px solid var(--gray-3);
+    border-radius: var(--radius-sm);
 }
