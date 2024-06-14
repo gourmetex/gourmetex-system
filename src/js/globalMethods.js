@@ -173,6 +173,11 @@ export const globalMethods = {
                     this.selectGridRow(event[3]);
                     break;
             }
+
+            if (event[0] == "badge" && event[4] == "action") {
+                let id = $("#grid-row-" + event[5]).find(".grid-cell:first-child h3").html();
+                this.triggerAction(id);
+            }
         },
         showEditButtons: function () {
             let editButtons = $(".dynamic-edit-buttons");

@@ -474,8 +474,8 @@ export default {
 
             api.get("/orders/" + self.orderid).then((response) => {
                 self.order = response.data.returnObj;
-                
-                self.order_total = self.formatDecimalValues(self.order.total);
+
+                self.order_total = self.order.total == null ? 0.0 : self.formatDecimalValues(self.order.total);
                 self.pix_payment = self.formatCurrency(self.order.pagamento_pix);
                 self.card_payment = self.formatCurrency(self.order.pagamento_cartao);
                 self.cash_payment = self.formatCurrency(self.order.pagamento_dinheiro);

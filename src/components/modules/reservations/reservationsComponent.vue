@@ -31,6 +31,12 @@ export default {
         }
     },
     methods: {
+        triggerAction: function (row_id) {
+            let self = this;
+            api.post("/reservations/open_reservation", { reservation_id: parseInt(row_id) }).then(() => {
+                self.$router.push("/home/digital_menu");
+            })
+        },
         resetModalContents: function () {
             this.showEditReservationModalContent = false;
         }, 
