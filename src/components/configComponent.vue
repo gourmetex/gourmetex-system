@@ -30,6 +30,8 @@
                 <tablesConfig v-if="showSections.tablesConfig"></tablesConfig>
                 <financialConfig v-if="showSections.financialConfig"></financialConfig>
                 <reservationPreferences v-if="showSections.reservationPreferences" @cancel="resetConfigOptions"></reservationPreferences>
+                <shippingConfig v-if="showSections.shippingConfig" @cancel="resetConfigOptions"></shippingConfig>
+                <systemData v-if="showSections.systemData" @cancel="resetConfigOptions"></systemData>
             </div>
         </div>
     </div>
@@ -44,6 +46,8 @@ import dishesCategories from "./config/dishesCategories.vue";
 import tablesConfig from "./config/tablesConfig.vue";
 import financialConfig from "./config/financialConfig.vue";
 import reservationPreferences from "./config/reservationPreferences.vue";
+import shippingConfig from "./config/shippingConfig.vue";
+import systemData from "./config/systemData.vue";
 
 export default {
     name: "configComponent",
@@ -94,6 +98,11 @@ export default {
                     subMenus: [
                         {
                             id: 0,
+                            name: "Dados da empresa",
+                            link: "systemData"
+                        },
+                        {
+                            id: 1,
                             name: "Personalização",
                             link: "systemConfig"
                         }
@@ -131,6 +140,17 @@ export default {
                             link: "reservationPreferences"
                         }
                     ]
+                },
+                {
+                    id: 7,
+                    name: "Entregas",
+                    subMenus: [
+                        {
+                            id: 0,
+                            name: "Configurar taxa",
+                            link: "shippingConfig"
+                        }
+                    ]
                 }
             ],
             showSections: {
@@ -141,7 +161,9 @@ export default {
                 dishesCategories: false,
                 tablesConfig: false,
                 financialConfig: false,
-                reservationPreferences: false
+                reservationPreferences: false,
+                shippingConfig: false,
+                systemData: false
             }
         }
     },
@@ -196,7 +218,9 @@ export default {
         dishesCategories,
         tablesConfig,
         financialConfig,
-        reservationPreferences
+        reservationPreferences,
+        shippingConfig,
+        systemData
     }
 }
 </script>

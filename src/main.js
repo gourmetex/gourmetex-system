@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import router from '../src/routes/router.js';
 import App from './App.vue';
+import * as VueGoogleMaps from 'vue2-google-maps';
 
 // This callback runs before every route change, including on page load.
 router.beforeEach((to, from, next) => {
@@ -47,6 +48,13 @@ router.beforeEach((to, from, next) => {
 });
 
 Vue.config.productionTip = false
+
+Vue.use(VueGoogleMaps, {
+  load: {
+    key: 'AIzaSyAe-l7wnMqxFGoKxi3Ff1Lv-cTvSBO1dIQ',
+    libraries: 'places', // necessário se você estiver usando a biblioteca Places
+  },
+});
 
 new Vue({
   router,

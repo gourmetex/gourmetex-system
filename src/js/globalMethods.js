@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import api from '../configs/api.js';
+import axios from 'axios';
 
 export const globalMethods = {
     methods: {
@@ -161,6 +162,28 @@ export const globalMethods = {
                 api.get("/users/return_user").then((response) => {
                     self.$root.user = response.data.returnObj;
                     resolve();
+                })
+            })
+        },
+        //Métodos retorno objetos
+        searchCEP: function (cep) {
+            return new Promise((resolve, reject) => {
+                cep = cep.replace(/\D/g, '');
+                
+                axios.get(`/api/ws/${cep}/json/`)
+                .then(response => {
+                    const data = response.data;
+
+                    if (!data.erro) {
+                        let address = `${data.logradouro}, ${data.bairro}, ${data.localidade} - ${data.uf}`;
+
+                        resolve(address);
+                    } else {
+                        alert('CEP não encontrado!')
+                    }
+                })
+                .catch((erro) => {
+                    reject(erro);
                 })
             })
         },

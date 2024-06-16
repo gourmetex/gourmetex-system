@@ -530,18 +530,24 @@ label {
 }
 
 .footer {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     width: 100%;
     left: 0;
     display: flex;
     justify-content: flex-end;
     padding: var(--space-3);
+    background: var(--white);
+    border-top: 1px solid var(--gray-3);
 }
 
     .footer .btn:first-child {
         margin-right: var(--space-3);
     }
+
+.config-page {
+    padding-bottom: 70px;
+}
 
 .form-group {
     display: flex;

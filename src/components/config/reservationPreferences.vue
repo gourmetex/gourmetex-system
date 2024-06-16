@@ -1,5 +1,5 @@
 <template>
-    <div class="reservations">
+    <div class="reservations config-page">
         <div class="panel">
             <form id="reservation-preferences" @submit.prevent="saveContent()">
                 <div class="preferences-group" datalabel="automatic_preferences">

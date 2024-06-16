@@ -247,6 +247,7 @@ header {
     height: calc(100vh - 80px);
     transition: transform 0.4s;
     overflow: hidden;
+    z-index: 1;
 }
 
     .lateral-menu h3 {
