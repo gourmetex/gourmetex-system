@@ -76,7 +76,11 @@ export default {
 
             let targetElement = $("#" + elementId);
             targetElement.addClass("li-active");
-            this.toggleLateralMenu();
+            if (window.innerWidth <= 960) {
+                if (this.menuMovement) return;
+
+                this.toggleLateralMenu();
+            }
         },
         toggleProfileMenu: function () {
             let profileMenu = $(".profile-menu-container");
