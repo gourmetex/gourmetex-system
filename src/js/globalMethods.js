@@ -388,8 +388,6 @@ export const globalMethods = {
             }
         }
     },
-    mounted: function () {
-    },
     data() {
         return {
             response: "",

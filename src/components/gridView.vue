@@ -10,7 +10,7 @@
             </div>
             <div class="grid-body">
                 <div class="grid-row" v-for="(row, rowKey) in griddata" :key="rowKey" :id="'grid-row-' + rowKey">
-                    <div class="grid-cell" v-for="(col, colKey) in row" :key="colKey">
+                    <div class="grid-cell" v-for="(col, colKey) in row" :key="colKey" :class="col[3]">
                         <h3 v-if="col[0] == 'text'" v-on:click="emitClick(col, rowKey)" :class="col[2] != '' ? 'clicable' : ''" :title="col[1]">{{ col[1] }}</h3>
                         <badge v-if="col[0] == 'badge'" :col="col" :rowkey="rowKey" @dataclick="emitClick(col, rowKey)"></badge>
                     </div>

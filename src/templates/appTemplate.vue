@@ -17,6 +17,7 @@ import headerComponent from '../components/header.vue';
 import { globalMethods } from '../js/globalMethods';
 import $ from 'jquery';
 import loadingJson from "../assets/animations/loading.json";
+import moment from "moment";
 
 export default {
     name: "appTemplate",
@@ -30,6 +31,49 @@ export default {
         }
     },
     methods: {
+        updateTime: function () {
+            moment.locale("pt-br");
+
+            setInterval(() => {
+                if ($(".update-time").length) {
+                    let elements = $(".update-time");
+
+                    elements.each((index, item) => {
+                        let currentItem = $(item);
+                        let currentItemText = currentItem.find("h3");
+
+                        if (currentItemText.html() != "") {
+                            let timeSource;
+
+                            if (moment(currentItemText.html()).isValid()) {
+                                timeSource = currentItemText.html();
+                                currentItemText.attr("dataTime", currentItemText.html());
+                            } else {
+                                timeSource = currentItemText.attr("dataTime");
+                            }
+                            
+                            const now = moment();
+
+                            // Calcula a diferença entre a data atual e a data de início em milissegundos
+                            const diff = now.diff(timeSource);
+                            // Converte a diferença em uma duração
+                            const duration = moment.duration(diff);
+
+                            const hours = Math.floor(duration.asHours()); // Horas totais
+                            const minutes = Math.floor(duration.minutes()); // Minutos
+                            const seconds = Math.floor(duration.seconds()); // Segundos
+
+                            // Formata para HH:mm:ss
+                            const elapsedTimeString = `${hours.toString().padStart(2, '0')}:${minutes
+                                .toString()
+                                .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+                            currentItemText.html(elapsedTimeString).attr("title", elapsedTimeString);
+                        }
+                    })
+                }
+            }, 1000)
+        },
         toggleContent: function (event) {
             if (event) {
                 this.contractContent();
@@ -57,6 +101,8 @@ export default {
     },
     mounted: function () {
         let self = this;
+
+        self.updateTime();
 
         $(window).on("resize", () => {
             let windowWidth = $(window).width();

@@ -4,7 +4,7 @@
             <h1>Menu digital</h1>
         </div>  
         <actionButtons add_text="ABRIR MESA" exclude_text="FECHAR MESA" edit_text="EDITAR MESA" :disabledbuttons="disabledButtons" @add="openTable()" @exclude="closeTable()" @edit="editTable()" />
-        <div class="digital-menu-container">
+        <div class="digital-menu-container" v-if="!reloadTable">
             <gridView :gridoptions="gridOptions" :griddata="digitalMenu" @dataclick="selectRow($event)"></gridView>
         </div>
         <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :excludepath="'/orders/' + editId" :modalbutton2="modalButton2" :modalButton3="modalButton3" @closeModal="closeModalFunction(); returnMenuDigital();">
@@ -28,7 +28,8 @@ export default {
             gridOptions: [],
             digitalMenu: [],
             showEditOrderModalContent: false,
-            payment: false
+            payment: false,
+            reloadTable: false
         }
     },
     methods: {
@@ -54,6 +55,12 @@ export default {
         },
         returnMenuDigital: function () {
             let self = this;
+
+            this.reloadTable = true;
+
+            setTimeout(() => {
+                this.reloadTable = false;
+            }, 1)
 
             api.get("/digital_menu").then((response) => {
                 self.digitalMenu = response.data.returnObj.digital_menu;

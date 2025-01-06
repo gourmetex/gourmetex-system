@@ -419,7 +419,7 @@ export default {
                 }
 
                 if ($(".ajax-autocomplete").attr("invalid") == "true") {
-                    this.setResponse("Campo cliente não pode ser vazio", "error");7
+                    this.setResponse("Campo cliente não pode ser vazio", "error");
                     return;
                 }
 
