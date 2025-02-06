@@ -5,14 +5,33 @@
         </div>  
         <actionButtons add_text="FINALIZAR PRATO" exclude_text="CANCELAR PRATO" :disabledbuttons="disabledButtons" @add="finishDish()" @exclude="cancelDish()" />
         <div class="dishes-container">
-            <gridView :gridoptions="gridOptions" :griddata="orders" @dataclick="selectRow($event)"></gridView>
+            <dataTable :dataTable="orders" :rowsPerPage="7" searchText="">
+                <template slot="column-id" slot-scope="props">
+                    <p class="clicable text-center" v-on:click="selectRow2($event)">{{ props.item.id }}</p>
+                </template>
+                <template slot="column-comanda" slot-scope="props">
+                    <p class="text-center">{{ props.item.id_comanda }}</p>
+                </template>
+                <template slot="column-mesa" slot-scope="props">
+                    <p class="text-center">{{ props.item.mesa }}</p>
+                </template>
+                <template slot="column-prato" slot-scope="props">
+                    <p>{{ props.item.nome }}</p>
+                </template>
+                <template slot="column-quantidade" slot-scope="props">
+                    <p class="text-center">{{ props.item.quantidade_restante }}</p>
+                </template>
+                <template slot="column-observações" slot-scope="props">
+                    <p>{{ props.item.observacoes }}</p>
+                </template>
+            </dataTable>
         </div>
     </div>
 </template>
 <script>
 import api from "../../../configs/api";
 import actionButtons from "../../actionButtons.vue";
-import gridView from "../../gridView.vue";
+import dataTable from "../../dataTable.vue";
 import { globalMethods } from "@/js/globalMethods";
 
 export default {
@@ -20,8 +39,14 @@ export default {
     mixins: [globalMethods],
     data() {
         return {
-            orders: [],
-            gridOptions: []
+            orders: []
+        }
+    },
+    watch: {
+        editId: function () {
+            if (this.editId == null) {
+                this.disableActionsButtons(true, true, true);
+            }
         }
     },
     methods: {
@@ -49,17 +74,15 @@ export default {
             let self = this;
 
             api.get("/kitchen/orders").then((response) => {
-                self.orders = response.data.returnObj.orders;
-                self.gridOptions = response.data.returnObj.labels;
+                self.orders = response.data.returnObj;
                 self.reorganizeDishesObservations();
-                self.editId = null;
             }).catch((error) => {
                 console.log(error);
             })
         },
         reorganizeDishesObservations: function () {
             for (let i = 0; i < this.orders.length; i++) {
-                this.orders[i].observacoes[1] = this.groupObservations(this.orders[i].observacoes[1]);
+                this.orders[i].observacoes = this.groupObservations(this.orders[i].observacoes);
             }
         }
     },
@@ -69,7 +92,7 @@ export default {
     },
     components: {
         actionButtons,
-        gridView
+        dataTable
     }
 }
 </script>

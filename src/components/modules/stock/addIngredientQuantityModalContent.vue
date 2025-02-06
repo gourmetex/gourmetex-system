@@ -4,8 +4,8 @@
             <div class="form-group">
                 <label for="ingredient">Item</label>
                 <select id="ingredient" name="ingredient" @change="selectThisIngredient()" required>
-                    <option value="">Qualquer</option>
-                    <option v-for="(item, index) in ingredients" :key="index" :value="item.id[1]">{{ item.nome[1] }}</option>
+                    <option value="">* Selecione *</option>
+                    <option v-for="(item, index) in ingredients" :key="index" :value="item.id">{{ item.nome }}</option>
                 </select>
             </div>
             <div class="form-group">
@@ -36,11 +36,11 @@ export default {
     methods: {
         selectThisIngredient: function () {
             let value = $("#ingredient").val();
-            let ingredient = this.ingredients.find(obj => obj.id[1] == value);
+            let ingredient = this.ingredients.find(obj => obj.id == value);
 
             if (ingredient != undefined && ingredient != null) {
                 this.selected_ingredient = ingredient;
-                this.selected_ingredient_measure_unit = ingredient.unidade_medida[1];
+                this.selected_ingredient_measure_unit = ingredient.unidade_medida;
             } else {
                 this.selected_ingredient = {};
                 this.selected_ingredient_measure_unit = "";
@@ -70,7 +70,7 @@ export default {
             let self = this;
 
             api.post("/dishes/ingredients").then((response) => {
-                self.ingredients = response.data.returnObj.ingredients;
+                self.ingredients = response.data.returnObj;
             }).catch((error) => {
                 console.log(error);
             })

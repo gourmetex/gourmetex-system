@@ -7,7 +7,7 @@
         <div class="dishes-container">
             <div class="filter-container-header">
                 <h2>Lista de clientes</h2>
-                <div class="filters">
+                <div class="filters" v-if="false">
                     <form id="filter-form" @submit.prevent="search()">
                         <div class="filter-field">
                             <label for="nome">Nome do cliente</label>

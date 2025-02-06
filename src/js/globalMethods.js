@@ -203,6 +203,8 @@ export const globalMethods = {
             }
         },
         selectRow2: function (event) {
+            this.descelectRows2();
+            
             let id = $(event.target).html();
             let parent = $(event.target).parent().parent();
 

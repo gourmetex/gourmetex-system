@@ -33,7 +33,23 @@
                     </form>
                 </div>
             </div>
-            <gridView :gridoptions="gridOptions" :griddata="items" @dataclick="selectRow($event)"></gridView>
+            <dataTable :dataTable="items" :rowsPerPage="7" searchText="">
+                <template slot="column-id" slot-scope="props">
+                    <p class="clicable text-center" v-on:click="selectRow2($event)">{{ props.item.id }}</p>
+                </template>
+                <template slot="column-nome" slot-scope="props">
+                    <p>{{ props.item.nome }}</p>
+                </template>
+                <template slot="column-categoria" slot-scope="props">
+                    <p>{{ props.item.categoria }}</p>
+                </template>
+                <template slot="column-telefone" slot-scope="props">
+                    <newBadge class="text-center" :background="props.item.status == 0 ? 'var(--red)' : 'var(--green-2)'" :text="props.item.status == 0 ? 'Vazio' : 'Normal'" />
+                </template>
+                <template slot="column-quantidade-em-estoque" slot-scope="props">
+                    <p class="text-center">{{ props.item.quantidade_em_estoque }}</p>
+                </template>
+            </dataTable>
         </div>
         <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :modalbutton2="modalButton2" :modalbutton3="modalButton3" @closeModal="closeModalFunction(); returnStock();">
             <addIngredientQuantityModalContent v-if="showAddIngredientQuantityModalContent" @savedContent="closeModalFunction(); returnStock();"></addIngredientQuantityModalContent>
@@ -43,7 +59,8 @@
 </template>
 <script>
 import actionButtons from "../../actionButtons.vue";
-import gridView from "../../gridView.vue";
+import dataTable from "../../dataTable.vue";
+import newBadge from "../../newBadge.vue";
 import { globalMethods } from "@/js/globalMethods";
 import modal from "../../modal.vue";
 import addIngredientQuantityModalContent from "./addIngredientQuantityModalContent.vue";
@@ -57,7 +74,6 @@ export default {
     data() {
         return {
             items: [],
-            gridOptions: [],
             filters: [],
             showAddIngredientQuantityModalContent: false,
             showDeleteIngredientQuantityModalContent: false,
@@ -106,8 +122,7 @@ export default {
             }
 
             api.post("/stock/return_stock", data).then((response) => {
-                self.items = response.data.returnObj.items;
-                self.gridOptions = response.data.returnObj.labels;
+                self.items = response.data.returnObj;
             }).catch((error) => {
                 console.log(error);
             })
@@ -119,8 +134,9 @@ export default {
     },
     components: {
         actionButtons,
-        gridView,
+        dataTable,
         modal,
+        newBadge,
         addIngredientQuantityModalContent,
         deleteIngredientQuantityModalContent
     }
