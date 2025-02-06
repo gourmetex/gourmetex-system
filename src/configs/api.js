@@ -19,7 +19,7 @@ let ambient;
     
 if (window.location.hostname.indexOf("localhost") != -1 || window.location.hostname.indexOf("192.168") != -1) {
     ambient = 0;
-} else if (window.location.hostname.indexOf("dev.") != -1) {
+} else if (window.location.hostname.indexOf("dev.") != -1 || window.location.hostname.indexOf("dev-") != -1) {
     ambient = 1;
 } else {
     ambient = 2;
