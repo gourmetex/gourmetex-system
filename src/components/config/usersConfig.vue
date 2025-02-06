@@ -20,7 +20,7 @@
                 <button type="submit" class="btn btn-primary">Buscar</button>
             </form>
         </div>
-        <dataTable :dataTable="users" :rowsPerPage="7" searchText="">
+        <dataTable :dataTable="users" :rowsPerPage="7" searchText="" :loaded="contentLoaded">
             <template slot="column-id" slot-scope="props">
                 <p class="clicable text-center" v-on:click="selectRow2($event)">{{ props.item.id }}</p>
             </template>

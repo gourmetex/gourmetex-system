@@ -1,6 +1,6 @@
 <template>
     <div class="financial">
-        <dataTable :dataTable="debtCategories" :rowsPerPage="7" searchText="item">
+        <dataTable :dataTable="debtCategories" :rowsPerPage="7" searchText="item" :loaded="contentLoaded">
             <template slot="column-id" slot-scope="props">
                 <p class="clicable text-center" v-on:click="selectRow2($event)">{{ props.item.id }}</p>
             </template>
@@ -63,8 +63,11 @@ export default {
         returnDebtCategories: function () {
             let self = this;
 
+            self.contentLoaded = false;
+
             api.get("/financial/debt_categories?all=true").then((response) => {
                 self.debtCategories = response.data.returnObj;
+                self.contentLoaded = true;
             }).catch((error) => {
                 console.log(error);
             })

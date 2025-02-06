@@ -9,7 +9,7 @@
                 <button type="submit" class="btn btn-primary">Buscar</button>
             </form>
         </div>
-        <dataTable :dataTable="tables" :rowsPerPage="7" searchText="">
+        <dataTable :dataTable="tables" :rowsPerPage="7" searchText="" :loaded="contentLoaded">
             <template slot="column-número" slot-scope="props">
                 <p class="clicable text-center" v-on:click="selectRow2($event)">{{ props.item.id }}</p>
             </template>
@@ -83,8 +83,11 @@ export default {
                 filters: self.filters
             }
 
+            self.contentLoaded = false;
+
             api.post("/tables", data).then((response) => {
                 self.tables = response.data.returnObj;
+                self.contentLoaded = true;
             }).catch((error) => {
                 self.setResponse(error.response.data, "error");
             })

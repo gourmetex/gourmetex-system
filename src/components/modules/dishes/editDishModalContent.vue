@@ -25,7 +25,7 @@
             <input type="submit" id="submit-button" style="display: none;">
         </form>
         <div class="modal-edit-grid">
-            <dataTable :dataTable="dish.ingredientes" :rowsPerPage="3" searchText="">
+            <dataTable :dataTable="dish.ingredientes" :rowsPerPage="3" searchText="" :loaded="contentLoaded">
                 <template slot="column-id" slot-scope="props">
                     <p class="clicable text-center" v-on:click="selectRow2($event)">{{ props.item.id }}</p>
                 </template>
@@ -196,8 +196,11 @@ export default {
                 return;
             } 
 
+            self.contentLoaded = false;
+
             api.get("/dishes/" + self.dishid).then((response) => {
                 self.dish = response.data.returnObj;
+                self.contentLoaded = true;
                 self.fillSubmitIngredients();
             }).catch((error) => {
                 console.log(error);

@@ -8,7 +8,7 @@
             <div class="filter-container-header">
                 <h2>Lista de pedidos</h2>
             </div>
-            <dataTable :dataTable="orders" :rowsPerPage="7" searchText="pedido">
+            <dataTable :dataTable="orders" :rowsPerPage="7" searchText="pedido" :loaded="contentLoaded">
                 <template slot="column-nº-comanda" slot-scope="props">
                     <p class="clicable text-center" v-on:click="selectRow2($event)">{{ props.item.comanda }}</p>
                 </template>
@@ -74,8 +74,11 @@ export default {
         returnOrders: function () {
             let self = this;
 
+            self.contentLoaded = false;
+
             api.get("/orders").then((response) => {
                 self.orders = response.data.returnObj;
+                self.contentLoaded = true;
                 self.editId = null;
             }).catch((error) => {
                 console.log(error);

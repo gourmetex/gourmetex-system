@@ -430,7 +430,8 @@ export const globalMethods = {
             reloadGrid: false,
             editId: null,
             disabledButtons: [],
-            preferences: []
+            preferences: [],
+            contentLoaded: false
         }
     }
 }

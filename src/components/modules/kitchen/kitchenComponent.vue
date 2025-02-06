@@ -5,7 +5,7 @@
         </div>  
         <actionButtons add_text="FINALIZAR PRATO" exclude_text="CANCELAR PRATO" :disabledbuttons="disabledButtons" @add="finishDish()" @exclude="cancelDish()" />
         <div class="dishes-container">
-            <dataTable :dataTable="orders" :rowsPerPage="7" searchText="">
+            <dataTable :dataTable="orders" :rowsPerPage="7" searchText="" :loaded="contentLoaded">
                 <template slot="column-id" slot-scope="props">
                     <p class="clicable text-center" v-on:click="selectRow2($event)">{{ props.item.id }}</p>
                 </template>
@@ -73,8 +73,11 @@ export default {
         returnDishes: function () {
             let self = this;
 
+            self.contentLoaded = false;
+
             api.get("/kitchen/orders").then((response) => {
                 self.orders = response.data.returnObj;
+                self.contentLoaded = true;
                 self.reorganizeDishesObservations();
             }).catch((error) => {
                 console.log(error);

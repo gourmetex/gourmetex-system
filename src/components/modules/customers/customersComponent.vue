@@ -17,7 +17,7 @@
                     </form>
                 </div>
             </div>
-            <dataTable :dataTable="customers" :rowsPerPage="7" searchText="cliente">
+            <dataTable :dataTable="customers" :rowsPerPage="7" searchText="cliente" :loaded="contentLoaded">
                 <template slot="column-id" slot-scope="props">
                     <p class="clicable text-center" v-on:click="selectRow2($event)">{{ props.item.id }}</p>
                 </template>
@@ -97,8 +97,11 @@ export default {
                 filters: self.filters
             }
 
+            self.contentLoaded = false;
+
             api.post("/customers", data).then((response) => {
                 self.customers = response.data.returnObj;
+                self.contentLoaded = true;
             }).catch((error) => {
                 console.log(error);
             })

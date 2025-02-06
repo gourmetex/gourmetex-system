@@ -5,7 +5,7 @@
         </div> 
         <actionButtons add_text="ADICIONAR RESERVA" exclude_text="EXCLUIR RESERVA" edit_text="EDITAR RESERVA" :disabledbuttons="disabledButtons" @add="createReservation()" @exclude="deleteReservation()" @edit="editReservation()" />
         <div class="reservations-container">
-            <dataTable :dataTable="reservationsList" :rowsPerPage="7" searchText="item">
+            <dataTable :dataTable="reservationsList" :rowsPerPage="7" searchText="item" :loaded="contentLoaded">
                 <template slot="column-id" slot-scope="props">
                     <p class="clicable text-center" v-on:click="selectRow2($event)">{{ props.item.id }}</p>
                 </template>
@@ -28,7 +28,7 @@
                 </template>
             </dataTable>
         </div>
-        <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :excludepath="'/reservations/delete_reservation' + editId" :modalbutton2="modalButton2" :modalButton3="modalButton3" @closeModal="closeModalFunction(); returnReservations();">
+        <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :excludepath="'/reservations/' + editId" :modalbutton2="modalButton2" :modalButton3="modalButton3" @closeModal="closeModalFunction(); returnReservations();">
             <editReservationModalContent v-if="showEditReservationModalContent" :reservationid="editId" @savedContent="closeModalFunction(); returnReservations();"></editReservationModalContent>
         </modal>
     </div>
@@ -79,8 +79,11 @@ export default {
         returnReservations: function () {
             let self = this;
 
+            self.contentLoaded = false;
+
             api.get("/reservations").then((response) => {
                 self.reservationsList = response.data.returnObj;
+                self.contentLoaded = true;
             })
         }
     },

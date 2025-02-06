@@ -12,7 +12,7 @@
                 <button type="submit" class="btn btn-primary">Buscar</button>
             </form>
         </div>
-        <dataTable :dataTable="ingredients" :rowsPerPage="7" searchText="">
+        <dataTable :dataTable="ingredients" :rowsPerPage="7" searchText="" :loaded="contentLoaded">
             <template slot="column-id" slot-scope="props">
                 <p class="clicable text-center" v-on:click="selectRow2($event)">{{ props.item.id }}</p>
             </template>
@@ -102,8 +102,11 @@ export default {
                 filters: self.filters
             }
 
+            self.contentLoaded = false;
+
             api.post("/dishes/ingredients", data).then((response) => {
                 self.ingredients = response.data.returnObj;
+                self.contentLoaded = true;
             }).catch((error) => {
                 console.log(error);
             })

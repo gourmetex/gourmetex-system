@@ -6,7 +6,7 @@
         </div>
         
         <div class="empresas-list">
-            <dataTable :dataTable="companies" :rowsPerPage="7" searchText="item">
+            <dataTable :dataTable="companies" :rowsPerPage="7" searchText="item" :loaded="contentLoaded">
                 <template slot="column-id" slot-scope="props">
                     <p class="clicable text-center" v-on:click="editCompany(props.item.id)">{{ props.item.id }}</p>
                 </template>
@@ -68,8 +68,11 @@ export default {
         returnAllCompanies: function () {
             let self = this;
 
+            self.contentLoaded = false;
+
             api.get("/companies/return_all_companies").then((response) => {
                 self.companies = response.data.returnObj;
+                self.contentLoaded = true;
             }).catch((error) => {
                 console.log(error);
             })

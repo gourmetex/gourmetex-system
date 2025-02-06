@@ -21,7 +21,7 @@
                 <button type="submit" class="btn btn-primary">Buscar</button>
             </form>
         </div>
-        <dataTable :dataTable="roles" :rowsPerPage="7" searchText="">
+        <dataTable :dataTable="roles" :rowsPerPage="7" searchText="" :loaded="contentLoaded">
             <template slot="column-id" slot-scope="props">
                 <p class="clicable text-center" v-on:click="selectRow2($event)">{{ props.item.id }}</p>
             </template>
@@ -97,8 +97,11 @@ export default {
                 filters: self.filters
             }
 
+            self.contentLoaded = false;
+
             api.post("/companies/roles", data).then((response) => {
                 self.roles = response.data.returnObj;
+                self.contentLoaded = true;
             }).catch((error) => {
                 console.log(error);
             })

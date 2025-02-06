@@ -33,7 +33,7 @@
                     </form>
                 </div>
             </div>
-            <dataTable :dataTable="items" :rowsPerPage="7" searchText="">
+            <dataTable :dataTable="items" :rowsPerPage="7" searchText="" :loaded="contentLoaded">
                 <template slot="column-id" slot-scope="props">
                     <p class="clicable text-center" v-on:click="selectRow2($event)">{{ props.item.id }}</p>
                 </template>
@@ -121,8 +121,11 @@ export default {
                 filters: self.filters
             }
 
+            self.contentLoaded = false;
+
             api.post("/stock/return_stock", data).then((response) => {
                 self.items = response.data.returnObj;
+                self.contentLoaded = true;
             }).catch((error) => {
                 console.log(error);
             })

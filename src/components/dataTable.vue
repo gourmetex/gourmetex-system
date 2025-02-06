@@ -1,54 +1,62 @@
 <template>
-    <div class="data-table">
-      <!-- Search/Filter -->
-      <inputSearch
-        v-if="searchText != ''"
-        :search="searchQuery"
-        @model="searchQuery = $event"
-        @input="filterData"
-        :searchText="searchText"
-      />
-  
-      <!-- Table -->
-      <table class="table">
-        <thead>
-          <tr>
-            <th
-              v-for="(column, index) in columnsToRender"
-              :key="index"
-              @click="sortData(column)"
-              :class="column"
-            >
-              <span style="text-transform: capitalize;">{{ column.replace(/-/g, " ") }}</span>
-              <span v-if="sortColumn === column">
-                {{ sortDirection === 'asc' ? ' ▲' : ' ▼' }}
-              </span>
-            </th>
-          </tr>
-        </thead>
-        <tbody v-if="dataTable && dataTable.length">
-          <tr v-for="item in paginatedData" :key="item.id">
-            <td v-for="(column, colIndex) in columnsToRender" :key="colIndex" :data-th="returnFormatedDataTh(column)" :class="column">
-              <template v-if="$scopedSlots[`column-${column}`]">
-                <slot :name="`column-${column}`" :item="item"></slot>
-              </template>
-              <template v-else>
-                {{ item[column] }}
-              </template>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-  
-      <!-- Pagination -->
-      <div class="pagination">
-        <button @click="prevPage" class="btn rounded-btn small" :disabled="currentPage === 1">
-            <span class="material-icons">navigate_before</span>
-        </button>
-        <span>Página <strong>{{ currentPage }}</strong> de {{ totalPages }}</span>
-        <button @click="nextPage" class="btn rounded-btn small" :disabled="currentPage === totalPages">
-            <span class="material-icons">navigate_next</span>
-        </button>
+    <div class="datatable">
+      <div class="empty-datatable text-center" v-if="dataTable.length == 0 && loaded">
+        <h2>Não existem informações para exibir</h2>
+      </div>
+      <div class="datatable-loading" v-if="!loaded">
+        <lottie-player id="datatable-loading" background="transparent" speed="1" loop autoplay></lottie-player>
+      </div>
+      <div class="datatable-content" v-if="loaded && dataTable.length > 0">
+        <!-- Search/Filter -->
+        <inputSearch
+          v-if="searchText != ''"
+          :search="searchQuery"
+          @model="searchQuery = $event"
+          @input="filterData"
+          :searchText="searchText"
+        />
+    
+        <!-- Table -->
+        <table class="table">
+          <thead>
+            <tr>
+              <th
+                v-for="(column, index) in columnsToRender"
+                :key="index"
+                @click="sortData(column)"
+                :class="column"
+              >
+                <span style="text-transform: capitalize;">{{ column.replace(/-/g, " ") }}</span>
+                <span v-if="sortColumn === column">
+                  {{ sortDirection === 'asc' ? ' ▲' : ' ▼' }}
+                </span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="item in paginatedData" :key="item.id">
+              <td v-for="(column, colIndex) in columnsToRender" :key="colIndex" :data-th="returnFormatedDataTh(column)" :class="column">
+                <template v-if="$scopedSlots[`column-${column}`]">
+                  <slot :name="`column-${column}`" :item="item"></slot>
+                </template>
+                <template v-else>
+                  {{ item[column] }}
+                </template>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+    
+        <!-- Pagination -->
+        <div class="pagination">
+          <button @click="prevPage" class="btn rounded-btn small" :disabled="currentPage === 1">
+              <span class="material-icons">navigate_before</span>
+          </button>
+          <span>Página <strong>{{ currentPage }}</strong> de {{ totalPages }}</span>
+          <button @click="nextPage" class="btn rounded-btn small" :disabled="currentPage === totalPages">
+              <span class="material-icons">navigate_next</span>
+          </button>
+        </div>
       </div>
     </div>
   </template>
@@ -56,6 +64,7 @@
   <script>
   import inputSearch from "./inputSearch.vue";
   import { globalMethods } from "@/js/globalMethods";
+  import loadingJson from "../assets/animations/loading-component.json";
 
   export default {
     name: "dataTable",
@@ -72,6 +81,10 @@
       rowsPerPage: {
         type: Number,
         default: 10
+      },
+      loaded: {
+        type: Boolean,
+        required: true
       }
     },
     components: {
@@ -157,28 +170,33 @@
       },
       applyAlignmentClasses() {
         this.columnsToRender.forEach((column) => {
-        const thElement = this.$el.querySelector(`th.${column}`);
-        const tdElements = this.$el.querySelectorAll(`td.${column}`);
+          const thElement = this.$el.querySelector(`th.${column}`);
+          const tdElements = this.$el.querySelectorAll(`td.${column}`);
 
-        tdElements.forEach((td) => {
-            const firstChild = td.firstElementChild;
-            if (firstChild && firstChild.classList.contains('text-center')) {
-            thElement.classList.add('text-center');
-            td.classList.add('text-center');
-            } else if (firstChild && firstChild.classList.contains('text-left')) {
-            thElement.classList.add('text-left');
-            td.classList.add('text-left');
-            } else if (firstChild && firstChild.classList.contains('text-right')) {
-            thElement.classList.add('text-right');
-            td.classList.add('text-right');
-            }
+          tdElements.forEach((td) => {
+              const firstChild = td.firstElementChild;
+
+              if (firstChild && firstChild.classList.contains('text-center')) {
+                thElement.classList.add('text-center');
+                td.classList.add('text-center');
+              } else if (firstChild && firstChild.classList.contains('text-left')) {
+                thElement.classList.add('text-left');
+                td.classList.add('text-left');
+              } else if (firstChild && firstChild.classList.contains('text-right')) {
+                thElement.classList.add('text-right');
+                td.classList.add('text-right');
+              }
+          });
         });
-        });
-    }
+      }
     },
     watch: {
+      loaded: function () {
+        console.log(this.loaded)
+      },
       dataTable: {
         handler(newData) {
+          console.log(this.dataTable)
           this.filteredData = newData || [];
           this.currentPage = 1;
         },
@@ -186,17 +204,38 @@
       }
     },
     mounted() {
-        this.applyAlignmentClasses();
+      const player = document.querySelector("lottie-player");
+      player.addEventListener("rendered", () => {
+          player.load(
+              loadingJson
+          );
+      });
+
+      this.applyAlignmentClasses();
     },
     updated() {
-        this.applyAlignmentClasses();
+      this.applyAlignmentClasses();
     }
   };
   </script>
   <style scoped>
-    .data-table {
+    .datatable {
         margin-top: var(--space-3);
         width: 100%;
+
+        & .empty-datatable h2 {
+          margin-top: var(--space-6);
+        }
+    }
+
+    .datatable-loading {
+      width: 100%;
+      display: grid;
+      place-items: center;
+
+      & lottie-player {
+        width: 150px;
+      }
     }
 
   .table {

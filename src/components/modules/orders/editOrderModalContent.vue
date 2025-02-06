@@ -17,7 +17,7 @@
         <div class="order-dishes-container">
             <h3>Itens do pedido</h3>
             <div class="modal-edit-grid">
-                <dataTable :dataTable="order.dishes" :rowsPerPage="2" searchText="">
+                <dataTable :dataTable="order.dishes" :rowsPerPage="2" searchText="" :loaded="contentLoaded">
                     <template slot="column-cód-do-item" slot-scope="props">
                         <p class="clicable text-center" v-on:click="selectRow2($event)">{{ props.item.id }}</p>
                     </template>
@@ -448,7 +448,11 @@ export default {
                 return;
             } 
 
+            self.contentLoaded = false;
+
             api.get("/orders/" + self.orderid).then((response) => {
+                self.contentLoaded = true;
+                
                 self.order = response.data.returnObj;
 
                 self.order_total = self.order.total == null ? 0.0 : self.formatDecimalValues(self.order.total);

@@ -4,8 +4,8 @@
             <h1>Menu digital</h1>
         </div>  
         <actionButtons add_text="ABRIR MESA" exclude_text="FECHAR MESA" edit_text="EDITAR MESA" :disabledbuttons="disabledButtons" @add="openTable()" @exclude="closeTable()" @edit="editTable()" />
-        <div class="digital-menu-container" v-if="!reloadTable">
-            <dataTable :dataTable="digitalMenu" :rowsPerPage="7" searchText="item">
+        <div class="digital-menu-container">
+            <dataTable :dataTable="digitalMenu" :rowsPerPage="7" searchText="item" :loaded="contentLoaded">
                 <template slot="column-comanda" slot-scope="props">
                     <p class="clicable text-center" v-on:click="selectRow2($event)">{{ props.item.comanda }}</p>
                 </template>
@@ -50,8 +50,7 @@ export default {
         return {
             digitalMenu: [],
             showEditOrderModalContent: false,
-            payment: false,
-            reloadTable: false
+            payment: false
         }
     },
     methods: {
@@ -78,14 +77,11 @@ export default {
         returnMenuDigital: function () {
             let self = this;
 
-            this.reloadTable = true;
-
-            setTimeout(() => {
-                this.reloadTable = false;
-            }, 1)
+            self.contentLoaded = false;
 
             api.get("/digital_menu").then((response) => {
                 self.digitalMenu = response.data.returnObj;
+                self.contentLoaded = true;
             })
         }
     },
