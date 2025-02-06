@@ -6,7 +6,7 @@
         <div class="app-frame" v-else>
             <headerComponent @toggleMenu="toggleContent($event)" />
             <div class="inner-page-system">
-                <slot />
+                <slot  />
             </div>
         </div>
     </div>
@@ -37,19 +37,18 @@ export default {
             setInterval(() => {
                 if ($(".update-time").length) {
                     let elements = $(".update-time");
-
+                    
                     elements.each((index, item) => {
                         let currentItem = $(item);
-                        let currentItemText = currentItem.find("h3");
 
-                        if (currentItemText.html() != "") {
+                        if (currentItem.html() != "") {
                             let timeSource;
 
-                            if (moment(currentItemText.html()).isValid()) {
-                                timeSource = currentItemText.html();
-                                currentItemText.attr("dataTime", currentItemText.html());
+                            if (moment(currentItem.html()).isValid()) {
+                                timeSource = currentItem.html();
+                                currentItem.attr("dataTime", currentItem.html());
                             } else {
-                                timeSource = currentItemText.attr("dataTime");
+                                timeSource = currentItem.attr("dataTime");
                             }
                             
                             const now = moment();
@@ -68,7 +67,7 @@ export default {
                                 .toString()
                                 .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
-                            currentItemText.html(elapsedTimeString).attr("title", elapsedTimeString);
+                            currentItem.html(elapsedTimeString).attr("title", elapsedTimeString);
                         }
                     })
                 }
@@ -128,8 +127,8 @@ export default {
 
                     self.initSystemRequests();
                 }
-            })
-        }).catch(() => {})
+            }, 100)
+        })
     }
 }
 </script>

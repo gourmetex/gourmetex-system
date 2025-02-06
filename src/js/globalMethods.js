@@ -47,7 +47,7 @@ export const globalMethods = {
                 this.submitContent = false;
 
                 this.reloadGrid = false;
-                this.descelectRows();
+                this.descelectRows2();
             }, 400);
         },
         closeModalContent: function () {
@@ -202,6 +202,14 @@ export const globalMethods = {
                 this.triggerAction(id);
             }
         },
+        selectRow2: function (event) {
+            let id = $(event.target).html();
+            let parent = $(event.target).parent().parent();
+
+            this.showEditButtons();
+            this.editId = parseInt(id);
+            this.selectGridRow2(parent);
+        },
         showEditButtons: function () {
             let editButtons = $(".dynamic-edit-buttons");
 
@@ -211,6 +219,13 @@ export const globalMethods = {
             let editButtons = $(".dynamic-edit-buttons");
 
             editButtons.hide();
+        },
+        selectGridRow2: function (row) {
+            if (row.hasClass("row-selected")) {
+                this.descelectRows2();
+            } else {
+                row.addClass("row-selected");                
+            }
         },
         selectGridRow: function (rowKey) {
             let allRows = $(".grid-row");
@@ -222,6 +237,13 @@ export const globalMethods = {
                 allRows.removeClass("row-selected");
                 row.addClass("row-selected");
             }
+        },
+        descelectRows2: function () {
+            let allRows = $("td, tr");
+
+            allRows.removeClass("row-selected");
+            this.editId = null;
+            this.hideEditButtons();
         },
         descelectRows: function () {
             let allRows = $(".grid-row");
@@ -373,6 +395,10 @@ export const globalMethods = {
         formatDateFromDb: function (date) {
             return date.replace(' ', 'T').slice(0, -3);
         },
+        capitalize: (str) => {
+            if (!str) return "";
+            return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+        },
         //Métodos configurações
         cancel: function () {
             this.$emit("cancel");
@@ -385,6 +411,7 @@ export const globalMethods = {
             } else {
                 this.disableActionsButtons(false, true, true);
                 this.descelectRows();
+                this.descelectRows2();
             }
         }
     },

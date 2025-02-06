@@ -181,6 +181,23 @@ a, a:hover {
     color: var(--black);
 }
 
+.text-center {
+    text-align: center !important;
+}
+
+.text-right {
+    text-align: right !important;
+}
+
+.clicable {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.row-selected td {
+    background: var(--blue-high-2);
+}
+
 .btn {
     padding: var(--space-4) var(--space-5);
     border-radius: 6px;
@@ -195,6 +212,10 @@ a, a:hover {
     align-items: center;
     justify-content: center;
     min-width: 130px;
+
+    &:disabled {
+        cursor: default !important;
+    }
 }
 
 .btn.w-100 {
@@ -205,10 +226,23 @@ a, a:hover {
     padding: var(--space-3);
     width: 50px;
     height: 50px;
+    min-width: 50px;
+    min-height: 50px;
+    max-width: 50px;
+    max-height: 50px;
     border: none;
     border-radius: var(--radius-full);
     margin: var(--space-2);
     cursor: pointer;
+
+    &.small {
+        width: 30px;
+        height: 30px;
+        min-width: 30px;
+        min-height: 30px;
+        max-width: 30px;
+        max-height: 30px;
+    }
 }
 
     .rounded-btn span {
@@ -480,6 +514,7 @@ form .btn {
 
 .edit-buttons.buttons-vertical {
     flex-direction: column;
+    margin-top: var(--space-6);
 }
 
 .dynamic-edit-buttons {

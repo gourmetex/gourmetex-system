@@ -17,7 +17,26 @@
                     </form>
                 </div>
             </div>
-            <gridView :gridoptions="gridOptions" :griddata="customers" @dataclick="selectRow($event)"></gridView>
+            <dataTable :dataTable="customers" :rowsPerPage="7" searchText="cliente">
+                <template slot="column-id" slot-scope="props">
+                    <p class="clicable text-center" v-on:click="selectRow2($event)">{{ props.item.id }}</p>
+                </template>
+                <template slot="column-nome" slot-scope="props">
+                    <p>{{ props.item.nome }}</p>
+                </template>
+                <template slot="column-email" slot-scope="props">
+                    <p>{{ props.item.email }}</p>
+                </template>
+                <template slot="column-telefone" slot-scope="props">
+                    <p>{{ props.item.telefone }}</p>
+                </template>
+                <template slot="column-especial" slot-scope="props">
+                    <p class="text-center">{{ props.item.especial }}</p>
+                </template>
+                <template slot="column-desconto" slot-scope="props">
+                    <p class="text-center">{{ props.item.porcentagem_desconto != null ? props.item.porcentagem_desconto + "%" : "" }}</p>
+                </template>
+            </dataTable>
         </div>
         <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :excludepath="'/customers/' + editId" :modalbutton2="modalButton2" :modalbutton3="modalButton3" @closeModal="closeModalFunction(); returnCustomers();">
             <editCustomerModalContent v-if="showEditCustomerModalContent" :customerid="editId" @savedContent="closeModalFunction(); returnCustomers();"></editCustomerModalContent>
@@ -26,7 +45,7 @@
 </template>
 <script>
 import actionButtons from "../../actionButtons.vue";
-import gridView from "../../gridView.vue";
+import dataTable from "../../dataTable.vue";
 import { globalMethods } from "@/js/globalMethods";
 import modal from "../../modal.vue";
 import editCustomerModalContent from "./editCustomerModalContent.vue";
@@ -79,8 +98,7 @@ export default {
             }
 
             api.post("/customers", data).then((response) => {
-                self.customers = response.data.returnObj.customers;
-                self.gridOptions = response.data.returnObj.labels;
+                self.customers = response.data.returnObj;
             }).catch((error) => {
                 console.log(error);
             })
@@ -92,7 +110,7 @@ export default {
     },
     components: {
         actionButtons,
-        gridView,
+        dataTable,
         modal,
         editCustomerModalContent
     }

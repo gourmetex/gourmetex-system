@@ -131,11 +131,6 @@ export default {
     align-items: center;
 }
 
-.clicable {
-    cursor: pointer;
-    text-decoration: underline;
-}
-
 @media (max-width: 768px) {
     .inner-page-system {
         width: 100vw;

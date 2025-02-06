@@ -5,7 +5,29 @@
         </div>  
         <actionButtons add_text="ABRIR MESA" exclude_text="FECHAR MESA" edit_text="EDITAR MESA" :disabledbuttons="disabledButtons" @add="openTable()" @exclude="closeTable()" @edit="editTable()" />
         <div class="digital-menu-container" v-if="!reloadTable">
-            <gridView :gridoptions="gridOptions" :griddata="digitalMenu" @dataclick="selectRow($event)"></gridView>
+            <dataTable :dataTable="digitalMenu" :rowsPerPage="7" searchText="item">
+                <template slot="column-comanda" slot-scope="props">
+                    <p class="clicable text-center" v-on:click="selectRow2($event)">{{ props.item.comanda }}</p>
+                </template>
+                <template slot="column-mesa" slot-scope="props">
+                    <p class="text-center">{{ props.item.mesa }}</p>
+                </template>
+                <template slot="column-cliente" slot-scope="props">
+                    <p>{{ props.item.cliente }}</p>
+                </template>
+                <template slot="column-status-pedido" slot-scope="props">
+                    <p>{{ props.item.status_pedido }}</p>
+                </template>
+                <template slot="column-valor-parcial" slot-scope="props">
+                    <p class="text-center">{{ props.item.valor_parcial }}</p>
+                </template>
+                <template slot="column-tempo-permanência" slot-scope="props">
+                    <p class="text-center update-time">{{ props.item.tempo_permanencia }}</p>
+                </template>
+                <template slot="column-status-mesa" slot-scope="props">
+                    <newBadge class="text-center" :background="props.item.status_mesa == 1 ? 'var(--green-2)' : 'var(--red)'" :text="props.item.status_mesa == 1 ? 'Disponível' : 'Ocupada'" />
+                </template>
+            </dataTable>
         </div>
         <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :excludepath="'/orders/' + editId" :modalbutton2="modalButton2" :modalButton3="modalButton3" @closeModal="closeModalFunction(); returnMenuDigital();">
             <editOrderModalContent v-if="showEditOrderModalContent" :payment="payment" :orderid="editId" @savedContent="closeModalFunction(); returnMenuDigital();"></editOrderModalContent>
@@ -14,18 +36,18 @@
 </template>
 <script>
 import actionButtons from "../../actionButtons.vue";
-import gridView from "../../gridView.vue";
 import { globalMethods } from "@/js/globalMethods";
 import api from "../../../configs/api";
 import editOrderModalContent from "../orders/editOrderModalContent.vue";
 import modal from "../../modal.vue";
+import dataTable from "../../dataTable.vue";
+import newBadge from "../../newBadge.vue";
 
 export default {
     name: "digitalMenuComponent",
     mixins: [globalMethods],
     data() {
         return {
-            gridOptions: [],
             digitalMenu: [],
             showEditOrderModalContent: false,
             payment: false,
@@ -63,19 +85,20 @@ export default {
             }, 1)
 
             api.get("/digital_menu").then((response) => {
-                self.digitalMenu = response.data.returnObj.digital_menu;
-                self.gridOptions = response.data.returnObj.labels;
+                self.digitalMenu = response.data.returnObj;
             })
         }
     },
     mounted: function () {
+        this.disableActionsButtons(false, true, true);
         this.returnMenuDigital();
     },
     components: {
         actionButtons,
-        gridView,
         editOrderModalContent,
-        modal
+        modal,
+        dataTable,
+        newBadge
     }
 }
 </script>

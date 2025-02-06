@@ -8,7 +8,26 @@
             <div class="filter-container-header">
                 <h2>Lista de pratos</h2>
             </div>
-            <gridView :gridoptions="gridOptions" :griddata="dishes" @dataclick="selectRow($event)"></gridView>
+            <dataTable :dataTable="dishes" :rowsPerPage="7" searchText="prato">
+                <template slot="column-id" slot-scope="props">
+                    <p class="clicable text-center" v-on:click="selectRow2($event)">{{ props.item.id }}</p>
+                </template>
+                <template slot="column-nome" slot-scope="props">
+                    <p>{{ props.item.nome }}</p>
+                </template>
+                <template slot="column-descrição" slot-scope="props">
+                    <p>{{ props.item.dishes }}</p>
+                </template>
+                <template slot="column-preço" slot-scope="props">
+                    <p>{{ props.item.preco }}</p>
+                </template>
+                <template slot="column-categoria" slot-scope="props">
+                    <newBadge class="text-center" :background="props.item.cor" :text="props.item.nome_categoria" />
+                </template>
+                <template slot="column-disponível" slot-scope="props">
+                    <p class="text-center">{{ props.item.disponivel == 1 ? "Sim" : "Não" }}</p>
+                </template>                
+            </dataTable>
         </div>
         <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :excludepath="'/dishes/' + editId" :modalbutton2="modalButton2" :modalbutton3="modalButton3" @closeModal="closeModalFunction(); returnDishes();">
             <editDishModalContent v-if="showEditDishModalContent" :dishid="editId" @savedContent="closeModalFunction(); returnDishes();"></editDishModalContent>
@@ -17,11 +36,12 @@
 </template>
 <script>
 import actionButtons from "../../actionButtons.vue";
-import gridView from "../../gridView.vue";
 import { globalMethods } from "@/js/globalMethods";
 import modal from "../../modal.vue";
 import editDishModalContent from "./editDishModalContent.vue";
 import api from "../../../configs/api";
+import dataTable from "../../dataTable.vue";
+import newBadge from "../../newBadge.vue";
 
 export default {
     name: "dishesComponent",
@@ -29,7 +49,6 @@ export default {
     data() {
         return {
             dishes: [],
-            gridOptions: [],
             showEditDishModalContent: false,
             ingredients_categories: []
         }
@@ -58,9 +77,7 @@ export default {
             let self = this;
 
             api.get("/dishes").then((response) => {
-                self.dishes = response.data.returnObj.dishes;
-                self.gridOptions = response.data.returnObj.labels;
-                self.editId = null;
+                self.dishes = response.data.returnObj;
             }).catch((error) => {
                 console.log(error);
             })
@@ -72,7 +89,8 @@ export default {
     },
     components: {
         actionButtons,
-        gridView,
+        dataTable,
+        newBadge,
         modal,
         editDishModalContent
     }

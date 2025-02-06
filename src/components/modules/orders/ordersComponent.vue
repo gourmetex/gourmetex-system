@@ -8,7 +8,26 @@
             <div class="filter-container-header">
                 <h2>Lista de pedidos</h2>
             </div>
-            <gridView :gridoptions="gridOptions" :griddata="orders" @dataclick="selectRow($event)"></gridView>
+            <dataTable :dataTable="orders" :rowsPerPage="7" searchText="pedido">
+                <template slot="column-nº-comanda" slot-scope="props">
+                    <p class="clicable text-center" v-on:click="selectRow2($event)">{{ props.item.comanda }}</p>
+                </template>
+                <template slot="column-cliente" slot-scope="props">
+                    <p>{{ props.item.cliente }}</p>
+                </template>
+                <template slot="column-delivery" slot-scope="props">
+                    <p>{{ props.item.delivery == 1 ? "Sim" : "Não" }}</p>
+                </template>
+                <template slot="column-valor-parcial" slot-scope="props">
+                    <p>{{ props.item.valor_parcial }}</p>
+                </template>
+                <template slot="column-valor-final" slot-scope="props">
+                    <p>{{ props.item.valor_final }}</p>
+                </template>
+                <template slot="column-status-do-pedido" slot-scope="props">
+                    <p>{{ props.item.status }}</p>
+                </template>
+            </dataTable>
         </div>
         <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :excludepath="'/orders/' + editId" :modalbutton2="modalButton2" :modalButton3="modalButton3" @closeModal="closeModalFunction(); returnOrders();">
             <editOrderModalContent v-if="showEditOrderModalContent" :orderid="editId" @savedContent="closeModalFunction(); returnOrders();"></editOrderModalContent>
@@ -18,7 +37,7 @@
 <script>
 import api from "../../../configs/api";
 import actionButtons from "../../actionButtons.vue";
-import gridView from "../../gridView.vue";
+import dataTable from "../../dataTable.vue";
 import { globalMethods } from "@/js/globalMethods";
 import modal from "../../modal.vue";
 import editOrderModalContent from "./editOrderModalContent.vue";
@@ -56,8 +75,7 @@ export default {
             let self = this;
 
             api.get("/orders").then((response) => {
-                self.orders = response.data.returnObj.orders;
-                self.gridOptions = response.data.returnObj.labels;
+                self.orders = response.data.returnObj;
                 self.editId = null;
             }).catch((error) => {
                 console.log(error);
@@ -70,7 +88,7 @@ export default {
     },
     components: {
         actionButtons,
-        gridView,
+        dataTable,
         modal,
         editOrderModalContent
     }

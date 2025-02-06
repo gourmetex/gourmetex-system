@@ -9,8 +9,8 @@
                 <div class="form-group">
                     <label for="categoria">Categoria</label>
                     <select id="categoria" name="categoria" v-model="dish.categoria" required>
-                        <option value="">Qualquer</option>
-                        <option v-for="(category, index) in dishes_categories" :key="index" :value="category.id[1]">{{ category.nome[1] }}</option>
+                        <option value="">* Selecione *</option>
+                        <option v-for="(category, index) in dishes_categories" :key="index" :value="category.id">{{ category.nome }}</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -25,7 +25,17 @@
             <input type="submit" id="submit-button" style="display: none;">
         </form>
         <div class="modal-edit-grid">
-            <gridView :gridoptions="dish.ingredientes.labels" :griddata="dish.ingredientes.ingredientes" @dataclick="selectRow($event)"></gridView>
+            <dataTable :dataTable="dish.ingredientes" :rowsPerPage="3" searchText="">
+                <template slot="column-id" slot-scope="props">
+                    <p class="clicable text-center" v-on:click="selectRow2($event)">{{ props.item.id }}</p>
+                </template>
+                <template slot="column-nome" slot-scope="props">
+                    <p>{{ props.item.nome }}</p>
+                </template>
+                <template slot="column-quantidade" slot-scope="props">
+                    <p class="text-center">{{ props.item.quantidade }}</p>
+                </template>
+            </dataTable>
             <div class="edit-buttons buttons-vertical">
                 <button type="button" class="rounded-btn btn-primary" v-on:click="addIngredient()">
                     <span class="material-icons">add</span>
@@ -42,8 +52,8 @@
                 <div class="form-group">
                     <label for="ingredient">Item</label>
                     <select id="ingredient" name="ingredient" @change="selectThisIngredient()" required>
-                        <option value="">Qualquer</option>
-                        <option v-for="(item, index) in ingredients" :key="index" :value="item.id[1]">{{ item.nome[1] }}</option>
+                        <option value="">* Selecione *</option>
+                        <option v-for="(item, index) in ingredients" :key="index" :value="item.id">{{ item.nome }}</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -61,7 +71,7 @@
 import api from "../../../configs/api";
 import { globalMethods } from "@/js/globalMethods";
 import $ from 'jquery';
-import gridView from "../../gridView.vue";
+import dataTable from "../../dataTable.vue";
 
 export default {
     name: "editDishModalContent",
@@ -81,40 +91,38 @@ export default {
                 nome: "",
                 categoria: null,
                 preco: null,
-                ingredientes: {
-                    ingredientes: [],
-                    labels: [
-                        "Id",
-                        "Nome",
-                        "Quantidade"
-                    ]
-                }
+                ingredientes: []
             }
         }
     },
     methods: {
         deleteIngredient: function () {
             let self = this;
+
+            if (self.dish.ingredientes.length == 1) { 
+                this.editId = null; 
+                return;
+            }
             
-            self.dish.ingredientes.ingredientes = self.dish.ingredientes.ingredientes.filter(obj => obj.id_ingrediente[1] !== self.editId);
-            self.ingredients_list = self.ingredients_list.filter(obj => obj.id !== self.editId);
+            self.dish.ingredientes = self.dish.ingredientes.filter((obj) => { return obj.id !== self.editId });
+            self.ingredients_list = self.ingredients_list.filter((obj) => { return obj.id !== self.editId });
         },
         submitAddIngredient: function () {
             this.selectThisIngredient();
 
             let newIngredientGrid = {
-                id_ingrediente: this.selected_ingredient.id,
+                id: this.selected_ingredient.id,
                 nome: this.selected_ingredient.nome,
-                quantidade: ["text", this.quantity + " " + this.selected_ingredient_measure_unit, ""]
+                quantidade: this.quantity + " " + this.selected_ingredient_measure_unit
             }
 
             let newIngredient = {
-                id: this.selected_ingredient.id[1],
+                id: this.selected_ingredient.id,
                 quantidade: this.quantity
             }
 
-            if (this.dish.ingredientes.ingredientes.length == 0 || !this.dish.ingredientes.ingredientes.some(obj => obj.id_ingrediente[1] == this.selected_ingredient.id[1])) {
-                this.dish.ingredientes.ingredientes.push(newIngredientGrid);
+            if (this.dish.ingredientes.length == 0 || !this.dish.ingredientes.some(obj => obj.id == this.selected_ingredient.id)) {
+                this.dish.ingredientes.push(newIngredientGrid);
                 this.ingredients_list.push(newIngredient);
                 this.selected_ingredient = {};
                 this.selected_ingredient_measure_unit = "";
@@ -124,11 +132,11 @@ export default {
             this.closeSmallModal();
         },
         fillSubmitIngredients: function () {
-            for (let i = 0; i < this.dish.ingredientes.ingredientes.length; i++) {
-                let currentIngredient = this.dish.ingredientes.ingredientes[i];
+            for (let i = 0; i < this.dish.ingredientes.length; i++) {
+                let currentIngredient = this.dish.ingredientes[i];
                 let newIngredient = {
-                    id: currentIngredient.id_ingrediente[1],
-                    quantidade: currentIngredient.quantidade[1]
+                    id: currentIngredient.id,
+                    quantidade: parseInt(currentIngredient.quantidade)
                 }
 
                 this.ingredients_list.push(newIngredient);
@@ -136,11 +144,11 @@ export default {
         },
         selectThisIngredient: function () {
             let value = $("#ingredient").val();
-            let ingredient = this.ingredients.find(obj => obj.id[1] == value);
+            let ingredient = this.ingredients.find(obj => obj.id == value);
 
             if (ingredient != undefined && ingredient != null) {
                 this.selected_ingredient = ingredient;
-                this.selected_ingredient_measure_unit = ingredient.unidade_medida[1];
+                this.selected_ingredient_measure_unit = ingredient.unidade_medida;
             } else {
                 this.selected_ingredient = {};
                 this.selected_ingredient_measure_unit = "";
@@ -184,7 +192,7 @@ export default {
             let self = this;
 
             if (self.dishid == null) {
-                self.dish.ingredientes.ingredientes = [];
+                self.dish.ingredientes = [];
                 return;
             } 
 
@@ -199,7 +207,7 @@ export default {
             let self = this;
 
             api.post("/dishes/categories").then((response) => {
-                self.dishes_categories = response.data.returnObj.dishes_categories;
+                self.dishes_categories = response.data.returnObj;
             }).catch((error) => {
                 console.log(error);
             })
@@ -208,7 +216,7 @@ export default {
             let self = this;
 
             api.post("/dishes/ingredients").then((response) => {
-                self.ingredients = response.data.returnObj.ingredients;
+                self.ingredients = response.data.returnObj;
             }).catch((error) => {
                 console.log(error);
             })
@@ -220,7 +228,7 @@ export default {
         this.returnDish();        
     },
     components: {
-        gridView
+        dataTable
     }
 }
 </script>

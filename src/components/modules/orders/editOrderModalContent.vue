@@ -9,7 +9,7 @@
                 </div>
                 <div class="form-group">
                     <label for="id_cliente">Nome do cliente</label>
-                    <ajaxAutoComplete @select="setCustomer($event)" ajaxtype="clientes" :entityid="this.order.id_cliente" :entityname="this.order.nome_cliente" :required="true" />
+                    <ajaxAutoComplete @select="setCustomer($event)" ajaxtype="clientes" :entityid="order.id_cliente" :entityname="order.nome_cliente" :required="true" />
                 </div>
             </div>
             <input type="submit" id="submit-button" style="display: none;">
@@ -17,7 +17,26 @@
         <div class="order-dishes-container">
             <h3>Itens do pedido</h3>
             <div class="modal-edit-grid">
-                <gridView :gridoptions="order.dishes.labels" :griddata="order.dishes.dishes" @dataclick="selectRow($event)"></gridView>
+                <dataTable :dataTable="order.dishes" :rowsPerPage="2" searchText="">
+                    <template slot="column-cód-do-item" slot-scope="props">
+                        <p class="clicable text-center" v-on:click="selectRow2($event)">{{ props.item.id }}</p>
+                    </template>
+                    <template slot="column-nome-do-item" slot-scope="props">
+                        <p>{{ props.item.nome }}</p>
+                    </template>
+                    <template slot="column-qtd" slot-scope="props">
+                        <p class="text-center">{{ props.item.quantidade }}</p>
+                    </template>
+                    <template slot="column-obs" slot-scope="props">
+                        <p>{{ props.item.observacoes }}</p>
+                    </template>
+                    <template slot="column-valor-do-item" slot-scope="props">
+                        <p>{{ props.item.preco }}</p>
+                    </template>
+                    <template slot="column-status" slot-scope="props">
+                        <p>{{ props.item.status }}</p>
+                    </template>
+                </dataTable>
                 <div class="edit-buttons buttons-vertical">
                     <button type="button" class="rounded-btn btn-primary" v-on:click="addDish()">
                         <span class="material-icons">add</span>
@@ -62,8 +81,8 @@
                 <div class="form-group">
                     <label for="item">Item</label>
                     <select name="item" id="item" required>
-                        <option value="">"Selecione um item"</option>
-                        <option :value="item.id[1]" v-for="(item, index) in dishes_list" :key="index">{{ item.nome[1] }} {{ item.disponivel[1] != "Sim" ? "(Indisponível)" : "" }}</option>
+                        <option value="">* Selecione *</option>
+                        <option :value="item.id" v-for="(item, index) in dishes_list" :key="index">{{ item.nome }} {{ item.disponivel == 1 ? "" : "(Indisponível)" }}</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -82,7 +101,7 @@
                 <div class="form-group">
                     <label for="metodo_pagamento">Método de pagamento</label>
                     <select name="metodo_pagamento" id="metodo_pagamento" required>
-                        <option value="">"Selecione um item"</option>
+                        <option value="">* Selecione *</option>
                         <option value="dinheiro">Dinheiro</option>
                         <option value="cartao">Cartão</option>
                         <option value="pix">Pix</option>
@@ -103,7 +122,7 @@
 import api from "../../../configs/api";
 import { globalMethods } from "@/js/globalMethods";
 import $ from 'jquery';
-import gridView from "../../gridView.vue";
+import dataTable from "../../dataTable.vue";
 import ajaxAutoComplete from "../../ajaxAutoComplete.vue";
 
 export default {
@@ -114,24 +133,13 @@ export default {
         return {
             savingOrder: false,
             order: {
-                dishes: {
-                    dishes: [],
-                    labels: [
-                        "Cód. do item",
-                        "Nome do item",
-                        "Qtd.",
-                        "Obs",
-                        "Valor do item",
-                        "Status"
-                    ]
-                },
+                dishes: [],
                 total: "R$ 0,00",
                 nome_cliente: "",
                 id_cliente: "",
-                cep_entrega: null,
-                mesa: null
+                cep_entrega: "",
+                mesa: ""
             },
-            order_dishes: [],
             dishes_list: [],
             selected_dish: [],
             quantity: null,
@@ -144,8 +152,8 @@ export default {
             pix_payment: "R$ 0",
             amount_payed: "R$ 0",
             accumulatedQuantity: 0,
-            cliente_nome: null,
-            cliente_id: null,
+            cliente_nome: "",
+            cliente_id: "",
             cliente_desconto: 0,
             total_desconto: "R$ 0",
             frozen_table: null
@@ -173,10 +181,8 @@ export default {
         amount_payed: function () {
             var valor = this.amount_payed.replace(/\D/g, '');
             
-            // Transforma em número decimal com duas casas
             var valorNumerico = parseInt(valor) / 100;
 
-            // Formata para o formato monetário brasileiro
             var valorFormatado = valorNumerico.toLocaleString('pt-BR', {
                 style: 'currency',
                 currency: 'BRL'
@@ -209,47 +215,34 @@ export default {
         excludeDish: function () {
             let self = this;
             
-            let excludedDish = self.order.dishes.dishes.find(obj => obj.id[1] == self.editId);
+            let excludedDish = self.order.dishes.find(obj => obj.id == self.editId);
 
-            self.order.dishes.dishes = self.order.dishes.dishes.filter(obj => obj.id[1] !== self.editId);
-            self.order_dishes = self.order_dishes.filter(obj => obj.id !== self.editId);
-            let item_value = (this.formatDecimalValues(excludedDish.preco[1]) * parseFloat(excludedDish.quantidade[1]));
+            self.order.dishes = self.order.dishes.filter(obj => obj.id !== self.editId);
+            let item_value = (this.formatDecimalValues(excludedDish.preco) * parseFloat(excludedDish.quantidade));
 
             this.order_total -= item_value;
             this.editId = null;
 
             this.closeSmallModal();
         },
-        fillOrderDishes: function () {
-            for (let i = 0; i < this.order.dishes.dishes.length; i++) {
-                let currentDish = this.order.dishes.dishes[i];
-                let newDish = {
-                    id: currentDish.id[1],
-                    quantidade: currentDish.quantidade[1],
-                    observacoes: currentDish.observacoes[1]
-                }
-
-                this.order_dishes.push(newDish);
-            }
-        },
         reorganizeDishesObservations: function () {
-            for (let i = 0; i < this.order.dishes.dishes.length; i++) {
-                this.order.dishes.dishes[i].observacoes[1] = this.groupObservations(this.order.dishes.dishes[i].observacoes[1]);
+            for (let i = 0; i < this.order.dishes.length; i++) {
+                this.order.dishes[i].observacoes = this.groupObservations(this.order.dishes[i].observacoes);
             }
         },
         submitAddDish: function () {
+            let self = this;
+
             this.selectThisDish();
             this.resetResponse();
             
-            if (this.quantity == 0 || this.selected_dish.disponivel[1] != "Sim") {
+            if (this.quantity == 0 || this.selected_dish.disponivel != 1) {
                 this.disposeSelectedDishAndCloseSmallModal();
                 return;
             }
 
-            let promises = [];
-
-            let sameDish = this.order.dishes.dishes.filter(dish => dish.id[1] == this.selected_dish.id[1]);
-            let dishObservations = sameDish.length > 0 ? sameDish[0].observacoes[1] : null;
+            let sameDish = this.order.dishes.filter(dish => dish.id == this.selected_dish.id);
+            let dishObservations = sameDish.length > 0 ? sameDish[0].observacoes : null;
             
             if (dishObservations != null && dishObservations.trim() != "") {
                 dishObservations += ", " + this.observations;
@@ -263,71 +256,53 @@ export default {
                 }
             }
 
-            let gridDishObservations = this.groupObservations(dishObservations);      
+            let gridDishObservations = this.groupObservations(dishObservations); 
 
             let newDishGrid = {
                 id: this.selected_dish.id,
                 nome: this.selected_dish.nome,
-                quantidade: ["text", this.quantity, ""],
-                observacoes: ["text", gridDishObservations, ""],
-                preco: this.selected_dish.preco,
-                status: ["text", "Preparando", ""]
-            }
-
-            let newDish = {
-                id: this.selected_dish.id[1],
                 quantidade: this.quantity,
-                observacoes: dishObservations
+                observacoes: gridDishObservations,
+                preco: this.selected_dish.preco,
+                status: "Preparando"
             }
 
-            let selectedDishHaveInGrid = this.order.dishes.dishes.some(obj => obj.id[1] == this.selected_dish.id[1]);
+            let selectedDishHaveInGrid = this.order.dishes.some(obj => obj.id == this.selected_dish.id);
 
             let accumulatedQuantity = this.quantity;
 
-            if (this.order.dishes.dishes.length != 0 && selectedDishHaveInGrid) {
-                this.order.dishes.dishes.map(obj => {
-                    if (obj.id[1] == this.selected_dish.id[1]) {
-                        accumulatedQuantity = (parseInt(obj.quantidade[1]) + parseInt(this.quantity)).toString();
+            if (this.order.dishes.length != 0 && selectedDishHaveInGrid) {
+                this.order.dishes.map(obj => {
+                    if (obj.id == this.selected_dish.id) {
+                        accumulatedQuantity = (parseInt(obj.quantidade) + parseInt(this.quantity)).toString();
                     }
                 })
             }
 
             let data = {
-                id: this.selected_dish.id[1],
+                id: this.selected_dish.id,
                 quantidade: accumulatedQuantity
             }
 
-            promises.push(
-                api.post("/dishes/quantity_avalilable", data)
-            )
-
-            Promise.all(promises).then(() => {
-                if (this.order.dishes.dishes.length == 0 || !selectedDishHaveInGrid) {
-                    this.order.dishes.dishes.push(newDishGrid);
-                    this.order_dishes.push(newDish);
+            api.post("/dishes/quantity_avalilable", data).then(() => {
+                if (self.order.dishes.length == 0 || !selectedDishHaveInGrid) {
+                    self.order.dishes.push(newDishGrid);
                 } else {
-                    this.order.dishes.dishes.map(obj => {
-                        if (obj.id[1] == this.selected_dish.id[1]) {
-                            obj.quantidade[1] = accumulatedQuantity;
-                            obj.observacoes[1] = gridDishObservations;
+                    self.order.dishes.map(obj => {
+                        if (obj.id == this.selected_dish.id) {
+                            obj.quantidade = accumulatedQuantity;
+                            obj.observacoes = gridDishObservations;
                         }
                     })
 
-                    this.order.dishes.dishes.push({});
-                    this.order.dishes.dishes.pop();
-
-                    this.order_dishes.map(obj => {
-                        if (obj.id == this.selected_dish.id[1]) {
-                            obj.quantidade = parseInt(obj.quantidade) + parseInt(this.quantity);
-                            obj.observacoes = dishObservations;
-                        }
-                    })
+                    self.order.dishes.push({});
+                    self.order.dishes.pop();
                 }
 
-                let total_value = (this.formatDecimalValues(newDishGrid.preco[1]) * parseFloat(this.quantity));
-                this.order_total += total_value;
+                let total_value = (self.formatDecimalValues(newDishGrid.preco) * parseFloat(self.quantity));
+                self.order_total += total_value;
 
-                this.observations = "";
+                self.observations = "";
             }).catch((error) => {
                 this.setResponse(error.response.data, "error");
             }).then(() => {
@@ -361,7 +336,8 @@ export default {
         },
         selectThisDish: function () {
             let value = $("#item").val();
-            let dish = this.dishes_list.find(obj => obj.id[1] == value);
+
+            let dish = this.dishes_list.find(obj => obj.id == parseInt(value));
 
             if (dish != undefined && dish != null) {
                 this.selected_dish = dish;
@@ -408,7 +384,7 @@ export default {
                     return;
                 }
 
-                if (this.order_dishes.length == 0) {
+                if (this.order.dishes.length == 0) {
                     this.setResponse("O pedido não pode estar vazio", "error");
                     return;
                 }
@@ -430,12 +406,12 @@ export default {
                     return obj;
                 }, {});
 
-                data["pratos"] = self.order_dishes;
+                data["pratos"] = self.order.dishes;
                 data["pagamento_pix"] = this.pix_payment;
                 data["pagamento_cartao"] = this.card_payment;
                 data["pagamento_dinheiro"] = this.cash_payment;
-                data["cep_entrega"] = this.order.cep_entrega;
-                data["mesa"] = this.order.mesa == "" ? null : this.order.mesa;
+                data["cep_entrega"] = parseInt(this.order.cep_entrega);
+                data["mesa"] = this.order.mesa == "" ? null : parseInt(this.order.mesa);
                 data["save_type"] = $("#submit_type").val();
                 data["cliente_nome"] = this.cliente_nome != null ? this.cliente_nome : $("#ajax-autocomplete-input").val();
                 data["cliente_id"] = this.cliente_id;
@@ -459,7 +435,7 @@ export default {
             let self = this;
 
             api.get("/dishes").then((response) => {
-                self.dishes_list = response.data.returnObj.dishes;
+                self.dishes_list = response.data.returnObj;
             }).catch((error) => {
                 console.log(error);
             })
@@ -468,7 +444,7 @@ export default {
             let self = this;
 
             if (self.orderid == null) {
-                self.order.dishes.dishes = [];
+                self.order.dishes = [];
                 return;
             } 
 
@@ -490,7 +466,6 @@ export default {
 
                 self.frozen_table = frozenObj.mesa == '' ? null : frozenObj.mesa;
 
-                self.fillOrderDishes();
                 self.calculateOrderTotal();
                 self.reorganizeDishesObservations();
             }).catch((error) => {
@@ -507,7 +482,7 @@ export default {
         }
     },
     components: {
-        gridView,
+        dataTable,
         ajaxAutoComplete
     }
 }
