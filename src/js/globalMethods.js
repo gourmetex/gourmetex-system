@@ -346,7 +346,7 @@ export const globalMethods = {
                 let currentPreferenceGroup = this.preferences[i];
                 let groupElement = $(".preferences-group[datalabel='" + currentPreferenceGroup.label + "']");
 
-                groupElement.find("input[type='radio'][value='" + currentPreferenceGroup.preferences[0].nome + "']").prop('checked', true);
+                groupElement.find("input[type='radio'][value='" + currentPreferenceGroup.preferences[0]?.nome + "']").prop('checked', true);
             }
         },
         //Métodos de formatação de valores ou strings

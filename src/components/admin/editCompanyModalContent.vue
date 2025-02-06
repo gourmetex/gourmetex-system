@@ -38,7 +38,7 @@ export default {
         returnCompany: function () {
             let self = this;
             
-            if (self.companyid == 0) return;
+            if (!self.companyid) return;
 
             api.get("/companies/" + self.companyid + "/return_company").then((response) => {
                 self.company = response.data.returnObj;

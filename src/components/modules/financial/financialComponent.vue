@@ -10,10 +10,10 @@
                 <div class="filters">
                     <form id="filter-form" @submit.prevent="search()">
                         <div class="filter-field">
-                            <label for="categoria_conta">Categoria</label>
+                            <label for="categoria_conta">Tipo</label>
                             <select id="categoria_conta" name="categoria_conta">
-                                <option value="">Qualquer</option>
-                                <option v-for="(category, index) in debt_categories" :key="index" :value="category.id[1]">{{ category.nome[1] }}</option>
+                                <option value="">* Selecione *</option>
+                                <option v-for="(category, index) in debt_categories" :key="index" :value="category.id">{{ category.nome }}</option>
                             </select>
                         </div>
                         <div class="filter-field">
@@ -28,7 +28,23 @@
                     </form>
                 </div>
             </div>
-            <gridView :gridoptions="gridOptions" :griddata="debts" @dataclick="selectRow($event)"></gridView>
+            <dataTable :dataTable="debts" :rowsPerPage="7" searchText="">
+                <template slot="column-id" slot-scope="props">
+                    <p class="clicable text-center" v-on:click="selectRow2($event)">{{ props.item.id }}</p>
+                </template>
+                <template slot="column-discriminacao" slot-scope="props">
+                    <p>{{ props.item.discriminacao }}</p>
+                </template>
+                <template slot="column-valor" slot-scope="props">
+                    <p>{{ props.item.valor }}</p>
+                </template>
+                <template slot="column-tipo" slot-scope="props">
+                    <newBadge class="text-center" :background="props.item.cor" :text="props.item.nome" />
+                </template>
+                <template slot="column-data" slot-scope="props">
+                    <p class="text-center">{{ props.item.data_lancamento }}</p>
+                </template>
+            </dataTable>
         </div>
         <modal v-if="showModal" :modaltitle="modalTitle" :excludepath="'/financial/' + editId" :modalbutton1="modalButton1" :modalbutton2="modalButton2" :modalbutton3="modalButton3" @closeModal="closeModalFunction(); returnFinancial();">
             <postAccountReceivableModalContent v-if="showPostAccountReceivableModalContent" @savedContent="closeModalFunction(); returnFinancial();"></postAccountReceivableModalContent>
@@ -38,7 +54,8 @@
 </template>
 <script>
 import actionButtons from "../../actionButtons.vue";
-import gridView from "../../gridView.vue";
+import dataTable from "../../dataTable.vue";
+import newBadge from "../../newBadge.vue";
 import { globalMethods } from "@/js/globalMethods";
 import modal from "../../modal.vue";
 import postAccountReceivableModalContent from "./postAccountReceivableModalContent.vue";
@@ -75,7 +92,7 @@ export default {
                 if (item.name.indexOf("data_") != -1 && item.value.trim() != "") {
                     obj[item.name] = "data_lancamento:" + item.value;
                 } else {
-                    obj[item.name] = item.value;
+                    obj[item.name] = parseInt(item.value);
                 }
                 
                 return obj;
@@ -111,8 +128,7 @@ export default {
             }
 
             api.post("/financial", data).then((response) => {
-                self.debts = response.data.returnObj.debts;
-                self.gridOptions = response.data.returnObj.labels;
+                self.debts = response.data.returnObj;
             }).catch((error) => {
                 console.log(error);
             })
@@ -121,7 +137,7 @@ export default {
             let self = this;
 
             api.get("/financial/debt_categories?all=true").then((response) => {
-                self.debt_categories = response.data.returnObj.debtCategories;
+                self.debt_categories = response.data.returnObj;
             }).catch((error) => {
                 console.log(error);
             })
@@ -134,7 +150,8 @@ export default {
     },
     components: {
         actionButtons,
-        gridView,
+        dataTable,
+        newBadge,
         modal,
         postAccountReceivableModalContent,
         postPayableAccountModalContent

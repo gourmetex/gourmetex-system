@@ -14,13 +14,23 @@
                     <label for="role">Perfil</label>
                     <select id="role" name="id_cargo">
                         <option value="">* Qualquer</option>
-                        <option :value="role.id[1]" v-for="(role, index) in roles" :key="index">{{ role.nome[1] }}</option>
+                        <option :value="role.id" v-for="(role, index) in roles" :key="index">{{ role.nome }}</option>
                     </select>
                 </div>
                 <button type="submit" class="btn btn-primary">Buscar</button>
             </form>
         </div>
-        <gridView :gridoptions="gridOptions" :griddata="users" @dataclick="selectRow($event)"></gridView>
+        <dataTable :dataTable="users" :rowsPerPage="7" searchText="">
+            <template slot="column-id" slot-scope="props">
+                <p class="clicable text-center" v-on:click="selectRow2($event)">{{ props.item.id }}</p>
+            </template>
+            <template slot="column-nome" slot-scope="props">
+                <p>{{ props.item.nome }}</p>
+            </template>
+            <template slot="column-cargo" slot-scope="props">
+                <p>{{ props.item.cargo }}</p>
+            </template>
+        </dataTable>
         <div class="edit-buttons">
             <button type="button" class="rounded-btn btn-primary" v-on:click="createNewUser()">
                 <span class="material-icons">add</span>
@@ -40,7 +50,7 @@
     </div>
 </template>
 <script>
-import gridView from "../gridView.vue";
+import dataTable from "../dataTable.vue";
 import { globalMethods } from "@/js/globalMethods";
 import modal from "../modal.vue";
 import editUsersModalContent from "./editUsersModalContent.vue";
@@ -80,6 +90,18 @@ export default {
             this.showModalFunction("Editar usuário", "Salvar", "Cancelar");
             this.showEditUsersModalContent = true;
         },
+        returnRoles: function () {
+            let self = this;
+            let data = {
+                filters: []
+            }
+
+            api.post("/companies/roles", data).then((response) => {
+                self.roles = response.data.returnObj;
+            }).catch((error) => {
+                console.log(error);
+            })
+        },
         returnAllUsers: function () {
             let self = this;
 
@@ -88,19 +110,18 @@ export default {
             }
 
             api.post("/users/get_all_users", data).then((response) => {
-                self.roles = response.data.returnObj.roles;
-                self.users = response.data.returnObj.users;
-                self.gridOptions = response.data.returnObj.labels;
+                self.users = response.data.returnObj;
             }).catch((error) => {
                 console.log(error);
             })
         }
     },
     mounted: function () {
+        this.returnRoles();
         this.returnAllUsers();
     },
     components: {
-        gridView,
+        dataTable,
         modal,
         editUsersModalContent
     }

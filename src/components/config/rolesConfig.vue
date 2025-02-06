@@ -13,7 +13,7 @@
                 <div class="filter-field">
                     <label for="role">Perfil</label>
                     <select id="role" name="permissao">
-                        <option value="">Qualquer</option>
+                        <option value="">* Selecione *</option>
                         <option value="1">Master</option>
                         <option value="0">Padrão</option>
                     </select>
@@ -21,7 +21,17 @@
                 <button type="submit" class="btn btn-primary">Buscar</button>
             </form>
         </div>
-        <gridView :gridoptions="gridOptions" :griddata="roles" :selected="selectedRow" @dataclick="selectRow($event)"></gridView>
+        <dataTable :dataTable="roles" :rowsPerPage="7" searchText="">
+            <template slot="column-id" slot-scope="props">
+                <p class="clicable text-center" v-on:click="selectRow2($event)">{{ props.item.id }}</p>
+            </template>
+            <template slot="column-nome" slot-scope="props">
+                <p>{{ props.item.nome }}</p>
+            </template>
+            <template slot="column-permissão" slot-scope="props">
+                <p>{{ props.item.permissao == 1 ? "Master" : "Padrão" }}</p>
+            </template>
+        </dataTable>
         <div class="edit-buttons">
             <button type="button" class="rounded-btn btn-primary" v-on:click="createNewRole()">
                 <span class="material-icons">add</span>
@@ -41,7 +51,7 @@
     </div>
 </template>
 <script>
-import gridView from "../gridView.vue";
+import dataTable from "../dataTable.vue";
 import { globalMethods } from "@/js/globalMethods";
 import modal from "../modal.vue";
 import editRoleModalContent from "./editRoleModalContent.vue";
@@ -88,8 +98,7 @@ export default {
             }
 
             api.post("/companies/roles", data).then((response) => {
-                self.roles = response.data.returnObj.roles;
-                self.gridOptions = response.data.returnObj.labels;
+                self.roles = response.data.returnObj;
             }).catch((error) => {
                 console.log(error);
             })
@@ -99,7 +108,7 @@ export default {
         this.returnAllRoles();
     },
     components: {
-        gridView,
+        dataTable,
         modal,
         editRoleModalContent
     }

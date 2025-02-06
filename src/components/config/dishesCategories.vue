@@ -9,7 +9,23 @@
                 <button type="submit" class="btn btn-primary">Buscar</button>
             </form>
         </div>
-        <gridView :gridoptions="gridOptions" :griddata="dishes_categories" @dataclick="selectRow($event)"></gridView>
+        <dataTable :dataTable="dishes_categories" :rowsPerPage="7" searchText="">
+            <template slot="column-id" slot-scope="props">
+                <p class="clicable text-center" v-on:click="selectRow2($event)">{{ props.item.id }}</p>
+            </template>
+            <template slot="column-nome" slot-scope="props">
+                <p>{{ props.item.nome }}</p>
+            </template>
+            <template slot="column-cor" slot-scope="props">
+                <newBadge class="text-center" :background="props.item.cor" text="" />
+            </template>
+            <template slot="column-promocional" slot-scope="props">
+                <p>{{ props.item.promocional == 1 ? "Sim" : "Não" }}</p>
+            </template>
+            <template slot="column-porcentagem-desconto" slot-scope="props">
+                <p class="text-center">{{ props.item.promocional == 1 ? (props.item.porcentagem_desconto + "%") : "" }}</p>
+            </template>
+        </dataTable>
         <div class="edit-buttons">
             <button type="button" class="rounded-btn btn-primary" v-on:click="createNewCategory()">
                 <span class="material-icons">add</span>
@@ -29,7 +45,8 @@
     </div>
 </template>
 <script>
-import gridView from "../gridView.vue";
+import dataTable from "../dataTable.vue";
+import newBadge from "../newBadge.vue";
 import { globalMethods } from "@/js/globalMethods";
 import modal from "../modal.vue";
 import editDishesCategoriesModalContent from "./editDishesCategoriesModalContent.vue";
@@ -77,8 +94,7 @@ export default {
             }
 
             api.post("/dishes/categories", data).then((response) => {
-                self.dishes_categories = response.data.returnObj.dishes_categories;
-                self.gridOptions = response.data.returnObj.labels;
+                self.dishes_categories = response.data.returnObj;
             }).catch((error) => {
                 console.log(error);
             })
@@ -88,7 +104,8 @@ export default {
         this.returnDishesCategories();
     },
     components: {
-        gridView,
+        dataTable,
+        newBadge,
         editDishesCategoriesModalContent,
         modal
     }

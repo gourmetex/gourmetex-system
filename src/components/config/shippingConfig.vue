@@ -58,7 +58,7 @@ export default {
 
                 self.mapLoaded = true;
             }).catch((error) => {
-                console.log(error);
+                self.setResponse(error.response.data, "error");
             })
         }
     },

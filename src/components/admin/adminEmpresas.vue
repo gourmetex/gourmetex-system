@@ -6,7 +6,20 @@
         </div>
         
         <div class="empresas-list">
-            <gridView :gridoptions="gridOptions" :griddata="companies" @dataclick="selectModal($event)"></gridView>
+            <dataTable :dataTable="companies" :rowsPerPage="7" searchText="item">
+                <template slot="column-id" slot-scope="props">
+                    <p class="clicable text-center" v-on:click="editCompany(props.item.id)">{{ props.item.id }}</p>
+                </template>
+                <template slot="column-nome" slot-scope="props">
+                    <p>{{ props.item.nome }}</p>
+                </template>
+                <template slot="column-status" slot-scope="props">
+                    <newBadge class="text-center" :background="props.item.ativa == 1 ? 'var(--green-2)' : 'var(--red)'" :text="props.item.ativa == 1 ? 'Ativa' : 'Inativa'" />
+                </template>
+                <template slot="column-membos" slot-scope="props">
+                    <p class="text-center">{{ props.item.membros }}</p>
+                </template>
+            </dataTable>
         </div>
         <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :modalbutton2="modalButton2" :modalbutton3="modalButton3" @closeModal="closeModalFunction()">
             <editCompanyModalContent v-if="showEditCompanieModalContent" :companyid="companyId" @savedContent="closeModalFunction()"></editCompanyModalContent>
@@ -16,7 +29,8 @@
 <script>
 import api from "../../configs/api";
 import { globalMethods } from "@/js/globalMethods";
-import gridView from "../gridView.vue";
+import dataTable from "../dataTable.vue";
+import newBadge from "../newBadge.vue";
 import modal from "../modal.vue";
 import editCompanyModalContent from "./editCompanyModalContent.vue";
 
@@ -46,17 +60,16 @@ export default {
                     break;
             }
         },
-        editCompany: function (event = [0, 0]) {
+        editCompany: function (event) {
             this.showModalFunction("Editar empresa", "Salvar", "Cancelar");
             this.showEditCompanieModalContent = true;
-            this.companyId = event[1];
+            this.companyId = event;
         },
         returnAllCompanies: function () {
             let self = this;
 
             api.get("/companies/return_all_companies").then((response) => {
-                self.companies = response.data.returnObj.companies;
-                self.gridOptions = response.data.returnObj.labels;
+                self.companies = response.data.returnObj;
             }).catch((error) => {
                 console.log(error);
             })
@@ -66,7 +79,8 @@ export default {
         this.returnAllCompanies();
     },
     components: {
-        gridView,
+        dataTable,
+        newBadge,
         modal,
         editCompanyModalContent
     }

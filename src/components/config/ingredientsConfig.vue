@@ -5,14 +5,27 @@
                 <div class="filter-field">
                     <label for="categoria">Categoria</label>
                     <select id="categoria" name="categoria">
-                        <option value="">Qualquer</option>
+                        <option value="">* Selecione *</option>
                         <option v-for="(category, index) in ingredients_categories" :key="index" :value="category.id">{{ category.nome }}</option>
                     </select>
                 </div>
                 <button type="submit" class="btn btn-primary">Buscar</button>
             </form>
         </div>
-        <gridView :gridoptions="gridOptions" :griddata="ingredients" @dataclick="selectRow($event)"></gridView>
+        <dataTable :dataTable="ingredients" :rowsPerPage="7" searchText="">
+            <template slot="column-id" slot-scope="props">
+                <p class="clicable text-center" v-on:click="selectRow2($event)">{{ props.item.id }}</p>
+            </template>
+            <template slot="column-nome" slot-scope="props">
+                <p>{{ props.item.nome }}</p>
+            </template>
+            <template slot="column-categoria" slot-scope="props">
+                <p>{{ props.item.categoria }}</p>
+            </template>
+            <template slot="column-unidade_medida" slot-scope="props">
+                <p>{{ props.item.unidade_medida }}</p>
+            </template>
+        </dataTable>
         <div class="edit-buttons">
             <button type="button" class="rounded-btn btn-primary" v-on:click="createNewIngredient()">
                 <span class="material-icons">add</span>
@@ -32,7 +45,7 @@
     </div>
 </template>
 <script>
-import gridView from "../gridView.vue";
+import dataTable from "../dataTable.vue";
 import { globalMethods } from "@/js/globalMethods";
 import modal from "../modal.vue";
 import editIngredientModalContent from "./editIngredientModalContent.vue";
@@ -90,8 +103,7 @@ export default {
             }
 
             api.post("/dishes/ingredients", data).then((response) => {
-                self.ingredients = response.data.returnObj.ingredients;
-                self.gridOptions = response.data.returnObj.labels;
+                self.ingredients = response.data.returnObj;
             }).catch((error) => {
                 console.log(error);
             })
@@ -102,7 +114,7 @@ export default {
         this.returnAllIngredients();
     },
     components: {
-        gridView,
+        dataTable,
         editIngredientModalContent,
         modal
     }

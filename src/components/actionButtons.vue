@@ -11,7 +11,7 @@
             </button>
             <button class="btn-big btn-yellow" v-if="edit_text" id="edit-button-big" v-on:click="edit()">
                 {{ edit_text }}
-                <span class="material-icons">edit</span>
+                <span class="material-icons">{{ edit_icon != undefined && edit_icon != null && edit_icon != "" ? edit_icon : "edit" }}</span>
             </button>
         </div>  
     </div>
@@ -23,7 +23,7 @@ import $ from 'jquery';
 export default {
     name: "actionButtonsComponent",
     mixins: [globalMethods],
-    props: ["add_text", "exclude_text", "edit_text", "disabledbuttons", "add_icon", "exclude_icon"],
+    props: ["add_text", "exclude_text", "edit_text", "disabledbuttons", "add_icon", "exclude_icon", "edit_icon"],
     methods: {
         chooseAddIcon: function () {
             if (this.add_text != undefined && this.add_text.indexOf("FINALIZAR") != -1) {

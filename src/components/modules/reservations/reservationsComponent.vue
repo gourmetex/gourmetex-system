@@ -5,7 +5,28 @@
         </div> 
         <actionButtons add_text="ADICIONAR RESERVA" exclude_text="EXCLUIR RESERVA" edit_text="EDITAR RESERVA" :disabledbuttons="disabledButtons" @add="createReservation()" @exclude="deleteReservation()" @edit="editReservation()" />
         <div class="reservations-container">
-            <gridView :gridoptions="gridOptions" :griddata="reservationsList" @dataclick="selectRow($event)"></gridView>
+            <dataTable :dataTable="reservationsList" :rowsPerPage="7" searchText="item">
+                <template slot="column-id" slot-scope="props">
+                    <p class="clicable text-center" v-on:click="selectRow2($event)">{{ props.item.id }}</p>
+                </template>
+                <template slot="column-nome" slot-scope="props">
+                    <p>{{ props.item.nome }}</p>
+                </template>
+                <template slot="column-data-e-hora" slot-scope="props">
+                    <p>{{ props.item.data_reserva }}</p>
+                </template>
+                <template slot="column-quantidade-de-pessoas" slot-scope="props">
+                    <p class="text-center">{{ props.item.quantidade_pessoas }}</p>
+                </template>
+                <template slot="column-status" slot-scope="props">
+                    <p>{{ props.item.status }}</p>
+                </template>
+                <template slot="column-tipo" slot-scope="props">
+                    <button class="btn btn-primary rounded-btn small" v-on:click="openReservations(props.item.id)" title="Abrir mesa">
+                        <span class="material-icons" style="color: var(--white); font-size: var(--fontsize-sm);">open_in_new</span>
+                    </button>
+                </template>
+            </dataTable>
         </div>
         <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :excludepath="'/reservations/delete_reservation' + editId" :modalbutton2="modalButton2" :modalButton3="modalButton3" @closeModal="closeModalFunction(); returnReservations();">
             <editReservationModalContent v-if="showEditReservationModalContent" :reservationid="editId" @savedContent="closeModalFunction(); returnReservations();"></editReservationModalContent>
@@ -14,7 +35,7 @@
 </template>
 <script>
 import actionButtons from "../../actionButtons.vue";
-import gridView from "../../gridView.vue";
+import dataTable from "../../dataTable.vue";
 import { globalMethods } from "@/js/globalMethods";
 import editReservationModalContent from "./editReservationModalContent.vue";
 import modal from "../../modal.vue";
@@ -31,9 +52,9 @@ export default {
         }
     },
     methods: {
-        triggerAction: function (row_id) {
+        openReservations: function (reservation_id) {
             let self = this;
-            api.post("/reservations/open_reservation", { reservation_id: parseInt(row_id) }).then(() => {
+            api.post("/reservations/open_reservation", { reservation_id: parseInt(reservation_id) }).then(() => {
                 self.$router.push("/home/digital_menu");
             })
         },
@@ -59,8 +80,7 @@ export default {
             let self = this;
 
             api.get("/reservations").then((response) => {
-                self.reservationsList = response.data.returnObj.reservations;
-                self.gridOptions = response.data.returnObj.labels;
+                self.reservationsList = response.data.returnObj;
             })
         }
     },
@@ -70,7 +90,7 @@ export default {
     },
     components: {
         actionButtons,
-        gridView,
+        dataTable,
         modal,
         editReservationModalContent
     }

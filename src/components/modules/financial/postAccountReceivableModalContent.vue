@@ -16,8 +16,8 @@
             <div class="form-group">
                 <label for="categoria_conta">Categoria</label>
                 <select id="categoria_conta" name="categoria_conta" required>
-                    <option value="">Qualquer</option>
-                    <option v-for="(item, index) in debt_categories" :key="index" :value="item.id[1]">{{ item.nome[1] }}</option>
+                    <option value="">* Selecione *</option>
+                    <option v-for="(item, index) in debt_categories" :key="index" :value="item.id">{{ item.nome }}</option>
                 </select>
             </div>
             <input type="submit" id="submit-button" style="display: none;">
@@ -63,7 +63,7 @@ export default {
             let self = this;
 
             api.get("/financial/debt_categories?receivable=true").then((response) => {
-                self.debt_categories = response.data.returnObj.debtCategories;
+                self.debt_categories = response.data.returnObj;
             }).catch((error) => {
                 console.log(error);
             })

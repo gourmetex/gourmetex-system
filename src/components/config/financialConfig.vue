@@ -1,6 +1,16 @@
 <template>
     <div class="financial">
-        <gridView :gridoptions="gridOptions" :griddata="debtCategories" @dataclick="selectRow($event)"></gridView>
+        <dataTable :dataTable="debtCategories" :rowsPerPage="7" searchText="item">
+            <template slot="column-id" slot-scope="props">
+                <p class="clicable text-center" v-on:click="selectRow2($event)">{{ props.item.id }}</p>
+            </template>
+            <template slot="column-nome" slot-scope="props">
+                <p>{{ props.item.nome }}</p>
+            </template>
+            <template slot="column-tipo" slot-scope="props">
+                <newBadge class="text-center" :background="props.item.cor" :text="props.item.tipo_conta" />
+            </template>
+        </dataTable>
         <div class="edit-buttons">
             <button type="button" class="rounded-btn btn-primary" v-on:click="createNewDebtCategory()">
                 <span class="material-icons">add</span>
@@ -20,7 +30,8 @@
     </div>
 </template>
 <script>
-import gridView from "../gridView.vue";
+import dataTable from "../dataTable.vue";
+import newBadge from "../newBadge.vue";
 import { globalMethods } from "@/js/globalMethods";
 import modal from "../modal.vue";
 import editDebtCategoryModalContent from "./editDebtCategoryModalContent.vue";
@@ -53,8 +64,7 @@ export default {
             let self = this;
 
             api.get("/financial/debt_categories?all=true").then((response) => {
-                self.debtCategories = response.data.returnObj.debtCategories;
-                self.gridOptions = response.data.returnObj.labels;
+                self.debtCategories = response.data.returnObj;
             }).catch((error) => {
                 console.log(error);
             })
@@ -64,7 +74,8 @@ export default {
         this.returnDebtCategories();
     },
     components: {
-        gridView,
+        dataTable,
+        newBadge,
         modal,
         editDebtCategoryModalContent
     }

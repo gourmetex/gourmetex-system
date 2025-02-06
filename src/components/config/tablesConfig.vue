@@ -9,7 +9,14 @@
                 <button type="submit" class="btn btn-primary">Buscar</button>
             </form>
         </div>
-        <gridView :gridoptions="gridOptions" :griddata="tables" @dataclick="selectRow($event)"></gridView>
+        <dataTable :dataTable="tables" :rowsPerPage="7" searchText="">
+            <template slot="column-número" slot-scope="props">
+                <p class="clicable text-center" v-on:click="selectRow2($event)">{{ props.item.id }}</p>
+            </template>
+            <template slot="column-descrição" slot-scope="props">
+                <p>{{ props.item.descricao }}</p>
+            </template>
+        </dataTable>
         <div class="edit-buttons">
             <button type="button" class="rounded-btn btn-primary" v-on:click="createNewTable()">
                 <span class="material-icons">add</span>
@@ -29,7 +36,7 @@
     </div>
 </template>
 <script>
-import gridView from "../gridView.vue";
+import dataTable from "../dataTable.vue";
 import { globalMethods } from "@/js/globalMethods";
 import modal from "../modal.vue";
 import editTablesModalContent from "./editTablesModalContent.vue";
@@ -77,8 +84,7 @@ export default {
             }
 
             api.post("/tables", data).then((response) => {
-                self.tables = response.data.returnObj.tables;
-                self.gridOptions = response.data.returnObj.labels;
+                self.tables = response.data.returnObj;
             }).catch((error) => {
                 self.setResponse(error.response.data, "error");
             })
@@ -88,7 +94,7 @@ export default {
         this.returnAllTables();
     },
     components: {
-        gridView,
+        dataTable,
         editTablesModalContent,
         modal
     }
