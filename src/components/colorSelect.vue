@@ -5,16 +5,18 @@
             <span class="material-icons">arrow_drop_down</span>
         </div>
         <div class="colors-list">
-            <div class="color" v-for="(color, index) in colors" :key="index" :style="'background: ' + color.cor" :colorid="color.id" v-on:click="select(color)"></div>
+            <div class="color" v-for="(color, index) in colors" :key="index" :style="'background: ' + color.cor + '; color: ' + getContrastColorFromCssVariable(color.cor)" :colorid="color?.id" v-on:click="select(color)">{{ color.text ? color.text : '' }}</div>
         </div>
         <div class="color-list-wrapper" v-on:click="closeColorSelect()"></div>
     </div>
 </template>
 <script>
 import $ from 'jquery';
+import { globalMethods } from '@/js/globalMethods';
 
 export default {
     name: "colorSelect",
+    mixins: [globalMethods],
     props: ["colors", "selectedcolor"],
     watch: {
         selectedcolor: function () {
@@ -25,10 +27,11 @@ export default {
         chooseSelectedColor: function () {
             let color = "#fff";  
 
-            if (this.selectedcolor != null) {
+            if (this.selectedcolor != null && this.colors.length) {
                 let filteredColor = this.colors.find(obj => obj.id == this.selectedcolor);
                 color = filteredColor.cor;
             }
+
             $(".selected-color").css("background", color);
         },
         openColorSelect: function () {
@@ -47,6 +50,9 @@ export default {
             this.$emit("select", color);
             this.closeColorSelect();
         }
+    },
+    mounted: function () {
+        this.chooseSelectedColor();
     }
 }
 </script>
@@ -101,6 +107,8 @@ export default {
     position: relative;
     z-index: 3;
     cursor: pointer;
+    display: grid;
+    place-items: center;
 }
 
 .color-list-wrapper {

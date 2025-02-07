@@ -92,10 +92,19 @@ export default {
             let self = this;
 
             self.requireUser().then(() => {
-                self.requireCompany(self.$root.user.id_empresa).then(() => {
-                    self.loading = false;
+                self.returnSelectedTheme().then(() => {
+                    self.setTheme();
+                    self.requireCompany(self.$root.user.id_empresa).then(() => {
+                        self.loading = false;
+                    })
                 })
             })
+        },
+        setTheme: function () {
+            document.documentElement.style.setProperty('--background-color', this.$root.selectedTheme.cor_background);
+            document.documentElement.style.setProperty('--label-color', this.$root.selectedTheme.cor_label);
+            document.documentElement.style.setProperty('--label-hover-color', this.$root.selectedTheme.cor_label_hover);
+            document.documentElement.style.setProperty('--cor-destaque', this.$root.selectedTheme.cor_destaque);
         }
     },
     mounted: function () {

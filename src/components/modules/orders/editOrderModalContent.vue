@@ -444,6 +444,7 @@ export default {
             let self = this;
 
             if (self.orderid == null) {
+                self.contentLoaded = true;
                 self.order.dishes = [];
                 return;
             } 

@@ -179,7 +179,7 @@ export default {
 <style scoped>
 
 header, .lateral-menu {
-    background: var(--blue);
+    background: var(--background-color);
 }
 
 header {
@@ -191,7 +191,7 @@ header {
     display: flex;
     justify-content: space-between;
     padding: var(--space-4);
-    border-bottom: 1px solid var(--blue-low);
+    border-bottom: 1px solid var(--cor-destaque);
     z-index: 2;
 }
 
@@ -251,7 +251,7 @@ header {
 }
 
     .lateral-menu h3 {
-        color: var(--white);
+        color: var(--label-color);
     }
 
     .lateral-menu ul {
@@ -275,12 +275,13 @@ header {
         .lateral-menu ul li, .lateral-menu ul li a {
             display: flex;
             cursor: pointer;
-            color: var(--white);
+            color: var(--label-color);
             border-radius: var(--radius-md);
         }   
 
             .lateral-menu ul li:hover, .li-active {
-                background: var(--blue-low);
+                color: var(--label-hover-color);
+                background: var(--cor-destaque);
             }
 
 .lateral-menu-wrapper {
@@ -312,10 +313,10 @@ header {
     left: 0;
     padding: var(--space-3);
     border-radius: var(--radius-sm);
-    background: var(--white);
+    background: var(--background-color);
     box-shadow: var(--boxshadow-default);
-    border: 1px solid var(--gray-2);
-    color: var(--black);
+    border: 1px solid var(--cor-destaque);
+    color: var(--label-color);
     display: none;
 }
 
@@ -333,7 +334,8 @@ header {
         }
 
             .profile-menu-container ul li:hover {
-                background: var(--gray-3);
+                color: var(--label-hover-color);
+                background: var(--cor-destaque);
                 cursor: pointer;
             }
 

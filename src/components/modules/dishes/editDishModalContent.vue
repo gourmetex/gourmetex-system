@@ -192,6 +192,7 @@ export default {
             let self = this;
 
             if (self.dishid == null) {
+                self.contentLoaded = true;
                 self.dish.ingredientes = [];
                 return;
             } 

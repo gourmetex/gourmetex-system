@@ -37,6 +37,12 @@
 }
 
 :root {
+    /* TEMA SISTEMA */
+    --background-color: #3E6990;
+    --label-color: #FCFCFC;
+    --label-hover-color: #FCFCFC;
+    --cor-destaque: #2E4F6C;
+
     /* CORES */
     --white: #FCFCFC;
     --orange: #F26430;

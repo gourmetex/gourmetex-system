@@ -10,6 +10,35 @@
                     <input type="submit" id="submit-form" style="display: none;">
                 </form>
             </div>
+            <form @submit.prevent="saveTheme()" id="system-theme-form">
+                <div class="form-group">
+                    <label for="theme">Temas disponíveis</label>
+                    <colorSelect v-if="themes.length" :colors="themes" @select="selectedTheme = $event" :selectedcolor="selectedTheme?.id" style="min-width: 200px;" />
+                </div>
+                <div class="form-group">
+                    <label>Pré visualização</label>
+                    <span id="tema-selecionado">Tema selecionado: {{ selectedTheme?.nome }}</span>
+                    <div class="system-preview">
+                        <div class="menu-superior" :style="'background: ' + selectedTheme?.cor_background + '; color: ' + selectedTheme?.cor_label">
+                            <div class="logo">Logo</div>
+                        </div>
+                        <div class="menu-lateral" :style="'background: ' + selectedTheme?.cor_background + '; color: ' + selectedTheme?.cor_label">
+                            <ul>
+                                <li>Menu item 1</li>
+                                <li class="hover" :style="'background: ' + selectedTheme?.cor_destaque + '; color: ' + selectedTheme?.cor_label_hover">Menu item 2</li>
+                                <li>Menu item 3</li>
+                            </ul>
+                        </div>
+                        <div class="conteudo-sistema">
+                            <div>
+                                <span class="material-icons">computer</span>
+                                <span>Conteúdo do sistema</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Salvar</button>
+            </form>
             <div class="response">{{ response }}</div>
         </div>
     </div>
@@ -18,13 +47,15 @@
 import { globalMethods } from '@/js/globalMethods';
 import api from "../../configs/api.js";
 import $ from 'jquery';
+import colorSelect from "../colorSelect.vue";
 
 export default {
     name: "systemConfig",
     mixins: [globalMethods],
     data() {
         return {
-            
+            themes: [],
+            selectedTheme: null
         }
     },
     methods: {
@@ -60,7 +91,44 @@ export default {
         },
         clickInInputFile: function () {
             $("#photo").click();
+        },
+        saveTheme: function () {
+            let self = this;
+            let data = {
+                theme: self.selectedTheme.id
+            }
+
+            api.patch("/companies/theme", data).then((response) => {
+                self.themes = response.data.returnObj;
+                self.setResponse(response.data.message, "success");
+                location.reload();
+            }).catch((error) => {
+                self.setResponse(error.response.data, "error");
+            })
+        },
+        returnThemes: function () {
+            let self = this;
+
+            api.get("/companies/themes").then((response) => {
+                self.themes = response.data.returnObj;
+            }).catch((error) => {
+                self.setResponse(error.response.data, "error");
+            })
+        },
+        returnSelectedTheme: function () {
+            let self = this;
+
+            api.get("/companies/theme").then((response) => {
+                self.selectedTheme = response.data.returnObj;
+            })
         }
+    },
+    mounted: function () {
+        this.returnThemes();
+        this.returnSelectedTheme();
+    },
+    components: {
+        colorSelect
     }
 }
 </script>
@@ -97,5 +165,79 @@ input[type="file"] {
 form {
     display: flex;
     align-items: center;
+}
+
+#system-theme-form {
+    margin-top: var(--space-6);
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.system-preview {
+    width: 500px;
+    height: 350px;
+    margin: var(--space-6) 0;
+    position: relative;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--gray);
+    overflow: hidden;
+}
+
+.menu-superior {
+    height: 30px;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    & .logo {
+        width: 120px;
+        height: 100%;
+        display: grid;
+        place-content: center;
+    }
+}
+
+.menu-lateral {
+    height: calc(100% - 30px);
+    position: absolute;
+    top: 30px;
+    left: 0;
+    width: 120px;
+
+    & ul, & li {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    & li {
+        padding: var(--space-3) var(--space-3) var(--space-3) var(--space-6);
+    }
+}
+
+.conteudo-sistema {
+    width: calc(100% - 120px);
+    position: absolute;
+    left: 120px;
+    top: 30px;
+    height: calc(100% - 30px);
+    background: var(--gray-high);
+    display: flex;
+    justify-content: center;
+
+    & div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: var(--space-8);
+        height: fit-content;
+        gap: 5px;
+        color: var(--cinza-400);
+
+        & span {
+            font-size: var(--fontsize-md);
+        }
+    }
 }
 </style>
