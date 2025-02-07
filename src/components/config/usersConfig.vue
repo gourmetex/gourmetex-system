@@ -13,7 +13,7 @@
                 <div class="filter-field">
                     <label for="role">Perfil</label>
                     <select id="role" name="id_cargo">
-                        <option value="">* Qualquer</option>
+                        <option value="">* Qualquer *</option>
                         <option :value="role.id" v-for="(role, index) in roles" :key="index">{{ role.nome }}</option>
                     </select>
                 </div>
@@ -109,8 +109,11 @@ export default {
                 filters: self.filters
             }
 
+            self.contentLoaded = false;
+
             api.post("/users/get_all_users", data).then((response) => {
                 self.users = response.data.returnObj;
+                self.contentLoaded = true;
             }).catch((error) => {
                 console.log(error);
             })

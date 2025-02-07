@@ -7,7 +7,7 @@
             <h2 class="font-bold">Tem certeza que deseja excluir?</h2>
             <h3>Essa ação é irreversível</h3>
         </div>
-        <p class="response">{{ response }}</p>
+        <p class="response big">{{ response }}</p>
         <input type="submit" id="submit-button" v-on:click="deleteItem()" style="display: none;">
     </div>
 </template>

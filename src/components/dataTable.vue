@@ -191,12 +191,8 @@
       }
     },
     watch: {
-      loaded: function () {
-        console.log(this.loaded)
-      },
       dataTable: {
         handler(newData) {
-          console.log(this.dataTable)
           this.filteredData = newData || [];
           this.currentPage = 1;
         },
