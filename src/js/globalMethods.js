@@ -47,7 +47,7 @@ export const globalMethods = {
                 this.submitContent = false;
 
                 this.reloadGrid = false;
-                this.descelectRows2();
+                this.descelectRows();
             }, 400);
         },
         closeModalContent: function () {
@@ -189,28 +189,14 @@ export const globalMethods = {
         },
         //Metodos manipulação objetos
         selectRow: function (event) {
-            switch (event[2]) {
-                case "select_row":
-                    this.showEditButtons();
-                    this.editId = event[1];
-                    this.selectGridRow(event[3]);
-                    break;
-            }
-
-            if (event[0] == "badge" && event[4] == "action") {
-                let id = $("#grid-row-" + event[5]).find(".grid-cell:first-child h3").html();
-                this.triggerAction(id);
-            }
-        },
-        selectRow2: function (event) {
-            this.descelectRows2();
+            this.descelectRows();
             
             let id = $(event.target).html();
             let parent = $(event.target).parent().parent();
 
             this.showEditButtons();
-            this.editId = parseInt(id);
-            this.selectGridRow2(parent);
+            this.contentObject = parseInt(id);
+            this.selectGridRow(parent);
         },
         showEditButtons: function () {
             let editButtons = $(".dynamic-edit-buttons");
@@ -222,33 +208,15 @@ export const globalMethods = {
 
             editButtons.hide();
         },
-        selectGridRow2: function (row) {
+        selectGridRow: function (row) {
             if (row.hasClass("row-selected")) {
-                this.descelectRows2();
+                this.descelectRows();
             } else {
                 row.addClass("row-selected");                
             }
         },
-        selectGridRow: function (rowKey) {
-            let allRows = $(".grid-row");
-            let row = $("#grid-row-" + rowKey);
-
-            if (row.hasClass("row-selected")) {
-                this.descelectRows();
-            } else {
-                allRows.removeClass("row-selected");
-                row.addClass("row-selected");
-            }
-        },
-        descelectRows2: function () {
-            let allRows = $("td, tr");
-
-            allRows.removeClass("row-selected");
-            this.editId = null;
-            this.hideEditButtons();
-        },
         descelectRows: function () {
-            let allRows = $(".grid-row");
+            let allRows = $("td, tr");
 
             allRows.removeClass("row-selected");
             this.editId = null;
@@ -413,7 +381,7 @@ export const globalMethods = {
             } else {
                 this.disableActionsButtons(false, true, true);
                 this.descelectRows();
-                this.descelectRows2();
+                this.descelectRows();
             }
         }
     },

@@ -7,7 +7,7 @@
         <div class="reservations-container">
             <dataTable :dataTable="reservationsList" :rowsPerPage="7" searchText="item" :loaded="contentLoaded">
                 <template slot="column-id" slot-scope="props">
-                    <p class="clicable text-center" v-on:click="selectRow2($event)">{{ props.item.id }}</p>
+                    <p class="clicable text-center" v-on:click="selectRow($event)">{{ props.item.id }}</p>
                 </template>
                 <template slot="column-nome" slot-scope="props">
                     <p>{{ props.item.nome }}</p>

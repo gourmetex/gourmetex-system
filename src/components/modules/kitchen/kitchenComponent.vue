@@ -7,7 +7,7 @@
         <div class="dishes-container">
             <dataTable :dataTable="orders" :rowsPerPage="7" searchText="" :loaded="contentLoaded">
                 <template slot="column-id" slot-scope="props">
-                    <p class="clicable text-center" v-on:click="selectRow2($event)">{{ props.item.id }}</p>
+                    <p class="clicable text-center" v-on:click="selectRow($event)">{{ props.item.id }}</p>
                 </template>
                 <template slot="column-comanda" slot-scope="props">
                     <p class="text-center">{{ props.item.id_comanda }}</p>

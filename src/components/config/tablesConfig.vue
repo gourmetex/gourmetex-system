@@ -11,7 +11,7 @@
         </div>
         <dataTable :dataTable="tables" :rowsPerPage="7" searchText="" :loaded="contentLoaded">
             <template slot="column-número" slot-scope="props">
-                <p class="clicable text-center" v-on:click="selectRow2($event)">{{ props.item.id }}</p>
+                <p class="clicable text-center" v-on:click="selectRow($event)">{{ props.item.id }}</p>
             </template>
             <template slot="column-descrição" slot-scope="props">
                 <p>{{ props.item.descricao }}</p>

@@ -10,7 +10,7 @@
             </div>
             <dataTable :dataTable="orders" :rowsPerPage="7" searchText="pedido" :loaded="contentLoaded">
                 <template slot="column-nº-comanda" slot-scope="props">
-                    <p class="clicable text-center" v-on:click="selectRow2($event)">{{ props.item.comanda }}</p>
+                    <p class="clicable text-center" v-on:click="selectRow($event)">{{ props.item.comanda }}</p>
                 </template>
                 <template slot="column-cliente" slot-scope="props">
                     <p>{{ props.item.cliente }}</p>
