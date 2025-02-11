@@ -51,7 +51,10 @@ export default {
             api.post("/users/login", data).then((res) => {
                 self.setResponse(res.data.message, "success");
                 self.setJwtInLocalStorage(res.data.returnObj.jwtToken);
-                self.$router.push("/home");
+                
+                self.returnMenuOptions().then(() => {
+                    self.$router.push("/home");
+                });
             }).catch((error) => {
                 self.setResponse(error.response.data, "error");
             }).then(() => {

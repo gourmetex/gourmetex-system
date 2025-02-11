@@ -1,5 +1,5 @@
 <template>
-    <div class="datatable">
+    <div class="datatable" :style="dataTable.length == 0 && loaded ? 'border: 1px solid var(--gray-3); margin-top: var(--space-3);' : ''">
       <div class="empty-datatable text-center" v-if="dataTable.length == 0 && loaded">
         <h2>Não existem informações para exibir</h2>
       </div>
@@ -216,12 +216,9 @@
   </script>
   <style scoped>
     .datatable {
-        margin-top: var(--space-3);
-        width: 100%;
-
-        & .empty-datatable h2 {
-          margin-top: var(--space-6);
-        }
+      border-radius: var(--radius-md);
+      width: 100%;
+      padding: var(--space-6) 0;
     }
 
     .datatable-loading {

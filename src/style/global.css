@@ -628,6 +628,7 @@ label {
 
 /* FILTERS */
 .filter-container-header {
+    margin-top: var(--space-4);
     display: flex;
     align-items: center;
     justify-content: space-between;

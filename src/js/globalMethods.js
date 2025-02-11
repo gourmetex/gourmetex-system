@@ -90,6 +90,7 @@ export const globalMethods = {
         },
         removeJwtFromLocalStorage: function () {
             localStorage.removeItem("gourmetech_jwt");
+            this.$root.menuOptions = [];
         },
         checkAndSetJwt: function() {
             let interval = setInterval(() => {
@@ -145,6 +146,21 @@ export const globalMethods = {
             })
         },
         //Métodos retorno objetos globais
+        returnMenuOptions: function () {
+            let self = this;
+            let jwt = localStorage.getItem("gourmetech_jwt");
+
+            if (!jwt || (self.$root.menuOptions != undefined && self.$root.menuOptions.length != 0)) return;
+
+            return new Promise((resolve) => {
+                api.get("/users/return_menus", {headers: {Authorization: "Bearer " + jwt}}).then((response) => {
+                    self.$root.menuOptions = response.data.returnObj;
+                    resolve();
+                }).catch((error) => {
+                    console.log(error);
+                })
+            })
+        },
         requireCompany: function (company_id) {
             return new Promise((resolve) => {
                 let self = this;

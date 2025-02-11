@@ -6,10 +6,11 @@ Vue.use(VueRouter);
 import indexPage from '../pages/indexPage.vue';
 import loginPage from '../pages/loginPage.vue';
 import registerPage from '../pages/registerPage.vue';
+import forbiddenPage from '../pages/forbiddenPage.vue'; // Página de acesso negado
 import adminComponent from '../components/adminComponent.vue';
 import dishesComponent from '../components/modules/dishes/dishesComponent.vue';
 import homeComponent from '../components/homeComponent.vue';
-import configComponent from "../components/configComponent.vue"
+import configComponent from "../components/configComponent.vue";
 import stockComponent from "../components/modules/stock/stockComponent.vue";
 import ordersComponent from "../components/modules/orders/ordersComponent.vue";
 import customersComponent from "../components/modules/customers/customersComponent.vue";
@@ -31,85 +32,28 @@ const routes = [
         meta: {
             title: "Gourmetech",
             metaTags: [
-                {
-                    name: "description",
-                    content: "Página inicial - Gourmetech"
-                },
-                {
-                    name: "og:description",
-                    content: "ERP para restaurantes, tudo o que você precisa"
-                }
+                { name: "description", content: "Página inicial - Gourmetech" },
+                { name: "og:description", content: "ERP para restaurantes, tudo o que você precisa" }
             ]
         },
         children: [
-            {
-                path: '',
-                component: homeComponent
-            },
-            {
-                path: 'admin',
-                component: adminComponent
-            },
-            {
-                path: 'dishes',
-                component: dishesComponent
-            },
-            {
-                path: "config",
-                component: configComponent
-            },
-            {
-                path: "stock",
-                component: stockComponent
-            },
-            {
-                path: "orders",
-                component: ordersComponent
-            },
-            {
-                path: "customers",
-                component: customersComponent
-            },
-            {
-                path: "kitchen",
-                component: kitchenComponent
-            },
-            {
-                path: "printout",
-                component: printOut
-            },
-            {
-                path: "digital_menu",
-                component: digitalMenuComponent
-            },
-            {
-                path: "financial",
-                component: financialComponent
-            },
-            {
-                path: "whatsapp",
-                component: whatsappComponent
-            },
-            {
-                path: "newsletter",
-                component: newsletterComponent
-            },
-            {
-                path: "shipping",
-                component: shippingComponent
-            },
-            {
-                path: "reports",
-                component: reportsComponent
-            },
-            {
-                path: "reservations",
-                component: reservationsComponent
-            },
-            {
-                path: "profile",
-                component: profileComponent
-            }
+            { path: '', component: homeComponent },
+            { path: 'admin', component: adminComponent, meta: { modulo_requerido: 'admin' } },
+            { path: 'dishes', component: dishesComponent, meta: { modulo_requerido: 'dishes' } },
+            { path: "config", component: configComponent, meta: { modulo_requerido: 'config' } },
+            { path: "stock", component: stockComponent, meta: { modulo_requerido: 'stock' } },
+            { path: "orders", component: ordersComponent, meta: { modulo_requerido: 'orders' } },
+            { path: "customers", component: customersComponent, meta: { modulo_requerido: 'customers' } },
+            { path: "kitchen", component: kitchenComponent, meta: { modulo_requerido: 'kitchen' } },
+            { path: "printout", component: printOut, meta: { modulo_requerido: 'printout' } },
+            { path: "digital_menu", component: digitalMenuComponent, meta: { modulo_requerido: 'digital_menu' } },
+            { path: "financial", component: financialComponent, meta: { modulo_requerido: 'financial' } },
+            { path: "whatsapp", component: whatsappComponent, meta: { modulo_requerido: 'whatsapp' } },
+            { path: "newsletter", component: newsletterComponent, meta: { modulo_requerido: 'newsletter' } },
+            { path: "shipping", component: shippingComponent, meta: { modulo_requerido: 'shipping' } },
+            { path: "reports", component: reportsComponent, meta: { modulo_requerido: 'reports' } },
+            { path: "reservations", component: reservationsComponent, meta: { modulo_requerido: 'reservations' } },
+            { path: "profile", component: profileComponent, meta: { modulo_requerido: 'profile' } }
         ]
     },
     {
@@ -118,14 +62,8 @@ const routes = [
         meta: {
             title: "Faça login - Gourmetech",
             metaTags: [
-                {
-                    name: "description",
-                    content: "Login - Gourmetech"
-                },
-                {
-                    name: "og:description",
-                    content: "ERP para restaurantes, tudo o que você precisa"
-                }
+                { name: "description", content: "Login - Gourmetech" },
+                { name: "og:description", content: "ERP para restaurantes, tudo o que você precisa" }
             ]
         },
     },
@@ -135,26 +73,54 @@ const routes = [
         meta: {
             title: "Registre-se - Gourmetech",
             metaTags: [
-                {
-                    name: "description",
-                    content: "Registro - Gourmetech"
-                },
-                {
-                    name: "og:description",
-                    content: "ERP para restaurantes, tudo o que você precisa"
-                }
+                { name: "description", content: "Registro - Gourmetech" },
+                { name: "og:description", content: "ERP para restaurantes, tudo o que você precisa" }
             ]
         },
     },
     {
+        path: '/forbidden',
+        component: forbiddenPage,
+        meta: { title: "Acesso Negado - Gourmetech" }
+    },
+    {
         path: '',
         redirect: '/home'
+    },
+    {
+        path: "*",
+        redirect: "/login"
     }
 ];
 
 const router = new VueRouter({
     routes,
     mode: 'history'
+});
+
+// Middleware para verificar permissões
+router.beforeEach((to, from, next) => {
+    const moduloRequerido = to.meta.modulo_requerido;
+
+    if (moduloRequerido == undefined) next();
+
+    let interval = setInterval(() => {
+        if (router.app?.$root?.menuOptions != undefined) {
+            clearInterval(interval);
+
+            if (moduloRequerido) {
+                const menuOptions = router.app?.$root?.menuOptions || [];
+        
+                const temPermissao = menuOptions.some(modulo => modulo.codigo === moduloRequerido);
+        
+                if (!temPermissao) {
+                    return next('/forbidden');
+                }
+            }
+        
+            next();
+        }
+    }, 100)   
 });
 
 export default router;

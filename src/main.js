@@ -47,7 +47,7 @@ router.beforeEach((to, from, next) => {
   next();
 });
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 Vue.use(VueGoogleMaps, {
   load: {

@@ -1,6 +1,6 @@
 <template>
     <div class="edit-company-modal-content">
-        <form class="edit-company" id="informations-form" @submit.prevent="saveCompany()" v-if="company.id != null">
+        <form class="edit-company" id="informations-form" @submit.prevent="saveCompany()">
             <h3 class="font-bold">Informações principais</h3>
             <div class="form-group">
                 <label for="name">Nome</label>
@@ -103,11 +103,17 @@ export default {
         }
     },
     mounted: function () {
-        this.returnModules();
-        if (this.companyid != 0) {
+        if (this.companyid != 0 && this.companyid != undefined) {
             $("#main-user").attr("disabled", "disabled");
         }
+
+        this.returnModules();
         this.returnCompany();
     }
 }
 </script>
+<style scoped>
+    .company-modules {
+        margin-top: var(--space-6);
+    }
+</style>

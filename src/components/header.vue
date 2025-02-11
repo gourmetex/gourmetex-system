@@ -25,7 +25,7 @@
         </header>
         <div class="lateral-menu">
             <ul>
-                <li v-for="(item, index) in menuOptions" :key="index" class="menu-item" v-on:click="selectThisItem('menu-' + item.icone)" :id="'menu-' + item.icone" :class="checkCurrentPathname(item.link) ? 'li-active' : ''">
+                <li v-for="(item, index) in $root.menuOptions" :key="index" class="menu-item" v-on:click="selectThisItem('menu-' + item.icone)" :id="'menu-' + item.icone" :class="checkCurrentPathname(item.link) ? 'li-active' : ''">
                     <router-link :to="item.link">
                         <span class="material-icons">{{ item.icone }}</span>
                         <h3>{{ item.nome }}</h3>
@@ -37,7 +37,6 @@
     </div>
 </template>
 <script>
-import api from "../configs/api.js";
 import $ from 'jquery';
 import { globalMethods } from '@/js/globalMethods';
 
@@ -46,7 +45,6 @@ export default {
     mixins: [globalMethods],
     data() {
         return {
-            menuOptions: [],
             menuMovement: false
         }
     },
@@ -54,15 +52,6 @@ export default {
         goToProfile: function () {
             this.toggleProfileMenu();
             this.$router.push("/home/profile");
-        },
-        returnMenuOptions: function () {
-            let self = this;
-
-            api.get("/users/return_menus").then((response) => {
-                self.menuOptions = response.data.returnObj;
-            }).catch((error) => {
-                console.log(error);
-            })
         },
         checkCurrentPathname: function (linkToCheck) {
             let pathname = window.location.pathname;
@@ -171,8 +160,6 @@ export default {
                 lateralMenuWrapper.hide();
             }
         })
-
-        this.returnMenuOptions();
     }
 }
 </script>
