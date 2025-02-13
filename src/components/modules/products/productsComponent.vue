@@ -30,7 +30,7 @@
             </dataTable>
         </div>
         <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :excludepath="'/dishes/' + editId" :modalbutton2="modalButton2" :modalbutton3="modalButton3" @closeModal="closeModalFunction(); returnDishes();">
-            <editDishModalContent v-if="showEditDishModalContent" :dishid="editId" @savedContent="closeModalFunction(); returnDishes();"></editDishModalContent>
+            <editProductModalContent v-if="showEditDishModalContent" :dishid="editId" @savedContent="closeModalFunction(); returnDishes();"></editProductModalContent>
         </modal>
     </div>
 </template>
@@ -38,7 +38,7 @@
 import actionButtons from "../../actionButtons.vue";
 import { globalMethods } from "@/js/globalMethods";
 import modal from "../../modal.vue";
-import editDishModalContent from "./editDishModalContent.vue";
+import editProductModalContent from "./editProductModalContent.vue";
 import api from "../../../configs/api";
 import dataTable from "../../dataTable.vue";
 import newBadge from "../../newBadge.vue";
@@ -78,7 +78,7 @@ export default {
 
             self.contentLoaded = false;
 
-            api.get("/dishes").then((response) => {
+            api.get("/products").then((response) => {
                 self.dishes = response.data.returnObj;
                 self.contentLoaded = true;
             }).catch((error) => {
@@ -95,7 +95,7 @@ export default {
         dataTable,
         newBadge,
         modal,
-        editDishModalContent
+        editProductModalContent
     }
 }
 </script>

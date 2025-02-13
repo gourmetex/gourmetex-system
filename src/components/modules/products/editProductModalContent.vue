@@ -162,7 +162,7 @@ export default {
             if (self.savingDish) return;
 
             if (this.ingredients_list.length == 0) {
-                this.setResponse("O prato não pode estar vazio", "error");
+                this.setResponse("O produto não pode estar vazio", "error");
                 return;
             }
 
@@ -174,13 +174,13 @@ export default {
             }, {});
 
             data["ingredientes"] = self.ingredients_list;
-            let path = "create_dish";
+            let path = "create_products";
 
             if (self.dishid != null) {
-                path = "edit_dish/" + self.dishid;
+                path = "edit_product/" + self.dishid;
             }
             
-            api.post("/dishes/" + path, data).then(() => {
+            api.post("/products/" + path, data).then(() => {
                 self.$emit("savedContent", true);
             }).catch((error) => {
                 console.log(error);
@@ -199,7 +199,7 @@ export default {
 
             self.contentLoaded = false;
 
-            api.get("/dishes/" + self.dishid).then((response) => {
+            api.get("/products/" + self.dishid).then((response) => {
                 self.dish = response.data.returnObj;
                 self.contentLoaded = true;
                 self.fillSubmitIngredients();
@@ -210,7 +210,7 @@ export default {
         returnDishesCategories: function () {
             let self = this;
 
-            api.post("/dishes/categories").then((response) => {
+            api.post("/products/categories").then((response) => {
                 self.dishes_categories = response.data.returnObj;
             }).catch((error) => {
                 console.log(error);
@@ -219,7 +219,7 @@ export default {
         returnAllIngredients: function () {
             let self = this;
 
-            api.post("/dishes/ingredients").then((response) => {
+            api.post("/products/ingredients").then((response) => {
                 self.ingredients = response.data.returnObj;
             }).catch((error) => {
                 console.log(error);

@@ -8,7 +8,7 @@ import loginPage from '../pages/loginPage.vue';
 import registerPage from '../pages/registerPage.vue';
 import forbiddenPage from '../pages/forbiddenPage.vue'; // Página de acesso negado
 import adminComponent from '../components/adminComponent.vue';
-import dishesComponent from '../components/modules/dishes/dishesComponent.vue';
+import productsComponent from '../components/modules/products/productsComponent.vue';
 import homeComponent from '../components/homeComponent.vue';
 import configComponent from "../components/configComponent.vue";
 import stockComponent from "../components/modules/stock/stockComponent.vue";
@@ -39,7 +39,7 @@ const routes = [
         children: [
             { path: '', component: homeComponent },
             { path: 'admin', component: adminComponent, meta: { modulo_requerido: 'admin' } },
-            { path: 'dishes', component: dishesComponent, meta: { modulo_requerido: 'dishes' } },
+            { path: 'products', component: productsComponent, meta: { modulo_requerido: 'products' } },
             { path: "config", component: configComponent, meta: { modulo_requerido: 'config' } },
             { path: "stock", component: stockComponent, meta: { modulo_requerido: 'stock' } },
             { path: "orders", component: ordersComponent, meta: { modulo_requerido: 'orders' } },
