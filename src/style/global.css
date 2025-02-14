@@ -148,7 +148,7 @@ p {
 
 .response.big {
     font-size: var(--fontsize-sm);
-    margin-top: var(--space-5);
+    margin: var(--space-5) 0;
 }
 
 .error {

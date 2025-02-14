@@ -22,7 +22,7 @@
             </dataTable>
         </div>
         <modal v-if="showModal" :modaltitle="modalTitle" :modalbutton1="modalButton1" :modalbutton2="modalButton2" :modalbutton3="modalButton3" @closeModal="closeModalFunction()">
-            <editCompanyModalContent v-if="showEditCompanieModalContent" :companyid="companyId" @savedContent="closeModalFunction()"></editCompanyModalContent>
+            <editCompanyModalContent v-if="showEditCompanieModalContent" :companies="companies" :companyid="companyId" @savedContent="closeModalFunction()"></editCompanyModalContent>
         </modal>
     </div>
 </template>
@@ -40,7 +40,6 @@ export default {
     data() {
         return {
             companies: [],
-            gridOptions: [],
             showEditCompanieModalContent: false,
             companyId: null
         }

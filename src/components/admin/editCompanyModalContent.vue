@@ -14,6 +14,22 @@
                 <input type="checkbox" name="active" id="active" v-model="company.ativa">
                 <label for="active">Ativo?</label>
             </div>
+            <p class="response big">{{ response }}</p>
+            <div class="companies-to-bind">
+                <h3 class="font-bold">Vincular à empresa</h3>
+                <div v-for="(companyItem, index) in companies" :key="index">
+                    <div class="radio-group" v-if="companyItem.id != company.id">
+                        <input 
+                            type="radio" 
+                            :id="'company-' + companyItem.id" 
+                            :value="companyItem.id"
+                            v-model="company.empresa_vinculada"
+                            name="empresa_vinculada"
+                        >
+                        <label :for="'company-' + companyItem.id">{{ companyItem.nome }}</label>
+                    </div>
+                </div>
+            </div>
             <div class="company-modules">
                 <h3 class="font-bold">Módulos habilitados</h3>
                 <div class="radio-group" v-for="module in modules" :key="module.id">
@@ -34,17 +50,20 @@
 <script>
 import api from "../../configs/api";
 import $ from 'jquery';
+import { globalMethods } from "@/js/globalMethods";
 
 export default {
     name: "editCompanyModalContent",
-    props: ["companyid"],
+    mixins: [globalMethods],
+    props: ["companyid", "companies"],
     data() {
         return {
             company: {
                 id: null,
                 nome: "",
                 ativa: false,
-                email_requisitado: ""
+                email_requisitado: "",
+                empresa_vinculada: null
             },
             savingCompany: false,
             modules: [],
@@ -89,14 +108,14 @@ export default {
 
             let path = "create";
 
-            if (self.companyid != 0) {
+            if (self.companyid != 0 && self.companyid != undefined) {
                 path = "edit_company";
             }
 
             api.post("/companies/" + path, data).then(() => {
                 self.$emit("savedContent", true);
             }).catch((error) => {
-                console.log(error);
+                self.setResponse(error.response.data, "error");
             }).then(() => {
                 self.savingCompany = false;
             })
